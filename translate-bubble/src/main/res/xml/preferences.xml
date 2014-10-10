@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/typeFeedback">
+
+        <CheckBoxPreference
+                android:key="typeBubble"
+                android:title="@string/bubbleTitle"
+                android:summary="@string/bubbleMessage"
+                android:defaultValue="true"/>
+
+        <CheckBoxPreference
+                android:key="typeNotification"
+                android:title="@string/notificationTitle"
+                android:summary="@string/notificationMessage"
+                android:defaultValue="false"/>
+
+        <CheckBoxPreference
+                android:key="typeWatch"
+                android:title="@string/watchTitle"
+                android:summary="@string/watchMessage"
+                android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/services">
+
+        <CheckBoxPreference
+                android:key="serviceBing"
+                android:title="@string/bing"
+                android:defaultValue="true"/>
+
+        <CheckBoxPreference
+                android:key="serviceMyMemory"
+                android:title="@string/myMemory"
+                android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/languages">
+
+        <ListPreference
+                android:defaultValue="ENGLISH"
+                android:key="fromLanguage"/>
+
+        <ListPreference
+                android:defaultValue="SPANISH"
+                android:key="toLanguage"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/more">
+
+        <PreferenceScreen
+                android:key="launchFake"
+                android:title="@string/launchFake"
+                />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

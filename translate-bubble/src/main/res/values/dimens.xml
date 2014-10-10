@@ -1,0 +1,19 @@
+<resources>
+
+    <dimen name="padding_default">8dp</dimen>
+    <dimen name="margin_default">4dp</dimen>
+
+    <dimen name="bubble_start_pos_y">100dp</dimen>
+
+    <dimen name="title_content">9sp</dimen>
+    <dimen name="text_content">12sp</dimen>
+
+    <dimen name="card_shadow">2dp</dimen>
+    <dimen name="card_stroke">1dp</dimen>
+
+    <dimen name="radius_close">30dp</dimen>
+    <dimen name="stroke_close">2dp</dimen>
+
+    <dimen name="height_close_zone">150dp</dimen>
+
+</resources>

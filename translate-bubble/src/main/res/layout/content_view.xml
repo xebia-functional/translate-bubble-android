@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <FrameLayout
+            style="@style/TranslateContentLight">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_layout"
+                android:orientation="vertical">
+
+            <TextView
+                    style="@style/TranslateTitleLight"
+                    android:id="@+id/original"/>
+
+            <TextView
+                    style="@style/TranslateTextLight"
+                    android:id="@+id/translate"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/buttons_layout"
+                style="@style/TranslateButtonsLight">
+
+            <TextView
+                    style="@style/TranslateIconCollapseLight"
+                    android:id="@+id/collapse"/>
+
+            <TextView
+                    style="@style/TranslateIconCloseLight"
+                    android:id="@+id/close"/>
+
+        </LinearLayout>
+
+        <ImageView
+                style="@style/TranslateIconOptionsLight"
+                android:id="@+id/options"/>
+
+    </FrameLayout>
+
+</FrameLayout>

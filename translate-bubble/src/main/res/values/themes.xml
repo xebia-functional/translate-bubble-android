@@ -1,0 +1,13 @@
+<resources>
+
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="TranslateContent">@style/TranslateContentLight</item>
+        <item name="TranslateTitle">@style/TranslateTitleLight</item>
+        <item name="TranslateText">@style/TranslateTextLight</item>
+        <item name="TranslateIconCollapse">@style/TranslateIconCollapseLight</item>
+        <item name="TranslateIconClose">@style/TranslateIconCloseLight</item>
+
+    </style>
+
+</resources>
