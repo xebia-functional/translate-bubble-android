@@ -1,0 +1,185 @@
+# for debugging, don't inline methods
+#-dontoptimize
+#-optimizationpasses 5
+
+-dontobfuscate
+-dontoptimize
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+-verbose
+-flattenpackagehierarchy
+
+###
+# Android config
+###
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
+#-optimizationpasses 5
+#-allowaccessmodification
+
+-keepattributes *Annotation*
+-keep public class com.google.vending.licensing.ILicensingService
+-keep public class com.android.vending.licensing.ILicensingService
+
+-keepclasseswithmembernames class * {
+ native <methods>;
+}
+
+# We want to keep methods in Activity that could be used in the XML attribute onClick
+-keepclassmembers class * extends android.app.Activity {
+ public void *(android.view.View);
+}
+
+# For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
+-keepclassmembers enum * {
+ public static **[] values();
+ public static ** valueOf(java.lang.String);
+}
+
+-keep class * implements android.os.Parcelable {
+ public static final android.os.Parcelable$Creator *;
+}
+
+-dontnote android.annotation.**
+-dontnote com.android.vending.licensing.**
+-dontnote com.google.vending.licensing.**
+-dontwarn android.support.**
+-dontnote android.support.**
+
+# keep setters in Views so that animations can still work.
+# see http://proguard.sourceforge.net/manual/examples.html#beans
+-keepclassmembers public class * extends android.view.View {
+ void set*(***);
+ *** get*();
+}
+
+-keepclassmembers class **.R$* {
+ public static <fields>;
+}
+
+###
+# Scala proguard config
+###
+-dontnote scala.ScalaObject
+-dontnote org.xml.sax.EntityResolver
+-dontnote scala.concurrent.forkjoin.**
+-dontwarn scala.beans.ScalaBeanInfo
+-dontwarn scala.concurrent.**
+-dontwarn scala.reflect.**
+-dontwarn scala.sys.process.package$
+
+-dontwarn **$$anonfun$*
+-dontwarn scala.collection.immutable.RedBlack$Empty
+-dontwarn scala.tools.**,plugintemplate.**
+
+-keep public class scala.reflect.ScalaSignature
+# This is gone in 2.11
+-keep public interface scala.ScalaObject
+
+-keepclassmembers class * {
+ ** MODULE$;
+}
+
+-keep class scala.collection.SeqLike {
+ public java.lang.String toString();
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool {
+ long eventCount;
+ int workerCounts;
+ int runControl;
+ scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode syncStack;
+ scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode spareStack;
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinWorkerThread {
+ int base;
+ int sp;
+ int runState;
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinTask {
+ int status;
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.LinkedTransferQueue {
+ scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference head;
+ scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference tail;
+ scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference cleanMe;
+}
+# view res/layout/abc_action_menu_item_layout.xml #generated:17
+-keep class android.support.v7.internal.view.menu.ActionMenuItemView { <init>(...); }
+
+# view res/layout/abc_expanded_menu_layout.xml #generated:17
+-keep class android.support.v7.internal.view.menu.ExpandedMenuView { <init>(...); }
+
+# view res/layout/abc_list_menu_item_layout.xml #generated:17
+# view res/layout/abc_popup_menu_item_layout.xml #generated:17
+-keep class android.support.v7.internal.view.menu.ListMenuItemView { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:27
+-keep class android.support.v7.internal.widget.ActionBarContainer { <init>(...); }
+
+# view res/layout/abc_action_mode_bar.xml #generated:19
+# view res/layout/abc_screen_toolbar.xml #generated:43
+-keep class android.support.v7.internal.widget.ActionBarContextView { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:17
+-keep class android.support.v7.internal.widget.ActionBarOverlayLayout { <init>(...); }
+
+# view res/layout/abc_screen_content_include.xml #generated:19
+-keep class android.support.v7.internal.widget.ContentFrameLayout { <init>(...); }
+
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:23
+-keep class android.support.v7.internal.widget.FitWindowsFrameLayout { <init>(...); }
+
+# view res/layout/abc_screen_simple.xml #generated:17
+-keep class android.support.v7.internal.widget.FitWindowsLinearLayout { <init>(...); }
+
+# view v11/res/layout-v11/abc_screen_content_include.xml #generated:19
+-keep class android.support.v7.internal.widget.NativeActionModeAwareLayout { <init>(...); }
+
+# view res/layout/abc_action_mode_close_item_material.xml #generated:17
+# view res/layout/abc_search_dropdown_item_icons_2line.xml #generated:27
+# view res/layout/abc_search_dropdown_item_icons_2line.xml #generated:37
+# view res/layout/abc_search_dropdown_item_icons_2line.xml #generated:48
+# view res/layout/abc_search_view.xml #generated:116
+# view res/layout/abc_search_view.xml #generated:128
+# view res/layout/abc_search_view.xml #generated:38
+# view res/layout/abc_search_view.xml #generated:60
+# view res/layout/abc_search_view.xml #generated:97
+-keep class android.support.v7.internal.widget.TintImageView { <init>(...); }
+
+# view res/layout/abc_screen_simple.xml #generated:25
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:32
+-keep class android.support.v7.internal.widget.ViewStubCompat { <init>(...); }
+
+# view res/layout/abc_action_menu_layout.xml #generated:17
+-keep class android.support.v7.widget.ActionMenuView { <init>(...); }
+
+# view res/layout/abc_activity_chooser_view.xml #generated:19
+-keep class android.support.v7.widget.LinearLayoutCompat { <init>(...); }
+
+# view res/layout/abc_search_view.xml #generated:78
+-keep class android.support.v7.widget.SearchView$SearchAutoComplete { <init>(...); }
+
+# view AndroidManifest.xml #generated:27
+-keep class android.support.v7.widget.TestActivity { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:36
+-keep class android.support.v7.widget.Toolbar { <init>(...); }
+
+# view AndroidManifest.xml #generated:37
+-keep class android.test.InstrumentationTestRunner { <init>(...); }
+
+# view AndroidManifest.xml #generated:16
+-keep class com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService { <init>(...); }
+
+# view AndroidManifest.xml #generated:7
+-keep class com.fortysevendeg.translatebubble.ui.preferences.MainActivity { <init>(...); }
+
+-ignorewarnings
+-keep class scala.Dynamic
