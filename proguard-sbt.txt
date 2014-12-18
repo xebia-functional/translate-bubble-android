@@ -25,22 +25,22 @@
 -keep public class com.android.vending.licensing.ILicensingService
 
 -keepclasseswithmembernames class * {
- native <methods>;
+    native <methods>;
 }
 
 # We want to keep methods in Activity that could be used in the XML attribute onClick
 -keepclassmembers class * extends android.app.Activity {
- public void *(android.view.View);
+   public void *(android.view.View);
 }
 
 # For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
 -keepclassmembers enum * {
- public static **[] values();
- public static ** valueOf(java.lang.String);
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
 }
 
 -keep class * implements android.os.Parcelable {
- public static final android.os.Parcelable$Creator *;
+  public static final android.os.Parcelable$Creator *;
 }
 
 -dontnote android.annotation.**
@@ -52,12 +52,12 @@
 # keep setters in Views so that animations can still work.
 # see http://proguard.sourceforge.net/manual/examples.html#beans
 -keepclassmembers public class * extends android.view.View {
- void set*(***);
- *** get*();
+   void set*(***);
+   *** get*();
 }
 
 -keepclassmembers class **.R$* {
- public static <fields>;
+    public static <fields>;
 }
 
 ###
@@ -80,35 +80,35 @@
 -keep public interface scala.ScalaObject
 
 -keepclassmembers class * {
- ** MODULE$;
+    ** MODULE$;
 }
 
 -keep class scala.collection.SeqLike {
- public java.lang.String toString();
+    public java.lang.String toString();
 }
 
 -keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool {
- long eventCount;
- int workerCounts;
- int runControl;
- scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode syncStack;
- scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode spareStack;
+    long eventCount;
+    int  workerCounts;
+    int  runControl;
+    scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode syncStack;
+    scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode spareStack;
 }
 
 -keepclassmembernames class scala.concurrent.forkjoin.ForkJoinWorkerThread {
- int base;
- int sp;
- int runState;
+    int base;
+    int sp;
+    int runState;
 }
 
 -keepclassmembernames class scala.concurrent.forkjoin.ForkJoinTask {
- int status;
+    int status;
 }
 
 -keepclassmembernames class scala.concurrent.forkjoin.LinkedTransferQueue {
- scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference head;
- scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference tail;
- scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference cleanMe;
+    scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference head;
+    scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference tail;
+    scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference cleanMe;
 }
 # view res/layout/abc_action_menu_item_layout.xml #generated:17
 -keep class android.support.v7.internal.view.menu.ActionMenuItemView { <init>(...); }
