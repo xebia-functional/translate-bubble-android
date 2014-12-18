@@ -88,7 +88,7 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
   }
 
   def collapse(params: WindowManager.LayoutParams, windowManager: WindowManager) {
-    // TODO we can create a Snail when we can Macroid-Extra module
+    // TODO we can create a Snail when we have Macroid-Extra module
     val animator: ValueAnimator = ValueAnimator.ofFloat(params.y, params.y + 100)
     animator.setDuration(100)
     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener {

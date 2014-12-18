@@ -8,14 +8,11 @@ import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
-import com.fortysevendeg.translatebubble.modules.clipboard.impl.ClipboardServicesComponentImpl
-import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
-import com.fortysevendeg.translatebubble.modules.notifications.impl.NotificationsServicesComponentImpl
-import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
-import com.fortysevendeg.translatebubble.modules.persistent.impl.PersistentServicesComponentImpl
-import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
-import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateServicesComponentImpl
+import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
+import com.fortysevendeg.translatebubble.modules.clipboard.{ClipboardServicesComponent, GetTextClipboardRequest}
+import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsServicesComponent, ShowTextTranslatedRequest}
+import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesRequest, PersistentServicesComponent}
+import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateServicesComponent}
 import com.fortysevendeg.translatebubble.ui.components.{BubbleView, CloseView, ContentView, GestureListener}
 import com.fortysevendeg.translatebubble.utils.TypeTranslateUI
 import macroid.AppContext
@@ -25,10 +22,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class BubbleService
     extends Service
-    with TranslateServicesComponentImpl // TODO don't use implementations
-    with PersistentServicesComponentImpl
-    with ClipboardServicesComponentImpl
-    with NotificationsServicesComponentImpl {
+    with ComponentRegistryImpl {
 
   implicit lazy val appCtx = AppContext(getApplicationContext)
 
