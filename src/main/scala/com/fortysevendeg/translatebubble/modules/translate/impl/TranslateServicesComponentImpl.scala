@@ -20,7 +20,7 @@ import scala.concurrent.Future
 trait TranslateServicesComponentImpl
     extends TranslateServicesComponent {
 
-  val translateServices = new TranslateServicesImpl
+  lazy val translateServices = new TranslateServicesImpl
 
   class TranslateServicesImpl
       extends TranslateServices {
@@ -36,8 +36,7 @@ trait TranslateServicesComponentImpl
                     + URLEncoder.encode(text, "UTF-8")
                     + "&langpair=" + URLEncoder.encode(TypeLanguageTransformer.toMyMemory(request.from)
                     + "|" + TypeLanguageTransformer.toMyMemory(request.to), "UTF-8"))
-              }
-              catch {
+              } catch {
                 case e: UnsupportedEncodingException => e.printStackTrace()
               }
 

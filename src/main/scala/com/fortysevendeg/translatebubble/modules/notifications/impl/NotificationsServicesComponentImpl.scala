@@ -20,7 +20,7 @@ trait NotificationsServicesComponentImpl
 
   self : PersistentServicesComponent with AppContextProvider =>
 
-  def notificationsServices = new NotificationsServicesImpl
+  lazy val notificationsServices = new NotificationsServicesImpl
 
   class NotificationsServicesImpl
       extends NotificationsServices {
@@ -36,7 +36,7 @@ trait NotificationsServicesComponentImpl
             val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
 
             val builder = new NotificationCompat.Builder(appContextProvider.get)
-            val title: String = appContextProvider.get.getString(R.string.translatedTitle, request.original)
+            val title = appContextProvider.get.getString(R.string.translatedTitle, request.original)
             builder
                 .setContentTitle(title)
                 .setContentText(request.translated)
@@ -63,7 +63,8 @@ trait NotificationsServicesComponentImpl
       val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
       val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
       val builder = new NotificationCompat.Builder(appContextProvider.get)
-      val title: String = appContextProvider.get.getString(R.string.translating)
+      // TODO Simplify this using MacroidExtras when it's available
+      val title = appContextProvider.get.getString(R.string.translating)
       builder
           .setContentTitle(title)
           .setTicker(title)
@@ -86,8 +87,8 @@ trait NotificationsServicesComponentImpl
 
 
       val builder = new NotificationCompat.Builder(appContextProvider.get)
-      val title: String = appContextProvider.get.getString(R.string.failedTitle)
-      val message: String = appContextProvider.get.getString(R.string.failedMessage)
+      val title = appContextProvider.get.getString(R.string.failedTitle)
+      val message = appContextProvider.get.getString(R.string.failedMessage)
       val notification: Notification = builder
           .setContentTitle(title)
           .setContentText(message)
@@ -100,7 +101,7 @@ trait NotificationsServicesComponentImpl
     }
 
     def getUniqueId: Int = {
-      return (System.currentTimeMillis & 0xfffffff).toInt
+      (System.currentTimeMillis & 0xfffffff).toInt
     }
 
   }

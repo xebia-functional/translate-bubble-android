@@ -7,5 +7,5 @@ trait TranslateServices {
 }
 
 trait TranslateServicesComponent {
-  def translateServices: TranslateServices
+  val translateServices: TranslateServices
 }

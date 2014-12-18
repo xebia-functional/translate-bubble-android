@@ -14,11 +14,11 @@ trait ClipboardServicesComponentImpl
 
   self : AppContextProvider =>
 
-  def clipboardServices = new ClipboardServicesImpl
+  lazy val clipboardServices = new ClipboardServicesImpl
 
   class ClipboardServicesImpl extends ClipboardServices {
 
-    var previousText: String = null
+    var previousText: Option[String] = None
 
     var clipChangedListener: Option[ClipboardManager.OnPrimaryClipChangedListener] = None
 
@@ -33,9 +33,9 @@ trait ClipboardServicesComponentImpl
           val clip: ClipData = clipboardManager.getPrimaryClip
           if (clip != null && clip.getItemCount > 0) {
             val aux: CharSequence = clip.getItemAt(0).getText
-            if (aux != null && aux.length > 0 && !(aux == previousText)) {
-              previousText = aux.toString
-              result = Some(previousText)
+            if (aux != null && aux.length > 0 && previousText.map(_ != aux).getOrElse(true)) {
+              previousText = Some(aux.toString)
+              result = previousText
             }
           }
           GetTextClipboardResponse(result)
@@ -51,7 +51,7 @@ trait ClipboardServicesComponentImpl
         }
     }
 
-    def init(listener: ClipboardManager.OnPrimaryClipChangedListener) = {
+    def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit = {
       if (clipChangedListener.isDefined) {
         clipChangedListener map clipboardManager.removePrimaryClipChangedListener
       }
@@ -59,15 +59,13 @@ trait ClipboardServicesComponentImpl
       clipboardManager.addPrimaryClipChangedListener(listener)
     }
 
-    def destroy() = {
+    def destroy(): Unit = {
       clipChangedListener map clipboardManager.removePrimaryClipChangedListener
       clipChangedListener = None
     }
-
-    def reset() {
-      previousText = null
+    def reset(): Unit = {
+      previousText = None
     }
-
   }
 
 }

@@ -1,6 +1,6 @@
 package com.fortysevendeg.translatebubble.utils
 
-object TypeTranslateUI extends Enumeration {
+object TranslateUIType extends Enumeration {
   type TypeTranslateUI = Value
   val NOTIFICATION, BUBBLE, WATCH = Value
 }

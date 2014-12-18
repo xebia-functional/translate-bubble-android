@@ -1,7 +1,7 @@
 package com.fortysevendeg.translatebubble.modules.persistent
 
 import com.fortysevendeg.translatebubble.service._
-import com.fortysevendeg.translatebubble.utils.TypeTranslateUI._
+import com.fortysevendeg.translatebubble.utils.TranslateUIType._
 import macroid.AppContext
 
 trait PersistentServices {
@@ -12,5 +12,5 @@ trait PersistentServices {
 }
 
 trait PersistentServicesComponent {
-  def persistentServices: PersistentServices
+  val persistentServices: PersistentServices
 }

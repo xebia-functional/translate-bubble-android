@@ -6,10 +6,10 @@ import com.fortysevendeg.translatebubble.service.Service
 
 trait NotificationsServices {
   def showTextTranslated: Service[ShowTextTranslatedRequest, ShowTextTranslatedResponse]
-  def translating()
-  def failed()
+  def translating(): Unit
+  def failed(): Unit
 }
 
 trait NotificationsServicesComponent {
-  def notificationsServices: NotificationsServices
+  val notificationsServices: NotificationsServices
 }

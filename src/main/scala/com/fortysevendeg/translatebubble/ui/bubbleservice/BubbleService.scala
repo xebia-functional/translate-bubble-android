@@ -15,7 +15,7 @@ import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsSer
 import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesRequest, PersistentServicesComponent}
 import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateServicesComponent}
 import com.fortysevendeg.translatebubble.ui.components.{BubbleView, CloseView, ContentView, GestureListener}
-import com.fortysevendeg.translatebubble.utils.TypeTranslateUI
+import com.fortysevendeg.translatebubble.utils.TranslateUIType
 import macroid.AppContext
 import macroid.FullDsl._
 
@@ -76,10 +76,10 @@ class BubbleService
           initialY = paramsBubble.y
           initialTouchX = event.getRawX
           initialTouchY = event.getRawY
-          return true
+          true
         case MotionEvent.ACTION_CANCEL =>
           closeView.hide()
-          return false
+          false
         case MotionEvent.ACTION_UP =>
           closeView.hide()
           if (initialX == paramsBubble.x && initialY == paramsBubble.y) {
@@ -89,7 +89,7 @@ class BubbleService
           } else {
             bubble.drop(paramsBubble, windowManager)
           }
-          return true
+          true
         case MotionEvent.ACTION_MOVE =>
           if (!closeView.isVisible) {
             closeView.show()
@@ -97,9 +97,9 @@ class BubbleService
           paramsBubble.x = initialX + (event.getRawX - initialTouchX).toInt
           paramsBubble.y = initialY + (event.getRawY - initialTouchY).toInt
           windowManager.updateViewLayout(bubble, paramsBubble)
-          return true
+          true
+        case _ => false
       }
-      false
     }
   }
 
@@ -197,13 +197,13 @@ class BubbleService
 
   private def onStartTranslate() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
-    if (typeTranslateUI == TypeTranslateUI.BUBBLE) {
+    if (typeTranslateUI == TranslateUIType.BUBBLE) {
       if (bubbleStatus == BubbleStatus.FLOATING) {
         bubble.show(paramsBubble, windowManager)
       } else {
         contentView.setTexts(getString(R.string.translating), "")
       }
-    } else if (typeTranslateUI == TypeTranslateUI.NOTIFICATION) {
+    } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
       notificationsServices.translating()
     }
 
@@ -220,18 +220,18 @@ class BubbleService
 
   }
 
-  private def onEndTranslate(originalTextMaybe: Option[String], translatedTextMaybe: Option[String]) = {
+  private def onEndTranslate(maybeOriginalText: Option[String], maybeTranslatedText: Option[String]) = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     for {
-      originalText <- originalTextMaybe
-      translatedText <- translatedTextMaybe
+      originalText <- maybeOriginalText
+      translatedText <- maybeTranslatedText
     } yield {
-      if (typeTranslateUI == TypeTranslateUI.BUBBLE) {
+      if (typeTranslateUI == TranslateUIType.BUBBLE) {
         contentView.setTexts(originalText, translatedText)
         if (bubbleStatus == BubbleStatus.FLOATING) {
           bubble.stopAnimation()
         }
-      } else if (typeTranslateUI == TypeTranslateUI.NOTIFICATION) {
+      } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
         notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
       }
     }
@@ -239,12 +239,12 @@ class BubbleService
 
   private def translatedFailed() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
-    if (typeTranslateUI == TypeTranslateUI.BUBBLE) {
+    if (typeTranslateUI == TranslateUIType.BUBBLE) {
       contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage))
       if (bubbleStatus == BubbleStatus.FLOATING) {
         bubble.stopAnimation()
       }
-    } else if (typeTranslateUI == TypeTranslateUI.NOTIFICATION) {
+    } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
       notificationsServices.failed()
     }
   }
@@ -254,7 +254,7 @@ class BubbleService
 
 object BubbleService {
 
-  def launchIfIsNecessary(implicit appContext: AppContext) {
+  def launchIfIsNecessary()(implicit appContext: AppContext) {
     try {
       appContext.get.startService(new Intent(appContext.get, classOf[BubbleService]))
     } catch {

@@ -41,13 +41,7 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
   val buttons: Option[LinearLayout] = connect[LinearLayout](R.id.buttons_layout)
 
   options <~ On.click {
-    Ui {
-      if (showingInfo) {
-        showButtons()
-      } else {
-        showInfo()
-      }
-    }
+    Ui(if (showingInfo) showButtons() else showInfo())
   }
 
   showInfo()
@@ -122,20 +116,13 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     super.onTouchEvent(event)
   }
 
-  def onDown(e: MotionEvent): Boolean = {
-    true
-  }
+  def onDown(e: MotionEvent): Boolean = true
 
-  def onShowPress(e: MotionEvent) {
-  }
+  def onShowPress(e: MotionEvent) = ()
 
-  def onSingleTapUp(e: MotionEvent): Boolean = {
-    true
-  }
+  def onSingleTapUp(e: MotionEvent): Boolean = true
 
-  def onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = {
-    true
-  }
+  def onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = true
 
   def onLongPress(e: MotionEvent) {
   }
@@ -155,7 +142,7 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
         gestureListener.onPrevious()
       }
     }
-    return true
+    true
   }
 
 }

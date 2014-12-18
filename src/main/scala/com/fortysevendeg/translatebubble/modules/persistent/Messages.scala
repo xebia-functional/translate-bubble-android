@@ -1,7 +1,7 @@
 package com.fortysevendeg.translatebubble.modules.persistent
 
-import com.fortysevendeg.translatebubble.utils.TypeLanguage.TypeLanguage
+import com.fortysevendeg.translatebubble.utils.LanguageType.LanguageType
 
 case class GetLanguagesRequest()
 
-case class GetLanguagesResponse(from: TypeLanguage, to: TypeLanguage)
+case class GetLanguagesResponse(from: LanguageType, to: LanguageType)

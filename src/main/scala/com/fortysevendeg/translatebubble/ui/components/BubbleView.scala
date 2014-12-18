@@ -51,9 +51,9 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
     this.heightScreen = heightScreen
   }
 
-  def left: Int = 0
+  val left: Int = 0
 
-  def right: Int = widthScreen
+  val right: Int = widthScreen
 
   def stopAnimation() {
     loading.clearAnimation()
