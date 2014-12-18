@@ -1,6 +1,7 @@
 package com.fortysevendeg.translatebubble.modules.clipboard.impl
 
 import android.content.{ClipData, Context, ClipboardManager}
+import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.clipboard._
 import com.fortysevendeg.translatebubble.service._
 import macroid.AppContext
@@ -11,16 +12,18 @@ import scala.concurrent.Future
 trait ClipboardServicesComponentImpl
     extends ClipboardServicesComponent {
 
-  def clipboardServices(implicit appContext: AppContext) = new ClipboardServicesImpl
+  self : AppContextProvider =>
 
-  class ClipboardServicesImpl(implicit appContext: AppContext) extends ClipboardServices {
+  def clipboardServices = new ClipboardServicesImpl
+
+  class ClipboardServicesImpl extends ClipboardServices {
 
     var previousText: String = null
 
     var clipChangedListener: Option[ClipboardManager.OnPrimaryClipChangedListener] = None
 
     val clipboardManager: ClipboardManager = {
-      appContext.get.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
+      appContextProvider.get.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
     }
 
     override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = {

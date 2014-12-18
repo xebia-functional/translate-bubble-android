@@ -11,5 +11,5 @@ trait NotificationsServices {
 }
 
 trait NotificationsServicesComponent {
-  def notificationsServices(implicit appContext: AppContext): NotificationsServices
+  def notificationsServices: NotificationsServices
 }

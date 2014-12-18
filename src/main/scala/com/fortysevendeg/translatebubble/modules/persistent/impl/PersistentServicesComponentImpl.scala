@@ -2,6 +2,7 @@ package com.fortysevendeg.translatebubble.modules.persistent.impl
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesResponse, GetLanguagesRequest, PersistentServices, PersistentServicesComponent}
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.{TypeLanguage, TypeTranslateUI}
@@ -14,12 +15,14 @@ import scala.concurrent.Future
 trait PersistentServicesComponentImpl
     extends PersistentServicesComponent {
 
-  def persistentServices(implicit appContext: AppContext) = new PersistentServicesImpl
+  self : AppContextProvider =>
 
-  class PersistentServicesImpl(implicit appContext: AppContext)
+  def persistentServices = new PersistentServicesImpl
+
+  class PersistentServicesImpl
       extends PersistentServices {
 
-    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext.get)
+    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContextProvider.get)
 
     override def isTranslationEnable(): Boolean = {
       sharedPreferences.getBoolean("translationEnable", true)

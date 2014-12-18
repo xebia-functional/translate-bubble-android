@@ -8,6 +8,7 @@ import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.{ClipboardServicesComponent, GetTextClipboardRequest}
 import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsServicesComponent, ShowTextTranslatedRequest}
@@ -22,9 +23,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class BubbleService
     extends Service
+    with AppContextProvider
     with ComponentRegistryImpl {
 
-  implicit lazy val appCtx = AppContext(getApplicationContext)
+  override implicit lazy val appContextProvider = AppContext(getApplicationContext)
 
   object BubbleStatus extends Enumeration {
     type BubbleStatus = Value

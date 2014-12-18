@@ -12,5 +12,5 @@ trait PersistentServices {
 }
 
 trait PersistentServicesComponent {
-  def persistentServices(implicit appContext: AppContext): PersistentServices
+  def persistentServices: PersistentServices
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
@@ -15,8 +16,11 @@ import macroid.FullDsl._
 
 class MainActivity
     extends Activity
+    with AppContextProvider
     with Contexts[Activity]
     with ComponentRegistryImpl {
+
+  override implicit lazy val appContextProvider: AppContext = activityAppContext
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)

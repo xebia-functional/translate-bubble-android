@@ -13,5 +13,5 @@ trait ClipboardServices {
 }
 
 trait ClipboardServicesComponent {
-  def clipboardServices(implicit appContext: AppContext): ClipboardServices
+  def clipboardServices: ClipboardServices
 }
