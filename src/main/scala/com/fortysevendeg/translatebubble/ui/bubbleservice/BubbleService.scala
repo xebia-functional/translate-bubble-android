@@ -10,16 +10,17 @@ import android.view._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import com.fortysevendeg.translatebubble.modules.clipboard.{ClipboardServicesComponent, GetTextClipboardRequest}
-import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsServicesComponent, ShowTextTranslatedRequest}
-import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesRequest, PersistentServicesComponent}
-import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateServicesComponent}
+import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
+import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
+import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
+import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
 import com.fortysevendeg.translatebubble.ui.components.{BubbleView, CloseView, ContentView, GestureListener}
 import com.fortysevendeg.translatebubble.utils.TranslateUIType
 import macroid.AppContext
 import macroid.FullDsl._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Success, Failure, Try}
 
 class BubbleService
     extends Service
@@ -255,10 +256,9 @@ class BubbleService
 object BubbleService {
 
   def launchIfIsNecessary()(implicit appContext: AppContext) {
-    try {
-      appContext.get.startService(new Intent(appContext.get, classOf[BubbleService]))
-    } catch {
-      case e: SecurityException => e.printStackTrace()
+    Try(appContext.get.startService(new Intent(appContext.get, classOf[BubbleService]))) match {
+      case Failure(ex) => ex.printStackTrace()
+      case _ =>
     }
   }
 

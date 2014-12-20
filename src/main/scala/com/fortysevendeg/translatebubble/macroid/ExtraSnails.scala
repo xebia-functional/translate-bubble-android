@@ -52,8 +52,8 @@ object RevealSnails {
 
       v.map{
         toView=>
-          val finalX: Int = (toView.getX + (toView.getWidth / 2) - (view.getWidth / 2) - view.getX).asInstanceOf[Int]
-          val finalY: Int = (toView.getY + (toView.getHeight / 2) - (view.getHeight / 2) - view.getY).asInstanceOf[Int]
+          val finalX: Int = (toView.getX + (toView.getWidth / 2) - (view.getWidth / 2) - view.getX).toInt
+          val finalY: Int = (toView.getY + (toView.getHeight / 2) - (view.getHeight / 2) - view.getY).toInt
 
           view.animate.translationXBy(finalX).translationYBy(finalY).setListener(new AnimatorListenerAdapter {
             override def onAnimationEnd(animation: Animator) {
@@ -73,7 +73,7 @@ object SnailsUtils {
   def calculateRadius(x : Int = 0, y : Int = 0, width : Int = 0, height : Int = 0) = {
     val catheti1: Int = if (x < width / 2) width - x else x
     val catheti2: Int = if (y < height / 2) height - y else y
-    Math.sqrt((catheti1 * catheti1) + (catheti2 * catheti2)).asInstanceOf[Int]
+    Math.sqrt((catheti1 * catheti1) + (catheti2 * catheti2)).toInt
   }
 
 }
