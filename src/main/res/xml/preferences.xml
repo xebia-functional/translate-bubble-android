@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+            android:key="translationEnable"
+            android:title="@string/translationEnable"
+            android:defaultValue="true" />
+
+    <PreferenceCategory android:title="@string/typeFeedback">
+
+        <CheckBoxPreference
+                android:key="typeBubble"
+                android:title="@string/bubbleTitle"
+                android:summary="@string/bubbleMessage"
+                android:defaultValue="true"/>
+
+        <CheckBoxPreference
+                android:key="typeNotification"
+                android:title="@string/notificationTitle"
+                android:summary="@string/notificationMessage"
+                android:defaultValue="false"/>
+
+        <CheckBoxPreference
+                android:key="headUpNotification"
+                android:title="@string/headUpNotificationTitle"
+                android:summary="@string/headUpNotificationMessage"
+                android:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/languages">
+
+        <ListPreference
+                android:defaultValue="ENGLISH"
+                android:key="fromLanguage"/>
+
+        <ListPreference
+                android:defaultValue="SPANISH"
+                android:key="toLanguage"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/more">
+
+        <PreferenceScreen
+                android:key="launchFake"
+                android:title="@string/launchFake"
+                />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
