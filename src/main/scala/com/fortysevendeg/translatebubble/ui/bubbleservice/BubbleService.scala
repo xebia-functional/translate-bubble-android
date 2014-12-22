@@ -4,6 +4,7 @@ import android.app.{AlarmManager, PendingIntent, Service}
 import android.content.{ClipboardManager, Context, Intent}
 import android.graphics.{PixelFormat, Point}
 import android.os._
+import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
@@ -14,13 +15,13 @@ import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardReque
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
-import com.fortysevendeg.translatebubble.ui.components.{BubbleView, CloseView, ContentView, GestureListener}
+import com.fortysevendeg.translatebubble.ui.components.{BubbleView, CloseView, ContentView}
 import com.fortysevendeg.translatebubble.utils.TranslateUIType
-import macroid.AppContext
 import macroid.FullDsl._
+import macroid.{AppContext, Ui}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Try}
 
 class BubbleService
     extends Service
@@ -34,38 +35,14 @@ class BubbleService
     val FLOATING, CONTENT = Value
   }
 
-  private var windowManager: WindowManager = null
-  private var bubble: BubbleView = null
-  private var contentView: ContentView = null
-  private var closeView: CloseView = null
-  private var paramsBubble: WindowManager.LayoutParams = null
-  private var paramsContentView: WindowManager.LayoutParams = null
-  private var width: Int = 0
-  private var height: Int = 0
   private var bubbleStatus = BubbleStatus.FLOATING
 
-  private val clipChangedListener: ClipboardManager.OnPrimaryClipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener {
-    def onPrimaryClipChanged() {
-      if (persistentServices.isTranslationEnable()) {
-        onStartTranslate()
-      }
-    }
-  }
+  lazy val configuration: ViewConfiguration = ViewConfiguration.get(getApplicationContext)
 
-  private val gestureListener: GestureListener = new GestureListener {
-    def onUp() {
-      collapse()
-    }
-    def onDown() {
-      close()
-    }
-    def onPrevious() {
-    }
-    def onNext() {
-    }
-  }
+  // Distance in pixels a touch can wander before we think the user is scrolling
+  lazy val touchSlop = ViewConfigurationCompat.getScaledPagingTouchSlop(configuration)
 
-  private val touchListener: View.OnTouchListener = new View.OnTouchListener {
+  private val bubbleTouchListener = new View.OnTouchListener {
     private var initialX: Int = 0
     private var initialY: Int = 0
     private var initialTouchX: Float = 0f
@@ -83,7 +60,8 @@ class BubbleService
           false
         case MotionEvent.ACTION_UP =>
           closeView.hide()
-          if (initialX == paramsBubble.x && initialY == paramsBubble.y) {
+          if (paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
+              && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) {
             bubbleStatus = BubbleStatus.CONTENT
             bubble.hide()
             contentView.show()
@@ -104,52 +82,145 @@ class BubbleService
     }
   }
 
-  override def onCreate() {
-    super.onCreate()
+  private val contentTouchListener = new View.OnTouchListener {
+    private var initialX: Int = 0
+    private var initialY: Int = 0
+    private var initialTouchX: Float = 0f
+    private var initialTouchY: Float = 0f
+    private var moving = false
+    def onTouch(v: View, event: MotionEvent): Boolean = {
+      event.getAction match {
+        case MotionEvent.ACTION_DOWN =>
+          initialX = paramsContentView.x
+          initialY = paramsContentView.y
+          initialTouchX = event.getRawX
+          initialTouchY = event.getRawY
+          moving = false
+          true
+        case MotionEvent.ACTION_CANCEL =>
+          paramsContentView.alpha = 1f
+          windowManager.updateViewLayout(contentView, paramsContentView)
+          moving = false
+          false
+        case MotionEvent.ACTION_UP =>
+          paramsContentView.alpha = 1f
+          windowManager.updateViewLayout(contentView, paramsContentView)
+          moving = false
+          true
+        case MotionEvent.ACTION_MOVE =>
+          if (moving) {
+            val newPosX = initialX + (event.getRawX - initialTouchX).toInt
+            val newPosY = initialY + (event.getRawY - initialTouchY).toInt
+            paramsContentView.x = newPosX match {
+              case _ if newPosX < 0 =>
+                0
+              case _ if newPosX > width - paramsContentView.width =>
+                width - paramsContentView.width
+              case _ =>
+                newPosX
+            }
+            paramsContentView.y = newPosY match {
+              case _ if newPosY < 0 =>
+                0
+              case _ if newPosY > height - paramsContentView.height =>
+                height - paramsContentView.height
+              case _ =>
+                newPosY
+            }
+            windowManager.updateViewLayout(contentView, paramsContentView)
+          } else {
+            val (xMoved, yMoved) = verifyMoving(event.getRawX, event.getRawY)
+            moving = xMoved || yMoved
+            if (moving) {
+              // start movement
+              paramsContentView.alpha = 0.6f
+              windowManager.updateViewLayout(contentView, paramsContentView)
+            }
+          }
+          true
+        case _ => false
+      }
+    }
+    def verifyMoving(x: Float, y: Float) = {
+      val xDiff: Int = Math.abs(x - initialTouchX).toInt
+      val yDiff: Int = Math.abs(y - initialTouchY).toInt
+      (xDiff > touchSlop, yDiff > touchSlop)
+    }
+  }
 
-    clipboardServices.init(clipChangedListener)
+  private lazy val windowManager: WindowManager = getSystemService(Context.WINDOW_SERVICE).asInstanceOf[WindowManager]
 
-    windowManager = getSystemService(Context.WINDOW_SERVICE).asInstanceOf[WindowManager]
+  private lazy val (width: Int, height: Int) = {
     val display: Display = windowManager.getDefaultDisplay
     val size: Point = new Point
     display.getSize(size)
-    width = size.x
-    height = size.y
+    (size.x, size.y)
+  }
 
-    closeView = new CloseView(this)
+  private lazy val (bubble, paramsBubble) = {
+    val bubble = new BubbleView(this)
+    bubble.hide()
+    val paramsBubble = new WindowManager.LayoutParams(
+      WRAP_CONTENT,
+      WRAP_CONTENT,
+      TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
+      PixelFormat.TRANSLUCENT)
+    paramsBubble.gravity = Gravity.TOP | Gravity.LEFT
+    bubble.init(paramsBubble, height, width)
+    (bubble, paramsBubble)
+  }
+
+  private lazy val (contentView, paramsContentView) = {
+    val contentView = new ContentView(this)
+    contentView.hide()
+    val paramsContentView = new WindowManager.LayoutParams(
+      width,
+      getResources.getDimension(R.dimen.height_content).toInt,
+      TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
+      PixelFormat.TRANSLUCENT)
+    paramsContentView.y = height / 2 // TODO Calculate better position y
+    paramsContentView.gravity = Gravity.TOP | Gravity.LEFT
+    (contentView, paramsContentView)
+  }
+
+  private lazy val (closeView, closeViewParams) = {
+    val closeView = new CloseView(this)
     closeView.hide()
     val heightCloseZone: Int = getResources.getDimension(R.dimen.height_close_zone).toInt
-    val closeViewParams: WindowManager.LayoutParams = new WindowManager.LayoutParams(MATCH_PARENT, heightCloseZone, TYPE_PHONE, FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT)
+    val closeViewParams: WindowManager.LayoutParams = new WindowManager.LayoutParams(
+      MATCH_PARENT,
+      heightCloseZone,
+      TYPE_PHONE,
+      FLAG_NOT_FOCUSABLE,
+      PixelFormat.TRANSLUCENT)
     closeViewParams.gravity = Gravity.BOTTOM | Gravity.LEFT
+    (closeView, closeViewParams)
+  }
+
+  private val clipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener {
+    def onPrimaryClipChanged() {
+      if (persistentServices.isTranslationEnable()) {
+        onStartTranslate()
+      }
+    }
+  }
+
+  override def onCreate() {
+    super.onCreate()
+    clipboardServices.init(clipChangedListener)
+
     windowManager.addView(closeView, closeViewParams)
 
-    bubble = new BubbleView(this)
-    bubble.hide()
-    bubble.setOnTouchListener(touchListener)
-    paramsBubble = new WindowManager.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, TYPE_PHONE, FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT)
-    paramsBubble.x = 0
-    paramsBubble.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
-    paramsBubble.gravity = Gravity.TOP | Gravity.LEFT
-    bubble.init(height, width)
+    bubble.setOnTouchListener(bubbleTouchListener)
     windowManager.addView(bubble, paramsBubble)
 
-    contentView = new ContentView(this)
-    contentView.setGestureListener(gestureListener)
-    contentView.hide()
-    contentView.setListeners(new View.OnClickListener {
-      def onClick(v: View) {
-        collapse()
-      }
-    }, new View.OnClickListener {
-      def onClick(v: View) {
-        close()
-      }
-    })
-
-    paramsContentView = new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_PHONE, FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT)
-    paramsContentView.gravity = Gravity.BOTTOM | Gravity.LEFT
+    contentView.setOnTouchListener(contentTouchListener)
     windowManager.addView(contentView, paramsContentView)
-
+    runUi(
+      contentView.options <~ On.click {
+        Ui(collapse())
+      }
+    )
   }
 
   private def close() {

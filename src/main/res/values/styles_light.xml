@@ -3,8 +3,7 @@
 
     <style name="TranslateContentLight">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/margin_default</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:padding">@dimen/padding_default</item>
         <item name="android:background">@drawable/background_card_light</item>
         <item name="android:orientation">horizontal</item>
@@ -23,10 +22,10 @@
 
     <style name="TranslateTextLight">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">0px</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/text_content_light</item>
         <item name="android:textSize">@dimen/text_content</item>
-        <item name="android:lines">3</item>
         <item name="android:ellipsize">end</item>
     </style>
 
@@ -35,30 +34,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_default</item>
         <item name="android:layout_gravity">top|right</item>
+        <item name="android:src">@drawable/icon_options_light</item>
     </style>
 
-    <style name="TranslateButtonsLight">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="TranslateIconCollapseLight">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/padding_default</item>
-        <item name="android:drawableLeft">@drawable/icon_navigation_collapse_light</item>
-        <item name="android:text">@string/collapse</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="TranslateIconCloseLight">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/padding_default</item>
-        <item name="android:drawableLeft">@drawable/icon_navigation_close_light</item>
-        <item name="android:text">@string/close</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
 
 </resources>

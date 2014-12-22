@@ -4,7 +4,5 @@
     <attr name="TranslateContent" format="reference" />
     <attr name="TranslateTitle" format="reference" />
     <attr name="TranslateText" format="reference" />
-    <attr name="TranslateIconCollapse" format="reference" />
-    <attr name="TranslateIconClose" format="reference" />
-    
+
 </resources>

@@ -49,7 +49,7 @@ class MainActivity
       launchFake.map(
         _.setOnPreferenceClickListener(new OnPreferenceClickListener {
           override def onPreferenceClick(preference: Preference): Boolean = {
-            clipboardServices.copyToClipboard(CopyToClipboardRequest("Example Text %d".format(System.currentTimeMillis())))
+            clipboardServices.copyToClipboard(CopyToClipboardRequest("Seattle is a coastal seaport city and the seat of King County, in the U.S. state of Washington. With an estimated 652,405 residents as of 2013, Seattle is the largest city in both the State of Washington and the Pacific Northwest region of North America and the fastest-growing major city in the United States.[5] The Seattle metropolitan area of around 3.6 million inhabitants is the 15th largest metropolitan area in the United States %d".format(System.currentTimeMillis())))
             true
           }
         })

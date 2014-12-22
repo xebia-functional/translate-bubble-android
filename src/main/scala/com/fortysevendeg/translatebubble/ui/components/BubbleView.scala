@@ -3,11 +3,11 @@ package com.fortysevendeg.translatebubble.ui.components
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View._
 import android.view.WindowManager
-import android.view.animation.{LinearInterpolator, Animation, RotateAnimation}
+import android.view.animation.{Animation, LinearInterpolator, RotateAnimation}
 import android.widget.{FrameLayout, ImageView}
 import com.fortysevendeg.translatebubble.R
-import android.view.View._
 import macroid.AppContext
 
 class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
@@ -46,14 +46,16 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
   addView(bubble)
   addView(loading)
 
-  def init(heightScreen: Int, widthScreen: Int) {
+  def init(paramsBubble: WindowManager.LayoutParams, heightScreen: Int, widthScreen: Int) {
     this.widthScreen = widthScreen
     this.heightScreen = heightScreen
+    paramsBubble.x = left
+    paramsBubble.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
   }
 
-  val left: Int = 0
+  val left: Int = -getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
 
-  val right: Int = widthScreen
+  lazy val right: Int = widthScreen - getWidth + getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
 
   def stopAnimation() {
     loading.clearAnimation()
@@ -74,7 +76,7 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
   def drop(params: WindowManager.LayoutParams, windowManager: WindowManager) {
     if (params.y > heightScreen - heightCloseZone) {
       hide()
-      params.x = 0
+      params.x = left
       params.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
     } else {
       val x: Int = params.x

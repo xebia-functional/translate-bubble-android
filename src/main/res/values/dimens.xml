@@ -5,6 +5,10 @@
 
     <dimen name="bubble_start_pos_y">100dp</dimen>
 
+    <dimen name="bubble_horizontal_displacement">16dp</dimen>
+
+    <dimen name="height_content">100dp</dimen>
+
     <dimen name="title_content">9sp</dimen>
     <dimen name="text_content">12sp</dimen>
 
