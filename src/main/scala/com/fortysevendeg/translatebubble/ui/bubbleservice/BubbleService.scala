@@ -1,8 +1,10 @@
 package com.fortysevendeg.translatebubble.ui.bubbleservice
 
 import android.app.{AlarmManager, PendingIntent, Service}
+import android.content.res.Configuration
 import android.content.{ClipboardManager, Context, Intent}
 import android.graphics.{PixelFormat, Point}
+import android.hardware.{SensorManager, SensorEvent, Sensor, SensorEventListener}
 import android.os._
 import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
@@ -29,6 +31,10 @@ class BubbleService
     with ComponentRegistryImpl {
 
   override implicit lazy val appContextProvider = AppContext(getApplicationContext)
+
+  var widthScreen: Int = 0
+
+  var heightScreen: Int = 0
 
   object BubbleStatus extends Enumeration {
     type BubbleStatus = Value
@@ -114,16 +120,16 @@ class BubbleService
             paramsContentView.x = newPosX match {
               case _ if newPosX < 0 =>
                 0
-              case _ if newPosX > width - paramsContentView.width =>
-                width - paramsContentView.width
+              case _ if newPosX > widthScreen - paramsContentView.width =>
+                widthScreen - paramsContentView.width
               case _ =>
                 newPosX
             }
             paramsContentView.y = newPosY match {
               case _ if newPosY < 0 =>
                 0
-              case _ if newPosY > height - paramsContentView.height =>
-                height - paramsContentView.height
+              case _ if newPosY > heightScreen - paramsContentView.height =>
+                heightScreen - paramsContentView.height
               case _ =>
                 newPosY
             }
@@ -150,11 +156,13 @@ class BubbleService
 
   private lazy val windowManager: WindowManager = getSystemService(Context.WINDOW_SERVICE).asInstanceOf[WindowManager]
 
-  private lazy val (width: Int, height: Int) = {
+  private def reloadSizeDisplay() = {
     val display: Display = windowManager.getDefaultDisplay
     val size: Point = new Point
     display.getSize(size)
-    (size.x, size.y)
+    widthScreen = size.x
+    heightScreen = size.y
+    bubble.setDimensionsScreen(widthScreen, heightScreen)
   }
 
   private lazy val (bubble, paramsBubble) = {
@@ -166,7 +174,7 @@ class BubbleService
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
     paramsBubble.gravity = Gravity.TOP | Gravity.LEFT
-    bubble.init(paramsBubble, height, width)
+    bubble.init(paramsBubble)
     (bubble, paramsBubble)
   }
 
@@ -174,11 +182,11 @@ class BubbleService
     val contentView = new ContentView(this)
     contentView.hide()
     val paramsContentView = new WindowManager.LayoutParams(
-      width,
+      widthScreen,
       getResources.getDimension(R.dimen.height_content).toInt,
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
-    paramsContentView.y = height / 2 // TODO Calculate better position y
+    paramsContentView.y = heightScreen / 2 // TODO Calculate better position y
     paramsContentView.gravity = Gravity.TOP | Gravity.LEFT
     (contentView, paramsContentView)
   }
@@ -207,6 +215,9 @@ class BubbleService
 
   override def onCreate() {
     super.onCreate()
+
+    reloadSizeDisplay()
+
     clipboardServices.init(clipChangedListener)
 
     windowManager.addView(closeView, closeViewParams)
@@ -322,6 +333,14 @@ class BubbleService
   }
 
   override def onBind(intent: Intent): IBinder = null
+
+  override def onConfigurationChanged(newConfig: Configuration): Unit = {
+    super.onConfigurationChanged(newConfig)
+    reloadSizeDisplay()
+    bubble.changePositionIfIsNecessary(paramsBubble, windowManager)
+    windowManager.updateViewLayout(contentView, paramsContentView)
+  }
+
 }
 
 object BubbleService {
