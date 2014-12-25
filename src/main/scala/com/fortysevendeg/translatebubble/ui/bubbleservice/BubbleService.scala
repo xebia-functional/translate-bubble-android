@@ -4,14 +4,13 @@ import android.app.{AlarmManager, PendingIntent, Service}
 import android.content.res.Configuration
 import android.content.{ClipboardManager, Context, Intent}
 import android.graphics.{PixelFormat, Point}
-import android.hardware.{SensorManager, SensorEvent, Sensor, SensorEventListener}
 import android.os._
 import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest

@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.macroid.PreferencesBuildingExtra._
-import com.fortysevendeg.translatebubble.macroid.{AppContextProvider, RootPreferencesFragment}
+import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
+import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest

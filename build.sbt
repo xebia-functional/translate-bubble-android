@@ -6,7 +6,7 @@ platformTarget in Android := "android-21"
 
 name := """translate-bubble-android"""
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
 // a shortcut
 run <<= run in Android
@@ -29,6 +29,7 @@ libraryDependencies ++= Seq(
   aar("com.android.support" % "recyclerview-v7" % "21.0.2"),
   aar("com.android.support" % "cardview-v7" % "21.0.2"),
   aar("org.macroid" %% "macroid" % "2.0.0-M3"),
+  aar("com.fortysevendeg" %% "macroid-extras" % "0.1-SNAPSHOT"),
   "org.json4s" %% "json4s-native" % "3.2.10",
   compilerPlugin("org.brianmckenna" %% "wartremover" % "0.10")
 )

@@ -1,6 +1,6 @@
 package com.fortysevendeg.translatebubble.modules
 
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.clipboard.impl.ClipboardServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.notifications.impl.NotificationsServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.persistent.impl.PersistentServicesComponentImpl

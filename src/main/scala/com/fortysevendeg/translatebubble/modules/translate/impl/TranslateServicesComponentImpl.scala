@@ -3,11 +3,9 @@ package com.fortysevendeg.translatebubble.modules.translate.impl
 import java.io._
 import java.net.URLEncoder
 
-import com.fortysevendeg.translatebubble.modules.persistent.impl.PersistentServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateResponse, TranslateServices, TranslateServicesComponent}
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.TypeLanguageTransformer
-import org.apache.http.client.ClientProtocolException
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.{HttpEntity, HttpResponse}

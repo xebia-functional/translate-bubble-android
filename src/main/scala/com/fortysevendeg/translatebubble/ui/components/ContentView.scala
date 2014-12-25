@@ -7,9 +7,9 @@ import android.view.View._
 import android.view._
 import android.widget.{FrameLayout, ImageView, TextView}
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.macroid.LayoutBuildingExtra._
-import com.fortysevendeg.translatebubble.macroid.RootView
-import com.fortysevendeg.translatebubble.macroid.TextTweaks._
+import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
+import com.fortysevendeg.macroid.extras.RootView
+import com.fortysevendeg.macroid.extras.TextTweaks._
 import macroid.AppContext
 import macroid.FullDsl._
 

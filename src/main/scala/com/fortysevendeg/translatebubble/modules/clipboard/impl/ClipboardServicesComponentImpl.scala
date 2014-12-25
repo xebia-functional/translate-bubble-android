@@ -1,10 +1,9 @@
 package com.fortysevendeg.translatebubble.modules.clipboard.impl
 
 import android.content.{ClipData, Context, ClipboardManager}
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.clipboard._
 import com.fortysevendeg.translatebubble.service._
-import macroid.AppContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future

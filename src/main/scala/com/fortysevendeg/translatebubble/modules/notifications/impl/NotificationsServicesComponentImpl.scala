@@ -3,14 +3,12 @@ package com.fortysevendeg.translatebubble.modules.notifications.impl
 import android.app.{Notification, NotificationManager, PendingIntent}
 import android.content.{Context, Intent}
 import android.support.v4.app.NotificationCompat
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.notifications._
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
-import com.fortysevendeg.translatebubble.modules.persistent.impl.PersistentServicesComponentImpl
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
-import macroid.AppContext
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

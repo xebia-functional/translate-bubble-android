@@ -2,12 +2,11 @@ package com.fortysevendeg.translatebubble.modules.persistent.impl
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesResponse, GetLanguagesRequest, PersistentServices, PersistentServicesComponent}
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
 import com.fortysevendeg.translatebubble.utils.TranslateUIType.TypeTranslateUI
-import macroid.AppContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
