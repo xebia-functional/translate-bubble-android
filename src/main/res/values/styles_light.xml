@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Content View -->
+
     <style name="TranslateContentLight">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -37,5 +39,17 @@
         <item name="android:src">@drawable/icon_options_light</item>
     </style>
 
+    <!-- Ations View -->
+
+    <style name="TranslateActionsContentLight">
+        <item name="android:background">@drawable/workspace_bg</item>
+    </style>
+
+    <style name="TranslateActionsCloseLight">
+        <item name="android:layout_width">@dimen/size_close</item>
+        <item name="android:layout_height">@dimen/size_close</item>
+        <item name="android:layout_margin">@dimen/margin_close</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+    </style>
 
 </resources>

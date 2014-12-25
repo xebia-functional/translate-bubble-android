@@ -16,7 +16,7 @@ import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardReque
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
-import com.fortysevendeg.translatebubble.ui.components.{BubbleView, CloseView, ContentView}
+import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
 import com.fortysevendeg.translatebubble.utils.TranslateUIType
 import macroid.FullDsl._
 import macroid.{AppContext, Ui}
@@ -61,25 +61,44 @@ class BubbleService
           initialTouchY = event.getRawY
           true
         case MotionEvent.ACTION_CANCEL =>
-          closeView.hide()
+          actionsView.hide()
           false
         case MotionEvent.ACTION_UP =>
-          closeView.hide()
+          actionsView.hide()
           if (paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
               && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) {
             bubbleStatus = BubbleStatus.CONTENT
             bubble.hide()
             contentView.show()
           } else {
-            bubble.drop(paramsBubble, windowManager)
+            if (actionsView.isOverCloseView(event.getRawX, event.getRawY)) {
+              bubble.close(paramsBubble, windowManager)
+            } else {
+              bubble.drop(paramsBubble, windowManager)
+            }
           }
           true
         case MotionEvent.ACTION_MOVE =>
-          if (!closeView.isVisible) {
-            closeView.show()
+          if (!actionsView.isVisible()) {
+            actionsView.show()
           }
-          paramsBubble.x = initialX + (event.getRawX - initialTouchX).toInt
-          paramsBubble.y = initialY + (event.getRawY - initialTouchY).toInt
+          if (actionsView.isOverCloseView(event.getRawX, event.getRawY)) {
+            val pos = actionsView.getClosePosition()
+            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+          } else {
+            val newPosX = initialX + (event.getRawX - initialTouchX).toInt
+            val newPosY = initialY + (event.getRawY - initialTouchY).toInt
+            paramsBubble.x = newPosX
+            paramsBubble.y = newPosY match {
+              case _ if newPosY < 0 =>
+                0
+              case _ if newPosY > heightScreen - bubble.getHeight =>
+                heightScreen - bubble.getHeight
+              case _ =>
+                newPosY
+            }
+          }
           windowManager.updateViewLayout(bubble, paramsBubble)
           true
         case _ => false
@@ -190,18 +209,16 @@ class BubbleService
     (contentView, paramsContentView)
   }
 
-  private lazy val (closeView, closeViewParams) = {
-    val closeView = new CloseView(this)
-    closeView.hide()
-    val heightCloseZone: Int = getResources.getDimension(R.dimen.height_close_zone).toInt
-    val closeViewParams: WindowManager.LayoutParams = new WindowManager.LayoutParams(
+  private lazy val (actionsView, paramsActionsView) = {
+    val actionsView = new ActionsView(this)
+    actionsView.hide()
+    val paramsActionsView: WindowManager.LayoutParams = new WindowManager.LayoutParams(
       MATCH_PARENT,
-      heightCloseZone,
-      TYPE_PHONE,
-      FLAG_NOT_FOCUSABLE,
+      MATCH_PARENT,
+      TYPE_SYSTEM_ALERT,
+      FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
-    closeViewParams.gravity = Gravity.BOTTOM | Gravity.LEFT
-    (closeView, closeViewParams)
+    (actionsView, paramsActionsView)
   }
 
   private val clipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener {
@@ -219,7 +236,7 @@ class BubbleService
 
     clipboardServices.init(clipChangedListener)
 
-    windowManager.addView(closeView, closeViewParams)
+    windowManager.addView(actionsView, paramsActionsView)
 
     bubble.setOnTouchListener(bubbleTouchListener)
     windowManager.addView(bubble, paramsBubble)
@@ -256,7 +273,7 @@ class BubbleService
     clipboardServices.destroy()
     if (bubble != null) windowManager.removeView(bubble)
     if (contentView != null) windowManager.removeView(contentView)
-    if (closeView != null) windowManager.removeView(closeView)
+    if (actionsView != null) windowManager.removeView(actionsView)
   }
 
   private def ensureServiceStaysRunning() {
@@ -337,7 +354,6 @@ class BubbleService
     super.onConfigurationChanged(newConfig)
     reloadSizeDisplay()
     bubble.changePositionIfIsNecessary(paramsBubble, windowManager)
-    windowManager.updateViewLayout(contentView, paramsContentView)
   }
 
 }

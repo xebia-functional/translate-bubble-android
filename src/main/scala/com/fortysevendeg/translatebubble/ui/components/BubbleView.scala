@@ -50,8 +50,6 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
     anim
   }
 
-  val heightCloseZone: Int = appContext.get.getResources.getDimension(R.dimen.height_close_zone).toInt
-
   addView(bubble)
   addView(loading)
 
@@ -101,24 +99,24 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
 
   def hide() = setVisibility(GONE)
 
+  def close(params: WindowManager.LayoutParams, windowManager: WindowManager) = {
+    hide()
+    params.x = left
+    params.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
+  }
+
   def drop(params: WindowManager.LayoutParams, windowManager: WindowManager) {
-    if (params.y > heightScreen - heightCloseZone) {
-      hide()
-      params.x = left
-      params.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
-    } else {
-      val x: Int = params.x
-      val to: Int = if (x < widthScreen / 2) left else right()
-      val animator: ValueAnimator = ValueAnimator.ofFloat(x, to)
-      animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener {
-        def onAnimationUpdate(animation: ValueAnimator) {
-          val pos: Float = animation.getAnimatedValue.asInstanceOf[Float]
-          params.x = pos.toInt
-          windowManager.updateViewLayout(BubbleView.this, params)
-        }
-      })
-      animator.start()
-    }
+    val x: Int = params.x
+    val to: Int = if (x < widthScreen / 2) left else right()
+    val animator: ValueAnimator = ValueAnimator.ofFloat(x, to)
+    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener {
+      def onAnimationUpdate(animation: ValueAnimator) {
+        val pos: Float = animation.getAnimatedValue.asInstanceOf[Float]
+        params.x = pos.toInt
+        windowManager.updateViewLayout(BubbleView.this, params)
+      }
+    })
+    animator.start()
   }
 
 }
