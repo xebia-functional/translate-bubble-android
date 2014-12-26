@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.fortysevendeg.translatebubble.R
 
-class CloseView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
+class DisableView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
     extends View(context, attrs, defStyleAttr) {
 
   def this(context: Context) = this(context, null, 0)
@@ -53,7 +53,7 @@ class CloseView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
     canvas.drawCircle(middleWidth, middleHeight, (width / 2) - stroke, paintFillCircle)
     canvas.drawCircle(middleWidth, middleHeight, (width / 2) - stroke, paintStroke)
     val sizeAcross = width / 6
-    canvas.drawLine(middleWidth - sizeAcross, middleHeight - sizeAcross, middleWidth + sizeAcross, middleHeight + sizeAcross, paintStroke)
+    canvas.drawCircle(middleWidth, middleHeight, sizeAcross, paintStroke)
     canvas.drawLine(middleWidth + sizeAcross, middleHeight - sizeAcross, middleWidth - sizeAcross, middleHeight + sizeAcross, paintStroke)
   }
 

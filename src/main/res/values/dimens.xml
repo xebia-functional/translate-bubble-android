@@ -15,8 +15,12 @@
     <dimen name="card_shadow">2dp</dimen>
     <dimen name="card_stroke">1dp</dimen>
 
-    <dimen name="size_close">42dp</dimen>
-    <dimen name="margin_close">20dp</dimen>
+    <dimen name="size_close">64dp</dimen>
+    <dimen name="margin_close">50dp</dimen>
+
+    <dimen name="size_disable">44dp</dimen>
+    <dimen name="margin_disable">38dp</dimen>
+
     <dimen name="stroke_close">2dp</dimen>
 
 </resources>

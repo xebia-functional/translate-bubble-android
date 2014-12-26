@@ -45,6 +45,13 @@
         <item name="android:background">@drawable/workspace_bg</item>
     </style>
 
+    <style name="TranslateActionsDisableLight">
+        <item name="android:layout_width">@dimen/size_disable</item>
+        <item name="android:layout_height">@dimen/size_disable</item>
+        <item name="android:layout_margin">@dimen/margin_disable</item>
+        <item name="android:layout_gravity">right|top</item>
+    </style>
+
     <style name="TranslateActionsCloseLight">
         <item name="android:layout_width">@dimen/size_close</item>
         <item name="android:layout_height">@dimen/size_close</item>

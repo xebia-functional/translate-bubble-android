@@ -25,9 +25,9 @@ scalacOptions in (Compile, compile) ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  aar("com.android.support" % "appcompat-v7" % "21.0.2"),
-  aar("com.android.support" % "recyclerview-v7" % "21.0.2"),
-  aar("com.android.support" % "cardview-v7" % "21.0.2"),
+  aar("com.android.support" % "appcompat-v7" % "21.0.3"),
+  aar("com.android.support" % "recyclerview-v7" % "21.0.3"),
+  aar("com.android.support" % "cardview-v7" % "21.0.3"),
   aar("org.macroid" %% "macroid" % "2.0.0-M3"),
   aar("com.fortysevendeg" %% "macroid-extras" % "0.1-SNAPSHOT"),
   "org.json4s" %% "json4s-native" % "3.2.10",

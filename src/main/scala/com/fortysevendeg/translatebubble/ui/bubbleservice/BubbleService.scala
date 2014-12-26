@@ -53,12 +53,14 @@ class BubbleService
     private var initialTouchX: Float = 0f
     private var initialTouchY: Float = 0f
     def onTouch(v: View, event: MotionEvent): Boolean = {
+      val x = event.getRawX
+      val y = event.getRawY
       event.getAction match {
         case MotionEvent.ACTION_DOWN =>
           initialX = paramsBubble.x
           initialY = paramsBubble.y
-          initialTouchX = event.getRawX
-          initialTouchY = event.getRawY
+          initialTouchX = x
+          initialTouchY = y
           true
         case MotionEvent.ACTION_CANCEL =>
           actionsView.hide()
@@ -71,7 +73,7 @@ class BubbleService
             bubble.hide()
             contentView.show()
           } else {
-            if (actionsView.isOverCloseView(event.getRawX, event.getRawY)) {
+            if (actionsView.isOverCloseView(x, y)) {
               bubble.close(paramsBubble, windowManager)
             } else {
               bubble.drop(paramsBubble, windowManager)
@@ -82,13 +84,17 @@ class BubbleService
           if (!actionsView.isVisible()) {
             actionsView.show()
           }
-          if (actionsView.isOverCloseView(event.getRawX, event.getRawY)) {
+          if (actionsView.isOverCloseView(x, y)) {
             val pos = actionsView.getClosePosition()
             paramsBubble.x = pos._1 - (bubble.getWidth / 2)
             paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+          } else if (actionsView.isOverDisableView(x, y)) {
+            val pos = actionsView.getDisablePosition()
+            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
           } else {
-            val newPosX = initialX + (event.getRawX - initialTouchX).toInt
-            val newPosY = initialY + (event.getRawY - initialTouchY).toInt
+            val newPosX = initialX + (x - initialTouchX).toInt
+            val newPosY = initialY + (y - initialTouchY).toInt
             paramsBubble.x = newPosX
             paramsBubble.y = newPosY match {
               case _ if newPosY < 0 =>
@@ -113,12 +119,14 @@ class BubbleService
     private var initialTouchY: Float = 0f
     private var moving = false
     def onTouch(v: View, event: MotionEvent): Boolean = {
+      val x = event.getRawX
+      val y = event.getRawY
       event.getAction match {
         case MotionEvent.ACTION_DOWN =>
           initialX = paramsContentView.x
           initialY = paramsContentView.y
-          initialTouchX = event.getRawX
-          initialTouchY = event.getRawY
+          initialTouchX = x
+          initialTouchY = y
           moving = false
           true
         case MotionEvent.ACTION_CANCEL =>
@@ -133,8 +141,8 @@ class BubbleService
           true
         case MotionEvent.ACTION_MOVE =>
           if (moving) {
-            val newPosX = initialX + (event.getRawX - initialTouchX).toInt
-            val newPosY = initialY + (event.getRawY - initialTouchY).toInt
+            val newPosX = initialX + (x - initialTouchX).toInt
+            val newPosY = initialY + (y - initialTouchY).toInt
             paramsContentView.x = newPosX match {
               case _ if newPosX < 0 =>
                 0
@@ -153,7 +161,7 @@ class BubbleService
             }
             windowManager.updateViewLayout(contentView, paramsContentView)
           } else {
-            val (xMoved, yMoved) = verifyMoving(event.getRawX, event.getRawY)
+            val (xMoved, yMoved) = verifyMoving(x, y)
             moving = xMoved || yMoved
             if (moving) {
               // start movement
