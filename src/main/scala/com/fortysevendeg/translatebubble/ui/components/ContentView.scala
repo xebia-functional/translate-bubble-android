@@ -12,6 +12,7 @@ import com.fortysevendeg.macroid.extras.RootView
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import macroid.AppContext
 import macroid.FullDsl._
+import scala.language.postfixOps
 
 class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
     extends FrameLayout(context, attrs, defStyleAttr) {

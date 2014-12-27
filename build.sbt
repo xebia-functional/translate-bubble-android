@@ -1,43 +1,42 @@
-import android.Keys._
+import Libraries.android._
+import Libraries.macroid._
+import Libraries.json._
 
 android.Plugin.androidBuild
 
-platformTarget in Android := "android-21"
+platformTarget in Android := Versions.androidPlatformV
 
 name := """translate-bubble-android"""
 
-scalaVersion := "2.11.2"
+organization := "com.fortysevendeg"
 
-// a shortcut
-run <<= run in Android
+organizationName := "47 Degrees"
 
-resolvers ++= Seq(
-  Resolver.sonatypeRepo("releases"),
-  "jcenter" at "http://jcenter.bintray.com"
-)
+organizationHomepage := Some(new URL("http://47deg.com"))
 
-// add linter
-scalacOptions in (Compile, compile) ++=
-    (dependencyClasspath in Compile).value.files.map("-P:wartremover:cp:" + _.toURI.toURL)
+version := Versions.appV
 
-scalacOptions in (Compile, compile) ++= Seq(
-  "-P:wartremover:traverser:macroid.warts.CheckUi"
-)
+scalaVersion := Versions.scalaV
+
+scalacOptions ++= Seq("-feature", "-deprecation")
+
+credentials += Credentials(new File(Path.userHome.absolutePath + "/.ivy2/.credentials"))
+
+resolvers ++= Settings.resolvers
 
 libraryDependencies ++= Seq(
-  aar("com.android.support" % "appcompat-v7" % "21.0.3"),
-  aar("com.android.support" % "recyclerview-v7" % "21.0.3"),
-  aar("com.android.support" % "cardview-v7" % "21.0.3"),
-  aar("org.macroid" %% "macroid" % "2.0.0-M3"),
-  aar("com.fortysevendeg" %% "macroid-extras" % "0.1-SNAPSHOT"),
-  "org.json4s" %% "json4s-native" % "3.2.10",
-  compilerPlugin("org.brianmckenna" %% "wartremover" % "0.10")
-)
+  aar(macroidRoot),
+  aar(androidAppCompat),
+  aar(androidCardView),
+  aar(androidRecyclerview),
+  aar(macroidExtras),
+  json4s,
+  compilerPlugin(Libraries.wartRemover))
+
+run <<= run in Android
 
 proguardScala in Android := true
 
-// Generic ProGuard rules
-proguardOptions in Android ++= Seq(
-  "-ignorewarnings",
-  "-keep class scala.Dynamic"
-)
+useProguard in Android := true
+
+proguardOptions in Android ++= Settings.proguardCommons
