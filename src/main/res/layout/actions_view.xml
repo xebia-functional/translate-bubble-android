@@ -4,9 +4,30 @@
              android:layout_height="match_parent"
              style="@style/TranslateActionsContentLight">
 
-    <com.fortysevendeg.translatebubble.ui.components.DisableView
-            android:id="@+id/disable"
-            style="@style/TranslateActionsDisableLight"/>
+    <LinearLayout
+            style="@style/TranslateContentActionsDisableLight">
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/manually"
+                style="@style/TranslateActionsDisableLight"/>
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/day_1"
+                style="@style/TranslateActionsDisableLight"/>
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/hour_2"
+                style="@style/TranslateActionsDisableLight"/>
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/min_15"
+                style="@style/TranslateActionsDisableLight"/>
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/disable"
+                style="@style/TranslateActionsDisableLight"/>
+
+    </LinearLayout>
 
     <com.fortysevendeg.translatebubble.ui.components.CloseView
             android:id="@+id/close"

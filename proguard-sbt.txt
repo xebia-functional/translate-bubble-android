@@ -181,10 +181,14 @@
 # view AndroidManifest.xml #generated:16
 -keep class com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService { <init>(...); }
 
-# view res/layout/actions_view.xml #generated:11
+# view res/layout/actions_view.xml #generated:32
 -keep class com.fortysevendeg.translatebubble.ui.components.CloseView { <init>(...); }
 
-# view res/layout/actions_view.xml #generated:7
+# view res/layout/actions_view.xml #generated:10
+# view res/layout/actions_view.xml #generated:14
+# view res/layout/actions_view.xml #generated:18
+# view res/layout/actions_view.xml #generated:22
+# view res/layout/actions_view.xml #generated:26
 -keep class com.fortysevendeg.translatebubble.ui.components.DisableView { <init>(...); }
 
 # view AndroidManifest.xml #generated:7

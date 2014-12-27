@@ -9,6 +9,7 @@ import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
+import android.widget.Toast
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
@@ -73,7 +74,12 @@ class BubbleService
             bubble.hide()
             contentView.show()
           } else {
-            if (actionsView.isOverCloseView(x, y)) {
+            val option = if (actionsView.showingOptions) actionsView.isOverOption(x, y) else 0
+            actionsView.reset()
+            if (option != 0) {
+              bubble.close(paramsBubble, windowManager)
+              Toast.makeText(getApplicationContext, "option: " + option, Toast.LENGTH_SHORT).show()
+            } else if (actionsView.isOverCloseView(x, y)) {
               bubble.close(paramsBubble, windowManager)
             } else {
               bubble.drop(paramsBubble, windowManager)
@@ -84,15 +90,17 @@ class BubbleService
           if (!actionsView.isVisible()) {
             actionsView.show()
           }
-          if (actionsView.isOverCloseView(x, y)) {
+          val option = if (actionsView.showingOptions) actionsView.isOverOption(x, y) else 0
+          if (option != 0) {
+            val pos = actionsView.getOptionPosition(option)
+            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+          } else if (actionsView.isOverCloseView(x, y)) {
             val pos = actionsView.getClosePosition()
             paramsBubble.x = pos._1 - (bubble.getWidth / 2)
             paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-          } else if (actionsView.isOverDisableView(x, y)) {
-            val pos = actionsView.getDisablePosition()
-            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
           } else {
+            actionsView.checkOptions(x, y)
             val newPosX = initialX + (x - initialTouchX).toInt
             val newPosY = initialY + (y - initialTouchY).toInt
             paramsBubble.x = newPosX

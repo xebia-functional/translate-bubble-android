@@ -45,11 +45,17 @@
         <item name="android:background">@drawable/workspace_bg</item>
     </style>
 
+    <style name="TranslateContentActionsDisableLight">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_top_disable</item>
+        <item name="android:layout_gravity">right|top</item>
+    </style>
+
     <style name="TranslateActionsDisableLight">
         <item name="android:layout_width">@dimen/size_disable</item>
         <item name="android:layout_height">@dimen/size_disable</item>
-        <item name="android:layout_margin">@dimen/margin_disable</item>
-        <item name="android:layout_gravity">right|top</item>
+        <item name="android:layout_marginRight">@dimen/margin_right_disable</item>
     </style>
 
     <style name="TranslateActionsCloseLight">
