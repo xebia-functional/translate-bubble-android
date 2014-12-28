@@ -26,6 +26,10 @@
                 android:name=".ui.bubbleservice.BubbleService"
                 />
 
+        <service
+                android:name=".services.RestartTranslationService"
+                />
+
         <receiver
                 android:enabled="true"
                 android:name=".receivers.BootReceiver"

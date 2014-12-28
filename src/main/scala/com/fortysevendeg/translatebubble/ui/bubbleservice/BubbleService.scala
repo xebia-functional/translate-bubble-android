@@ -77,10 +77,10 @@ class BubbleService
             if (actionsView.isOverCloseView(x, y)) {
               bubble.close(paramsBubble, windowManager)
             } else if (actionsView.isOverDisableView(x, y)) {
-              Toast.makeText(getApplicationContext, "disable", Toast.LENGTH_SHORT).show()
+              persistentServices.disableTranslation()
               bubble.close(paramsBubble, windowManager)
             } else if (actionsView.isOver30minView(x, y)) {
-              Toast.makeText(getApplicationContext, "30min", Toast.LENGTH_SHORT).show()
+              persistentServices.disable30MinutesTranslation()
               bubble.close(paramsBubble, windowManager)
             } else {
               bubble.drop(paramsBubble, windowManager)

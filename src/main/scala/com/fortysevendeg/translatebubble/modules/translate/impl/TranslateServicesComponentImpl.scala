@@ -24,45 +24,43 @@ trait TranslateServicesComponentImpl
   class TranslateServicesImpl
       extends TranslateServices {
 
-    override def translate: Service[TranslateRequest, TranslateResponse] = {
-      request =>
-        Future {
-          request.text.map {
-            text =>
-              Try {
-                val url = "http://api.mymemory.translated.net/get?q=" + URLEncoder.encode(text, "UTF-8") +
-                    "&langpair=" + URLEncoder.encode(TypeLanguageTransformer.toMyMemory(request.from) +
-                    "|" + TypeLanguageTransformer.toMyMemory(request.to), "UTF-8")
-                val httpClient: DefaultHttpClient = new DefaultHttpClient
-                val httpPost: HttpGet = new HttpGet(url)
-                val httpResponse: HttpResponse = httpClient.execute(httpPost)
-                val httpEntity: HttpEntity = httpResponse.getEntity
-                val is: InputStream = httpEntity.getContent
-                val reader: BufferedReader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8)
-                val sb: StringBuilder = new StringBuilder
-                var line: String = null
-                while ( {
-                  line = reader.readLine
-                  line
-                } != null) {
-                  sb.append(line + "\n")
-                }
-                is.close()
-
-                implicit val formats = org.json4s.DefaultFormats
-                val json = parse(sb.toString())
-                val translatedText = (json \ "responseData" \ "translatedText").extract[String]
-                TranslateResponse(Some(translatedText))
-              } match {
-                case Success(response) => response
-                case Failure(ex) => {
-                  ex.printStackTrace()
-                  TranslateResponse(None)
-                }
+    override def translate: Service[TranslateRequest, TranslateResponse] = request =>
+      Future {
+        request.text.map {
+          text =>
+            Try {
+              val url = "http://api.mymemory.translated.net/get?q=" + URLEncoder.encode(text, "UTF-8") +
+                  "&langpair=" + URLEncoder.encode(TypeLanguageTransformer.toMyMemory(request.from) +
+                  "|" + TypeLanguageTransformer.toMyMemory(request.to), "UTF-8")
+              val httpClient: DefaultHttpClient = new DefaultHttpClient
+              val httpPost: HttpGet = new HttpGet(url)
+              val httpResponse: HttpResponse = httpClient.execute(httpPost)
+              val httpEntity: HttpEntity = httpResponse.getEntity
+              val is: InputStream = httpEntity.getContent
+              val reader: BufferedReader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8)
+              val sb: StringBuilder = new StringBuilder
+              var line: String = null
+              while ( {
+                line = reader.readLine
+                line
+              } != null) {
+                sb.append(line + "\n")
               }
-          }.getOrElse(TranslateResponse(None))
-        }
-    }
+              is.close()
+
+              implicit val formats = org.json4s.DefaultFormats
+              val json = parse(sb.toString())
+              val translatedText = (json \ "responseData" \ "translatedText").extract[String]
+              TranslateResponse(Some(translatedText))
+            } match {
+              case Success(response) => response
+              case Failure(ex) => {
+                ex.printStackTrace()
+                TranslateResponse(None)
+              }
+            }
+        }.getOrElse(TranslateResponse(None))
+      }
   }
 
 }

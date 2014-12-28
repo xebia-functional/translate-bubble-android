@@ -25,30 +25,26 @@ trait ClipboardServicesComponentImpl
       appContextProvider.get.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
     }
 
-    override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = {
-      request =>
-        Future {
-          var result: Option[String] = None
-          val clip: ClipData = clipboardManager.getPrimaryClip
-          if (clip != null && clip.getItemCount > 0) {
-            val aux: CharSequence = clip.getItemAt(0).getText
-            if (aux != null && aux.length > 0 && previousText.map(_ != aux).getOrElse(true)) {
-              previousText = Some(aux.toString)
-              result = previousText
-            }
+    override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = request =>
+      Future {
+        var result: Option[String] = None
+        val clip: ClipData = clipboardManager.getPrimaryClip
+        if (clip != null && clip.getItemCount > 0) {
+          val aux: CharSequence = clip.getItemAt(0).getText
+          if (aux != null && aux.length > 0 && previousText.map(_ != aux).getOrElse(true)) {
+            previousText = Some(aux.toString)
+            result = previousText
           }
-          GetTextClipboardResponse(result)
         }
-    }
+        GetTextClipboardResponse(result)
+      }
 
-    override def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse] = {
-      request =>
-        Future {
-          val clip = ClipData.newPlainText("label", request.text)
-          clipboardManager.setPrimaryClip(clip)
-          CopyToClipboardResponse()
-        }
-    }
+    override def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse] = request =>
+      Future {
+        val clip = ClipData.newPlainText("label", request.text)
+        clipboardManager.setPrimaryClip(clip)
+        CopyToClipboardResponse()
+      }
 
     def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit = {
       if (clipChangedListener.isDefined) {
@@ -62,9 +58,9 @@ trait ClipboardServicesComponentImpl
       clipChangedListener map clipboardManager.removePrimaryClipChangedListener
       clipChangedListener = None
     }
-    def reset(): Unit = {
-      previousText = None
-    }
+
+    def reset(): Unit = previousText = None
+
   }
 
 }
