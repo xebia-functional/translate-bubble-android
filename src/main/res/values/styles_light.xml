@@ -50,12 +50,20 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_top_disable</item>
         <item name="android:layout_gravity">right|top</item>
+        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="TranslateActionsDisableLight">
         <item name="android:layout_width">@dimen/size_disable</item>
         <item name="android:layout_height">@dimen/size_disable</item>
-        <item name="android:layout_marginRight">@dimen/margin_right_disable</item>
+        <item name="android:layout_marginRight">@dimen/margin_separate_options_disable</item>
+    </style>
+
+    <style name="TranslateActions30minDisableLight">
+        <item name="android:layout_width">@dimen/size_disable</item>
+        <item name="android:layout_height">@dimen/size_disable</item>
+        <item name="android:layout_marginTop">@dimen/margin_separate_options_disable</item>
+        <item name="android:layout_marginRight">@dimen/margin_separate_options_disable</item>
     </style>
 
     <style name="TranslateActionsCloseLight">

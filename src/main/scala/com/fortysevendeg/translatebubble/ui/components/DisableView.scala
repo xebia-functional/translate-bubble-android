@@ -76,22 +76,8 @@ class DisableView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
         canvas.drawCircle(middleWidth, middleHeight, sizeAcross, paintStroke)
         canvas.drawLine(middleWidth + sizeAcross, middleHeight - sizeAcross, middleWidth - sizeAcross, middleHeight + sizeAcross, paintStroke)
       }
-      case typeIcon if (typeIcon == TYPE_15_MIN) => {
-        val text = "15m"
-        canvas.drawText(text, middleWidth, baseline, paintWords)
-      }
-      case typeIcon if (typeIcon == TYPE_2_HOURS) => {
-        val text = "2H"
-        canvas.drawText(text, middleWidth, baseline, paintWords)
-      }
-      case typeIcon if (typeIcon == TYPE_1_DAY) => {
-        val text = "1d"
-        canvas.drawText(text, middleWidth, baseline, paintWords)
-      }
-      case typeIcon if (typeIcon == TYPE_MANUALLY) => {
-        val text = "M"
-        canvas.drawText(text, middleWidth, baseline, paintWords)
-      }
+      case typeIcon if (typeIcon == TYPE_30_MIN) => canvas.drawText("30m", middleWidth, baseline, paintWords)
+      case typeIcon if (typeIcon == TYPE_MANUALLY) => canvas.drawText("M", middleWidth, baseline, paintWords)
     }
 
   }
@@ -100,9 +86,7 @@ class DisableView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
 
 object DisableView {
   val TYPE_DISABLE = 0
-  val TYPE_15_MIN = 1
-  val TYPE_2_HOURS = 2
-  val TYPE_1_DAY = 3
+  val TYPE_30_MIN = 1
   val TYPE_MANUALLY = 4
 }
 

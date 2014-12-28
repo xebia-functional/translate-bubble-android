@@ -20,7 +20,7 @@
 
     <dimen name="size_disable">44dp</dimen>
     <dimen name="margin_top_disable">38dp</dimen>
-    <dimen name="margin_right_disable">16dp</dimen>
+    <dimen name="margin_separate_options_disable">16dp</dimen>
 
     <dimen name="stroke_close">2dp</dimen>
 

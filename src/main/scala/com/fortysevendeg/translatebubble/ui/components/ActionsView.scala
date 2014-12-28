@@ -6,7 +6,7 @@ import android.util.{Log, AttributeSet}
 import android.view.View._
 import android.view.animation.{AccelerateInterpolator, DecelerateInterpolator}
 import android.view.{View, ViewGroup}
-import android.widget.FrameLayout
+import android.widget.{LinearLayout, FrameLayout}
 import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.ui.components.DisableViewTweaks._
@@ -26,10 +26,6 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   def this(context: Context, attr: AttributeSet)(implicit appContext: AppContext) = this(context, attr, 0)
 
-  val options = List(DisableView.TYPE_15_MIN, DisableView.TYPE_2_HOURS, DisableView.TYPE_1_DAY, DisableView.TYPE_MANUALLY)
-
-  var showingOptions = false
-
   val sizeClose = appContext.get.getResources.getDimension(R.dimen.size_close).toInt
 
   val marginClose = appContext.get.getResources.getDimension(R.dimen.margin_close).toInt
@@ -38,7 +34,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   val marginTopDisable = appContext.get.getResources.getDimension(R.dimen.margin_top_disable).toInt
 
-  val marginRightDisable = appContext.get.getResources.getDimension(R.dimen.margin_right_disable).toInt
+  val marginSeparateOptionsDisable = appContext.get.getResources.getDimension(R.dimen.margin_separate_options_disable).toInt
 
   implicit val rootView: RootView = new RootView(R.layout.actions_view)
 
@@ -46,19 +42,12 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   val disableView: Option[DisableView] = connect[DisableView](R.id.disable)
 
-  val disableManuallyView: Option[DisableView] = connect[DisableView](R.id.manually)
+  val disableContentOptionsView: Option[LinearLayout] = connect[LinearLayout](R.id.content_options)
 
-  val disable1DayView: Option[DisableView] = connect[DisableView](R.id.day_1)
-
-  val disable2HoursView: Option[DisableView] = connect[DisableView](R.id.hour_2)
-
-  val disable15MinView: Option[DisableView] = connect[DisableView](R.id.min_15)
+  val disable30MinView: Option[DisableView] = connect[DisableView](R.id.min_15)
 
   runUi(
-    (disableManuallyView <~ vGone) ~ (disableManuallyView <~ dvTypeIcon(DisableView.TYPE_MANUALLY)) ~
-        (disable1DayView <~ vGone) ~ (disable1DayView <~ dvTypeIcon(DisableView.TYPE_1_DAY)) ~
-        (disable2HoursView <~ vGone) ~ (disable2HoursView <~ dvTypeIcon(DisableView.TYPE_2_HOURS)) ~
-        (disable15MinView <~ vGone) ~ (disable15MinView <~ dvTypeIcon(DisableView.TYPE_15_MIN))
+    (disable30MinView <~ dvTypeIcon(DisableView.TYPE_30_MIN))
   )
 
   addView(rootView.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -67,7 +56,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     setVisibility(VISIBLE)
     runUi(
       (closeView <~~ ActionsViewSnails.animCloseIn) ~
-          (disableView <~~ ActionsViewSnails.animDisableIn)
+          (disableContentOptionsView <~~ ActionsViewSnails.animDisableIn)
     )
   }
 
@@ -79,7 +68,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
           setVisibility(GONE)
         }
       })) ~
-          (disableView <~~ ActionsViewSnails.animDisableOut)
+          (disableContentOptionsView <~~ ActionsViewSnails.animDisableOut)
     )
   }
 
@@ -93,73 +82,30 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     (x > x1 && x < x2 && y > y1 && y < y2)
   }
 
-  def getClosePosition() = closeView.map(
-    view =>
-      (getWidth / 2, (getHeight - marginClose - (view.getHeight / 2)))
-  ).getOrElse(0, 0)
+  def getClosePosition() = (getWidth / 2, (getHeight - marginClose - (sizeClose / 2)))
 
-  def checkOptions(x: Float, y: Float) = {
-    if (!showingOptions) {
-      val isOverDisableView = disableView.map {
-        view =>
-          val x2 = getWidth - marginRightDisable
-          val y2 = sizeDisable + marginTopDisable
-          val x1 = x2 - sizeDisable
-          val y1 = marginTopDisable
-          (x > x1 && x < x2 && y > y1 && y < y2)
-      }.getOrElse(false)
-      if (isOverDisableView) {
-        showOptions()
-      }
-    }
+  def isOverDisableView(x: Float, y: Float): Boolean = {
+    val x1 = getWidth - sizeDisable - marginSeparateOptionsDisable
+    val y1 = marginTopDisable
+    val x2 = x1 + sizeDisable
+    val y2 = y1 + sizeDisable
+    (x > x1 && x < x2 && y > y1 && y < y2)
   }
 
-  def isOverOption(x: Float, y: Float): Int = {
-    val selectedList = options.map {
-      t =>
-        val x2 = getWidth - marginRightDisable - ((sizeDisable + marginRightDisable) * t)
-        val y2 = sizeDisable + marginTopDisable
-        val x1 = x2 - sizeDisable
-        val y1 = marginTopDisable
-        (t, (x > x1 && x < x2 && y > y1 && y < y2))
-    }
-    for (selected <- selectedList) {
-      if (selected._2) return selected._1
-    }
-    0
+  def getDisablePosition() =
+    (getWidth - (sizeDisable / 2) - marginSeparateOptionsDisable, marginTopDisable + (sizeDisable / 2))
+
+  def isOver30minView(x: Float, y: Float): Boolean = {
+    val x1 = getWidth - sizeDisable - marginSeparateOptionsDisable
+    val y1 = marginTopDisable + sizeDisable + marginSeparateOptionsDisable
+    val x2 = x1 + sizeDisable
+    val y2 = y1 + sizeDisable
+    (x > x1 && x < x2 && y > y1 && y < y2)
   }
 
-  def getOptionPosition(typeOption: Int) = {
-    val x = getWidth - marginRightDisable - ((sizeDisable + marginRightDisable) * typeOption) - (sizeDisable / 2)
-    val y = marginTopDisable + (sizeDisable / 2)
-    (x, y)
-  }
-
-  def showOptions() = {
-    showingOptions = true
-    runUi(
-      (disableManuallyView <~~ ActionsViewSnails.animDisableOptionIn) ~
-          (disable1DayView <~~ ActionsViewSnails.animDisableOptionIn) ~
-          (disable2HoursView <~~ ActionsViewSnails.animDisableOptionIn) ~
-          (disable15MinView <~~ ActionsViewSnails.animDisableOptionIn)
-    )
-  }
-
-  def hideOptions() = {
-    showingOptions = false
-    runUi(
-      (disableManuallyView <~~ ActionsViewSnails.animDisableOptionOut) ~
-          (disable1DayView <~~ ActionsViewSnails.animDisableOptionOut) ~
-          (disable2HoursView <~~ ActionsViewSnails.animDisableOptionOut) ~
-          (disable15MinView <~~ ActionsViewSnails.animDisableOptionOut)
-    )
-  }
-
-  def reset() = {
-    if (showingOptions) {
-      hideOptions()
-    }
-  }
+  def get30minPosition() =
+    (getWidth - (sizeDisable / 2) - marginSeparateOptionsDisable,
+        marginTopDisable + marginSeparateOptionsDisable + sizeDisable + (sizeDisable / 2))
 
 }
 

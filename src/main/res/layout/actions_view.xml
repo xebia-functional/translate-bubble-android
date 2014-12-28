@@ -5,27 +5,16 @@
              style="@style/TranslateActionsContentLight">
 
     <LinearLayout
+            android:id="@+id/content_options"
             style="@style/TranslateContentActionsDisableLight">
-
-        <com.fortysevendeg.translatebubble.ui.components.DisableView
-                android:id="@+id/manually"
-                style="@style/TranslateActionsDisableLight"/>
-
-        <com.fortysevendeg.translatebubble.ui.components.DisableView
-                android:id="@+id/day_1"
-                style="@style/TranslateActionsDisableLight"/>
-
-        <com.fortysevendeg.translatebubble.ui.components.DisableView
-                android:id="@+id/hour_2"
-                style="@style/TranslateActionsDisableLight"/>
-
-        <com.fortysevendeg.translatebubble.ui.components.DisableView
-                android:id="@+id/min_15"
-                style="@style/TranslateActionsDisableLight"/>
 
         <com.fortysevendeg.translatebubble.ui.components.DisableView
                 android:id="@+id/disable"
                 style="@style/TranslateActionsDisableLight"/>
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/min_15"
+                style="@style/TranslateActions30minDisableLight"/>
 
     </LinearLayout>
 
