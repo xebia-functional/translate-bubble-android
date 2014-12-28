@@ -2,9 +2,9 @@
 <resources>
 
     <!-- Main colors -->
-    <color name="primary">#ffff791d</color>
-    <color name="primary_dark">#ffd96d1d</color>
-    <color name="accent">#ff4879f9</color>
+    <color name="primary">#00BCD4</color>
+    <color name="primary_dark">#00ACC1</color>
+    <color name="accent">#00BCD4</color>
 
     <!-- Light -->
     <color name="background_content_light">#ffffff</color>

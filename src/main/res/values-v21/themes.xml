@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppThemeLight" parent="@android:style/Theme.Material.Light">
+    <style name="AppThemeLight" parent="@android:style/Theme.Material.Light.DarkActionBar">
 
         <!--   your app's branding color (for the app bar) -->
         <item name="android:colorPrimary">@color/primary</item>

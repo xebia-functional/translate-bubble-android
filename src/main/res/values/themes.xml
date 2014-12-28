@@ -1,6 +1,8 @@
 <resources>
 
-    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light">
+    <style name="AppThemeLight" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+
+        <item name="android:actionBarStyle">@style/HoloActionBar</item>
 
         <item name="TranslateContent">@style/TranslateContentLight</item>
         <item name="TranslateTitle">@style/TranslateTitleLight</item>
