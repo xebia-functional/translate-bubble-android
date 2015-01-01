@@ -28,8 +28,16 @@
     <string name="headUpNotificationTitle">Heads-Up Notification</string>
     <string name="headUpNotificationMessage">Show Heads-Up. Only in Lollipop or upper</string>
 
-    <string name="more">More</string>
     <string name="launchFake">Launch Fake Translation</string>
+
+    <string name="about">About</string>
+    <string name="openSource">Open Source</string>
+    <string name="openSourceMessage">This app is licensed under the Apache License, Version 2.0 and
+        we\'ve made in Scala on Android. You can download the code and learn how you can write code
+        in Android using Scala</string>
+
+    <string name="goToGitHub">Go to GitHub</string>
+    <string name="cancel">Cancel</string>
 
     <string name="languages">Languages</string>
     <string name="from">From %1$s</string>

@@ -1,9 +1,11 @@
 package com.fortysevendeg.translatebubble.ui.preferences
 
-import android.app.Activity
+import android.app.{AlertDialog, Activity}
+import android.content.DialogInterface
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
+import android.widget.Toast
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
 import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
@@ -46,10 +48,13 @@ class DefaultPreferencesFragment
   private lazy val headUpNotification = connect[CheckBoxPreference]("headUpNotification")
   private lazy val toLanguage = connect[ListPreference]("toLanguage")
   private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
+  private lazy val openSource = connect[PreferenceScreen]("openSource")
 
   override def onCreate(savedInstanceState: Bundle) {
 
     super.onCreate(savedInstanceState)
+
+    // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
 
     launchFake.map(
       _.setOnPreferenceClickListener(new OnPreferenceClickListener {
@@ -60,7 +65,28 @@ class DefaultPreferencesFragment
       })
     )
 
-    // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
+    openSource.map(
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          val builder = new AlertDialog.Builder(getActivity)
+          builder.setMessage(R.string.openSourceMessage)
+              .setPositiveButton(R.string.goToGitHub, new DialogInterface.OnClickListener() {
+            def onClick(dialog: DialogInterface, id: Int) {
+              // TODO Open github website project
+              dialog.dismiss()
+            }
+          })
+              .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            def onClick(dialog: DialogInterface, id: Int) {
+              dialog.dismiss()
+            }
+          })
+          val dialog = builder.create()
+          dialog.show()
+          true
+        }
+      })
+    )
 
     typeBubble.map(
       _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
