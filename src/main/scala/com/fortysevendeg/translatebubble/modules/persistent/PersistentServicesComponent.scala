@@ -12,6 +12,8 @@ trait PersistentServices {
   def getTypeTranslateUI(): TypeTranslateUI
   def isTranslationEnable(): Boolean
   def isHeadsUpEnable(): Boolean
+  def isWizardWasSeen(): Boolean
+  def wizardWasSeen(): Unit
 }
 
 trait PersistentServicesComponent {

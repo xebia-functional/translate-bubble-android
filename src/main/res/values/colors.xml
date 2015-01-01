@@ -6,6 +6,9 @@
     <color name="primary_dark">#00ACC1</color>
     <color name="accent">#00BCD4</color>
 
+    <!-- Wizard colors -->
+    <color name="agree_button">#ffffff</color>
+
     <!-- Content -->
     <color name="background_content_light">#00BCD4</color>
     <color name="background_content_shadow_light">#CABBBBBB</color>

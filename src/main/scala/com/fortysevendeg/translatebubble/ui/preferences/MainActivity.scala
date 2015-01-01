@@ -1,7 +1,7 @@
 package com.fortysevendeg.translatebubble.ui.preferences
 
 import android.app.{AlertDialog, Activity}
-import android.content.DialogInterface
+import android.content.{Intent, DialogInterface}
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
@@ -13,6 +13,7 @@ import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
+import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
 import com.fortysevendeg.translatebubble.utils.LanguageType
 import macroid.FullDsl._
 import macroid.{AppContext, Contexts}
@@ -49,6 +50,7 @@ class DefaultPreferencesFragment
   private lazy val toLanguage = connect[ListPreference]("toLanguage")
   private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
   private lazy val openSource = connect[PreferenceScreen]("openSource")
+  private lazy val showTutorial = connect[PreferenceScreen]("showTutorial")
 
   override def onCreate(savedInstanceState: Bundle) {
 
@@ -60,6 +62,19 @@ class DefaultPreferencesFragment
       _.setOnPreferenceClickListener(new OnPreferenceClickListener {
         override def onPreferenceClick(preference: Preference): Boolean = {
           clipboardServices.copyToClipboard(CopyToClipboardRequest("Sample %d".format(System.currentTimeMillis())))
+          true
+        }
+      })
+    )
+
+    showTutorial.map(
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          val intent = new Intent(getActivity, classOf[WizardActivity])
+          val bundle = new Bundle()
+          bundle.putBoolean(WizardActivity.keyShowTutorial, true)
+          intent.putExtras(bundle)
+          getActivity.startActivity(intent)
           true
         }
       })

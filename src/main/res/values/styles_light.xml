@@ -10,7 +10,7 @@
 
     <!-- Content View -->
 
-    <style name="TranslateContentLight">
+    <style name="TranslateContent">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">@dimen/padding_default</item>
@@ -18,7 +18,7 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="TranslateContentTitleLight">
+    <style name="TranslateContentTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
@@ -75,7 +75,7 @@
     <!-- Actions View -->
 
     <style name="ActionsContent">
-        <item name="android:background">@drawable/workspace_bg</item>
+        <item name="android:background">@drawable/background_system_alert</item>
     </style>
 
     <style name="ActionsContentDisable">

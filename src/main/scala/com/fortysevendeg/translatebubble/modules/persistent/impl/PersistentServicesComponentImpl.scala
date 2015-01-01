@@ -44,6 +44,10 @@ trait PersistentServicesComponentImpl
 
     override def isHeadsUpEnable(): Boolean = sharedPreferences.getBoolean("headUpNotification", true)
 
+    override def isWizardWasSeen(): Boolean = sharedPreferences.getBoolean("wizardWasSeen", false)
+
+    override def wizardWasSeen(): Unit = sharedPreferences.edit().putBoolean("wizardWasSeen", true).commit()
+
     override def getLanguages: Service[GetLanguagesRequest, GetLanguagesResponse] = request =>
       Future {
         GetLanguagesResponse(

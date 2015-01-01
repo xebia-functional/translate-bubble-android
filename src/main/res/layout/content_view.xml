@@ -2,10 +2,10 @@
 
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/TranslateContentLight">
+        style="@style/TranslateContent">
 
     <LinearLayout
-            style="@style/TranslateContentTitleLight">
+            style="@style/TranslateContentTitle">
 
         <TextView
                 style="@style/ContentLanguages"
