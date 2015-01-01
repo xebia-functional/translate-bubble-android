@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/TranslateContentLight">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            style="@style/TranslateContentTitleLight">
 
         <TextView
-                style="@style/TranslateTitleLight"
-                android:id="@+id/original"/>
+                style="@style/ContentLanguages"
+                android:id="@+id/languages"/>
 
-        <TextView
-                style="@style/TranslateTextLight"
-                android:id="@+id/translate"/>
+        <ImageView
+                style="@style/ContentBubbleBack"
+                android:id="@+id/options"/>
 
     </LinearLayout>
 
-    <ImageView
-            style="@style/TranslateIconOptionsLight"
-            android:id="@+id/options"/>
+    <TextView
+            style="@style/ContentOriginalText"
+            android:id="@+id/original"/>
 
-</FrameLayout>
+    <ImageView style="@style/ContentLine"/>
+
+    <TextView
+            style="@style/ContentTranslatedText"
+            android:id="@+id/translate"/>
+
+</LinearLayout>

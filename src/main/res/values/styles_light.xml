@@ -15,30 +15,56 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">@dimen/padding_default</item>
         <item name="android:background">@drawable/background_card_light</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="TranslateContentTitleLight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="TranslateTitleLight">
+    <style name="ContentLanguages">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">@dimen/margin_default</item>
+        <item name="android:textColor">@color/languages_content_light</item>
+        <item name="android:textSize">@dimen/languages_content</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ContentOriginalText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/margin_default</item>
+        <item name="android:layout_margin">@dimen/margin_default</item>
         <item name="android:textColor">@color/title_content_light</item>
-        <item name="android:textSize">@dimen/title_content</item>
+        <item name="android:textSize">@dimen/text_content</item>
         <item name="android:lines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="TranslateTextLight">
+    <style name="ContentTranslatedText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0px</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">@dimen/margin_default</item>
         <item name="android:textColor">@color/text_content_light</item>
         <item name="android:textSize">@dimen/text_content</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="TranslateIconOptionsLight">
+    <style name="ContentLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/line_stroke</item>
+        <item name="android:layout_margin">@dimen/margin_default</item>
+        <item name="android:background">@color/line_content</item>
+    </style>
+
+    <style name="ContentBubbleBack">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_default</item>
@@ -46,13 +72,13 @@
         <item name="android:src">@drawable/icon_options_light</item>
     </style>
 
-    <!-- Ations View -->
+    <!-- Actions View -->
 
-    <style name="TranslateActionsContentLight">
+    <style name="ActionsContent">
         <item name="android:background">@drawable/workspace_bg</item>
     </style>
 
-    <style name="TranslateContentActionsDisableLight">
+    <style name="ActionsContentDisable">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_top_disable</item>
@@ -60,20 +86,20 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="TranslateActionsDisableLight">
+    <style name="ActionsDisable">
         <item name="android:layout_width">@dimen/size_disable</item>
         <item name="android:layout_height">@dimen/size_disable</item>
         <item name="android:layout_marginRight">@dimen/margin_separate_options_disable</item>
     </style>
 
-    <style name="TranslateActions30minDisableLight">
+    <style name="Actions30minDisable">
         <item name="android:layout_width">@dimen/size_disable</item>
         <item name="android:layout_height">@dimen/size_disable</item>
         <item name="android:layout_marginTop">@dimen/margin_separate_options_disable</item>
         <item name="android:layout_marginRight">@dimen/margin_separate_options_disable</item>
     </style>
 
-    <style name="TranslateActionsCloseLight">
+    <style name="ActionsClose">
         <item name="android:layout_width">@dimen/size_close</item>
         <item name="android:layout_height">@dimen/size_close</item>
         <item name="android:layout_margin">@dimen/margin_close</item>

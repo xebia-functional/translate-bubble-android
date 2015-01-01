@@ -5,6 +5,7 @@ import android.content.{Intent, Context, SharedPreferences}
 import android.preference.PreferenceManager
 import android.util.Log
 import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesResponse, GetLanguagesRequest, PersistentServices, PersistentServicesComponent}
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
@@ -17,7 +18,7 @@ import scala.concurrent.Future
 trait PersistentServicesComponentImpl
     extends PersistentServicesComponent {
 
-  self : AppContextProvider =>
+  self: AppContextProvider =>
 
   lazy val persistentServices = new PersistentServicesImpl
 
@@ -50,10 +51,21 @@ trait PersistentServicesComponentImpl
           to = LanguageType.withName(sharedPreferences.getString("toLanguage", "SPANISH")))
       }
 
+    override def getLanguagesString: Option[String] = {
+      Some(appContextProvider.get.getString(R.string.toLanguages,
+        getString(sharedPreferences.getString("fromLanguage", "ENGLISH")),
+        getString(sharedPreferences.getString("toLanguage", "SPANISH"))))
+    }
+
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {
       case s: SharedPreferences if s.getBoolean("typeNotification", false) => TranslateUIType.NOTIFICATION
       case s: SharedPreferences if s.getBoolean("typeWatch", false) => TranslateUIType.WATCH
       case _ => TranslateUIType.BUBBLE
+    }
+
+    def getString(res: String) = {
+      val id = appContextProvider.get.getResources.getIdentifier(res, "string", appContextProvider.get.getPackageName)
+      (if (id == 0) res else appContextProvider.get.getString(id))
     }
 
   }

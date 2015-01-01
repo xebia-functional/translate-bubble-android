@@ -6,12 +6,13 @@ import android.util.AttributeSet
 import android.view.View._
 import android.view._
 import android.widget.{FrameLayout, ImageView, TextView}
-import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
 import com.fortysevendeg.macroid.extras.RootView
 import com.fortysevendeg.macroid.extras.TextTweaks._
+import com.fortysevendeg.translatebubble.R
 import macroid.AppContext
 import macroid.FullDsl._
+
 import scala.language.postfixOps
 
 class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
@@ -23,16 +24,17 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   implicit val rootView: RootView = new RootView(R.layout.content_view)
 
+  val languages: Option[TextView] = connect[TextView](R.id.languages)
   val original: Option[TextView] = connect[TextView](R.id.original)
   val translate: Option[TextView] = connect[TextView](R.id.translate)
   val options: Option[ImageView] = connect[ImageView](R.id.options)
 
-  setPadding(4 dp, 4 dp, 4 dp, 4 dp)
+  setPadding(8 dp, 8 dp, 8 dp, 8 dp)
   addView(rootView.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
-  def setTexts(textOriginal: String, textTranslate: String) {
+  def setTexts(langs: String, textOriginal: String, textTranslate: String) {
     runUi(
-      (original <~ tvText(textOriginal)) ~ (translate <~ tvText(textTranslate))
+      (languages <~ tvText(langs)) ~ (original <~ tvText(textOriginal)) ~ (translate <~ tvText(textTranslate))
     )
   }
 

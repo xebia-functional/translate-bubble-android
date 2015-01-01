@@ -2,24 +2,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             style="@style/TranslateActionsContentLight">
+             style="@style/ActionsContent">
 
     <LinearLayout
             android:id="@+id/content_options"
-            style="@style/TranslateContentActionsDisableLight">
+            style="@style/ActionsContentDisable">
 
         <com.fortysevendeg.translatebubble.ui.components.DisableView
                 android:id="@+id/disable"
-                style="@style/TranslateActionsDisableLight"/>
+                style="@style/ActionsDisable"/>
 
         <com.fortysevendeg.translatebubble.ui.components.DisableView
                 android:id="@+id/min_15"
-                style="@style/TranslateActions30minDisableLight"/>
+                style="@style/Actions30minDisable"/>
 
     </LinearLayout>
 
     <com.fortysevendeg.translatebubble.ui.components.CloseView
             android:id="@+id/close"
-            style="@style/TranslateActionsCloseLight"/>
+            style="@style/ActionsClose"/>
 
 </FrameLayout>

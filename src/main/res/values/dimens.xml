@@ -3,13 +3,15 @@
     <dimen name="padding_default">8dp</dimen>
     <dimen name="margin_default">4dp</dimen>
 
+    <dimen name="line_stroke">1px</dimen>
+
     <dimen name="bubble_start_pos_y">100dp</dimen>
 
     <dimen name="bubble_horizontal_displacement">16dp</dimen>
 
-    <dimen name="height_content">100dp</dimen>
+    <dimen name="height_content">150dp</dimen>
 
-    <dimen name="title_content">9sp</dimen>
+    <dimen name="languages_content">13sp</dimen>
     <dimen name="text_content">12sp</dimen>
 
     <dimen name="card_shadow">2dp</dimen>

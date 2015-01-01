@@ -53,6 +53,7 @@ class BubbleService
     private var initialY: Int = 0
     private var initialTouchX: Float = 0f
     private var initialTouchY: Float = 0f
+    private var moving = false
     def onTouch(v: View, event: MotionEvent): Boolean = {
       val x = event.getRawX
       val y = event.getRawY
@@ -62,13 +63,15 @@ class BubbleService
           initialY = paramsBubble.y
           initialTouchX = x
           initialTouchY = y
+          moving = false
           true
         case MotionEvent.ACTION_CANCEL =>
           actionsView.hide()
+          moving = false
           false
         case MotionEvent.ACTION_UP =>
           actionsView.hide()
-          if (paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
+          if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
               && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) {
             bubbleStatus = BubbleStatus.CONTENT
             bubble.hide()
@@ -86,40 +89,51 @@ class BubbleService
               bubble.drop(paramsBubble, windowManager)
             }
           }
+          moving = false
           true
         case MotionEvent.ACTION_MOVE =>
-          if (!actionsView.isVisible()) {
-            actionsView.show()
-          }
-          if (actionsView.isOverCloseView(x, y)) {
-            val pos = actionsView.getClosePosition()
-            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-          } else if (actionsView.isOverDisableView(x, y)) {
-            val pos = actionsView.getDisablePosition()
-            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-          } else if (actionsView.isOver30minView(x, y)) {
-            val pos = actionsView.get30minPosition()
-            paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-            paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-          } else {
-            val newPosX = initialX + (x - initialTouchX).toInt
-            val newPosY = initialY + (y - initialTouchY).toInt
-            paramsBubble.x = newPosX
-            paramsBubble.y = newPosY match {
-              case _ if newPosY < 0 =>
-                0
-              case _ if newPosY > heightScreen - bubble.getHeight =>
-                heightScreen - bubble.getHeight
-              case _ =>
-                newPosY
+          if (moving) {
+            if (!actionsView.isVisible()) {
+              actionsView.show()
             }
+            if (actionsView.isOverCloseView(x, y)) {
+              val pos = actionsView.getClosePosition()
+              paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+              paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+            } else if (actionsView.isOverDisableView(x, y)) {
+              val pos = actionsView.getDisablePosition()
+              paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+              paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+            } else if (actionsView.isOver30minView(x, y)) {
+              val pos = actionsView.get30minPosition()
+              paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+              paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+            } else {
+              val newPosX = initialX + (x - initialTouchX).toInt
+              val newPosY = initialY + (y - initialTouchY).toInt
+              paramsBubble.x = newPosX
+              paramsBubble.y = newPosY match {
+                case _ if newPosY < 0 =>
+                  0
+                case _ if newPosY > heightScreen - bubble.getHeight =>
+                  heightScreen - bubble.getHeight
+                case _ =>
+                  newPosY
+              }
+            }
+            windowManager.updateViewLayout(bubble, paramsBubble)
+          } else {
+            val (xMoved, yMoved) = verifyMoving(x, y)
+            moving = xMoved || yMoved
           }
-          windowManager.updateViewLayout(bubble, paramsBubble)
           true
         case _ => false
       }
+    }
+    def verifyMoving(x: Float, y: Float) = {
+      val xDiff: Int = Math.abs(x - initialTouchX).toInt
+      val yDiff: Int = Math.abs(y - initialTouchY).toInt
+      (xDiff > touchSlop, yDiff > touchSlop)
     }
   }
 
@@ -223,7 +237,7 @@ class BubbleService
       getResources.getDimension(R.dimen.height_content).toInt,
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
-    paramsContentView.y = heightScreen / 2 // TODO Calculate better position y
+    paramsContentView.y = heightScreen - appContextProvider.get.getResources.getDimension(R.dimen.height_content).toInt
     paramsContentView.gravity = Gravity.TOP | Gravity.LEFT
     (contentView, paramsContentView)
   }
@@ -319,7 +333,7 @@ class BubbleService
       if (bubbleStatus == BubbleStatus.FLOATING) {
         bubble.show(paramsBubble, windowManager)
       } else {
-        contentView.setTexts(getString(R.string.translating), "")
+        contentView.setTexts(getString(R.string.translating), "", "")
       }
     } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
       notificationsServices.translating()
@@ -343,9 +357,10 @@ class BubbleService
     for {
       originalText <- maybeOriginalText
       translatedText <- maybeTranslatedText
+      languages <- persistentServices.getLanguagesString
     } yield {
       if (typeTranslateUI == TranslateUIType.BUBBLE) {
-        contentView.setTexts(originalText, translatedText)
+        contentView.setTexts(languages, originalText, translatedText)
         if (bubbleStatus == BubbleStatus.FLOATING) {
           bubble.stopAnimation()
         }
@@ -358,7 +373,7 @@ class BubbleService
   private def translatedFailed() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     if (typeTranslateUI == TranslateUIType.BUBBLE) {
-      contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage))
+      contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "")
       if (bubbleStatus == BubbleStatus.FLOATING) {
         bubble.stopAnimation()
       }
