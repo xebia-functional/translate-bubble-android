@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Bubble Translate</string>
+    <string name="app_name">Translate Bubble</string>
     <string name="action_settings">Settings</string>
 
     <string name="noClipboardText">There isn\'t test in clipboard</string>
@@ -54,7 +54,7 @@
     <string name="wizardTitle4">Clicking on the bubble</string>
     <string name="wizardDescription4">You\'ll see the translation and you can scroll through your screen</string>
 
-    <string name="agree">I agree</string>
+    <string name="gotIt">Got it!</string>
 
     <string name="AUTO_DETECT">Autodetect</string>
     <string name="ARABIC">Arabic</string>

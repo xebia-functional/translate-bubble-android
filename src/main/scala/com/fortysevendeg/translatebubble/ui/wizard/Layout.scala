@@ -5,15 +5,28 @@ import android.widget._
 import macroid.FullDsl._
 import macroid.{IdGeneration, ActivityContext, AppContext}
 import Styles._
+import com.fortysevendeg.macroid.extras.ViewTweaks._
 
 trait Layout extends IdGeneration {
 
-  var pager = slot[ViewPager]
+  var viewPager = slot[ViewPager]
+
+  var paginationContent = slot[LinearLayout]
+
+  var gotIt = slot[Button]
 
   def layout(implicit appContext: AppContext, context: ActivityContext) = getUi(
-    l[FrameLayout](
-      l[ViewPager]() <~ wire(pager) <~ pagerStyle <~ id(Id.pager) // ViewPager need set resource id
+    l[LinearLayout](
+      l[ViewPager]() <~ wire(viewPager) <~ pagerStyle <~ id(Id.pager), // ViewPager need set resource id
+      l[FrameLayout](
+        l[LinearLayout]() <~ wire(paginationContent) <~ paginationContentStyle,
+        w[Button] <~ wire(gotIt) <~ gotItStyle
+      ) <~ bottomContentStyle
     ) <~ rootStyle
+  )
+
+  def pagination(position: Int)(implicit appContext: AppContext, context: ActivityContext) = getUi(
+    w[ImageView] <~ paginationItemStyle <~ vTag("position_%d".format(position))
   )
 
 }
@@ -26,14 +39,11 @@ class FragmentLayout(implicit appContext: AppContext, context: ActivityContext) 
 
   var description = slot[TextView]
 
-  var agree = slot[Button]
-
   val content = getUi(
     l[LinearLayout](
       w[ImageView] <~ placeHolderStyle <~ wire(image),
       w[TextView] <~ titleStepStyle <~ wire(title),
-      w[TextView] <~ descriptionStepStyle <~ wire(description),
-      w[Button] <~ agreeStepStyle <~ wire(agree)
+      w[TextView] <~ descriptionStepStyle <~ wire(description)
     ) <~ contentStepsStyle
   )
 

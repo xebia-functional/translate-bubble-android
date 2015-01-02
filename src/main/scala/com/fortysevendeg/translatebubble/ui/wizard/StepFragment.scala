@@ -10,7 +10,6 @@ import macroid.{Ui, AppContext, Contexts}
 import macroid.FullDsl._
 import com.fortysevendeg.macroid.extras.ImageViewTweaks._
 import com.fortysevendeg.macroid.extras.TextTweaks._
-import com.fortysevendeg.macroid.extras.ViewTweaks._
 
 class StepFragment
     extends Fragment
@@ -28,14 +27,6 @@ class StepFragment
       (fLayout.image <~ ivSrc(step.image))
           ~ (fLayout.title <~ tvText(step.title))
           ~ (fLayout.description <~ tvText(step.description))
-          ~ (fLayout.agree <~ (if (element >= steps.length -1) vVisible else vInvisible))
-          ~ (fLayout.agree <~ On.click {
-            Ui {
-              persistentServices.wizardWasSeen()
-              startActivity(new Intent(getActivity, classOf[MainActivity]))
-              getActivity.finish()
-            }
-      })
     )
     fLayout.layout
   }
