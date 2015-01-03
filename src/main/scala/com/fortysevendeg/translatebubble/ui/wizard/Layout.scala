@@ -2,12 +2,17 @@ package com.fortysevendeg.translatebubble.ui.wizard
 
 import android.support.v4.view.ViewPager
 import android.widget._
+import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
+import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
 import macroid.FullDsl._
 import macroid.{IdGeneration, ActivityContext, AppContext}
 import Styles._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
+import com.fortysevendeg.macroid.extras.ExtraUIActions._
 
 trait Layout extends IdGeneration {
+
+  self: PersistentServicesComponent =>
 
   var viewPager = slot[ViewPager]
 
@@ -20,7 +25,11 @@ trait Layout extends IdGeneration {
       l[ViewPager]() <~ wire(viewPager) <~ pagerStyle <~ id(Id.pager), // ViewPager need set resource id
       l[FrameLayout](
         l[LinearLayout]() <~ wire(paginationContent) <~ paginationContentStyle,
-        w[Button] <~ wire(gotIt) <~ gotItStyle
+        w[Button] <~ wire(gotIt) <~ gotItStyle <~ On.click {
+          persistentServices.wizardWasSeen()
+          context.get.finish()
+          uiStartActivity[MainActivity]
+        }
       ) <~ bottomContentStyle
     ) <~ rootStyle
   )

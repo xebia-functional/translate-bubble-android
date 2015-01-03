@@ -1,22 +1,18 @@
 package com.fortysevendeg.translatebubble.ui.wizard
 
-import android.animation.{Animator, AnimatorListenerAdapter}
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app._
 import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.view.View
-import android.view.View._
-import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
+import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
-import macroid.{Snail, AppContext, Contexts}
 import macroid.FullDsl._
+import macroid.{AppContext, Contexts, Transformer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Promise
-import scala.util.Success
 
 class WizardActivity
     extends FragmentActivity
@@ -29,8 +25,8 @@ class WizardActivity
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
     val extras = getIntent.getExtras
-    val showTutorial = (if (extras != null) extras.getBoolean(WizardActivity.keyShowTutorial, false) else false)
-    if (!showTutorial && persistentServices.isWizardWasSeen()) {
+    val modeTutorial = (if (extras != null) extras.getBoolean(WizardActivity.keyModeTutorial, false) else false)
+    if (!modeTutorial && persistentServices.isWizardWasSeen()) {
       startActivity(new Intent(this, classOf[MainActivity]))
       finish()
     }
@@ -44,35 +40,39 @@ class WizardActivity
       page <- paginationContent
       pager <- viewPager
     } yield {
+      def activateImages(position: Int) = Transformer {
+        case i: ImageView if (i.getTag.equals("position_%d".format(position))) => i <~ vActivated(true)
+        case i: ImageView => i <~ vActivated(false)
+      }
+
       pager.setAdapter(new StepsPagerAdapter(getSupportFragmentManager()))
       pager.setOnPageChangeListener(new OnPageChangeListener {
         var isLastStep = false
         override def onPageScrollStateChanged(i: Int): Unit = {}
         override def onPageScrolled(i: Int, v: Float, i1: Int): Unit = {}
         override def onPageSelected(i: Int): Unit = {
-          for (p <- 0 to (steps - 1)) {
-            page.getChildAt(p).setActivated(false)
-          }
-          page.getChildAt(i).setActivated(true)
-          if (i >= steps - 1) {
-            isLastStep = true
-            runUi(
-              (paginationContent <~~ WizardSnails.wizardFadeOut) ~
-                  (gotIt <~~ WizardSnails.wizardFadeIn)
-            )
-          } else if (isLastStep) {
-            isLastStep = false
-            runUi(
-              (paginationContent <~~ WizardSnails.wizardFadeIn) ~
-                  (gotIt <~~ WizardSnails.wizardFadeOut)
-            )
+          runUi(paginationContent <~ activateImages(i))
+          if (!modeTutorial) {
+            if (i >= steps - 1) {
+              isLastStep = true
+              runUi(
+                (paginationContent <~~ (vGone ++ fadeOut(300))) ~
+                    (gotIt <~ vVisible <~~ fadeIn(300))
+              )
+            } else if (isLastStep) {
+              isLastStep = false
+              runUi(
+                (paginationContent <~ vVisible <~~ fadeIn(300)) ~
+                    (gotIt <~~ (vGone ++ fadeOut(300)))
+              )
+            }
           }
         }
       })
       for (p <- 0 to (steps - 1)) {
         page.addView(pagination(p))
       }
-      page.getChildAt(0).setActivated(true)
+      runUi(paginationContent <~ activateImages(0))
     }
 
   }
@@ -98,7 +98,7 @@ class WizardActivity
 }
 
 object WizardActivity {
-  val keyShowTutorial = "show_tutorial"
+  val keyModeTutorial = "mode_tutorial"
 }
 
 object Steps {
@@ -130,43 +130,3 @@ object Steps {
 }
 
 case class Step(image: Int, title: String, description: String)
-
-object WizardSnails {
-
-  val DURATION = 300
-
-  val wizardFadeIn = Snail[View] {
-    view ⇒
-      val animPromise = Promise[Unit]()
-      view.setVisibility(VISIBLE)
-      view.setAlpha(0)
-      view.animate
-          .setDuration(DURATION)
-          .alpha(1)
-          .setInterpolator(new DecelerateInterpolator())
-          .setListener(new AnimatorListenerAdapter {
-        override def onAnimationEnd(animation: Animator) {
-          super.onAnimationEnd(animation)
-          animPromise.complete(Success(()))
-        }
-      }).start()
-      animPromise.future
-  }
-
-  val wizardFadeOut = Snail[View] {
-    view ⇒
-      val animPromise = Promise[Unit]()
-      view.animate
-          .setDuration(DURATION)
-          .alpha(0)
-          .setInterpolator(new DecelerateInterpolator())
-          .setListener(new AnimatorListenerAdapter {
-        override def onAnimationEnd(animation: Animator) {
-          super.onAnimationEnd(animation)
-          view.setVisibility(GONE)
-          animPromise.complete(Success(()))
-        }
-      }).start()
-      animPromise.future
-  }
-}

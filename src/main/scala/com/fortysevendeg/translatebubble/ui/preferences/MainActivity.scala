@@ -72,7 +72,7 @@ class DefaultPreferencesFragment
         override def onPreferenceClick(preference: Preference): Boolean = {
           val intent = new Intent(getActivity, classOf[WizardActivity])
           val bundle = new Bundle()
-          bundle.putBoolean(WizardActivity.keyShowTutorial, true)
+          bundle.putBoolean(WizardActivity.keyModeTutorial, true)
           intent.putExtras(bundle)
           getActivity.startActivity(intent)
           true
