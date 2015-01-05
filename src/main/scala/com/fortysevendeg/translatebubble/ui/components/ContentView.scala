@@ -29,7 +29,6 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
   val translate: Option[TextView] = connect[TextView](R.id.translate)
   val options: Option[ImageView] = connect[ImageView](R.id.options)
 
-  setPadding(8 dp, 8 dp, 8 dp, 8 dp)
   addView(rootView.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
   def setTexts(langs: String, textOriginal: String, textTranslate: String) {

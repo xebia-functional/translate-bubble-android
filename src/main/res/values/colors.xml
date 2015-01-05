@@ -7,11 +7,13 @@
     <color name="accent">#00BCD4</color>
 
     <!-- Wizard colors -->
+    <color name="wizard_background">#ffffff</color>
     <color name="wizard_title">#000000</color>
-    <color name="wizard_description">#ff4c4c4c</color>
-    <color name="wizard_button">#000000</color>
+    <color name="wizard_description">#ff696969</color>
+    <color name="wizard_line_button">#ffc5c5c5</color>
+    <color name="wizard_button">#dc000000</color>
     <color name="wizard_pager_default">#ffc7c7c7</color>
-    <color name="wizard_pager_selected">#000000</color>
+    <color name="wizard_pager_selected">#444444</color>
 
     <!-- Content -->
     <color name="background_content_light">#00BCD4</color>

@@ -9,6 +9,7 @@ import android.view.{View, ViewGroup}
 import android.widget.{LinearLayout, FrameLayout}
 import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
+import com.fortysevendeg.translatebubble.ui.commons.Dimens
 import com.fortysevendeg.translatebubble.ui.components.DisableViewTweaks._
 import com.fortysevendeg.macroid.extras.RootView
 import com.fortysevendeg.translatebubble.R
@@ -111,55 +112,10 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
 object ActionsViewSnails {
 
-  val DISTANCE_OPTION = 50
-
-  val DURATION_OPTION = 100
-
-  val DISTANCE = 300
-
-  val animDisableOptionIn = Snail[View] {
-    view ⇒
-      val animPromise = Promise[Unit]()
-      view.setVisibility(VISIBLE)
-      view.setTranslationX(DISTANCE_OPTION)
-      view.setAlpha(0)
-      view.animate
-          .setDuration(DURATION_OPTION)
-          .translationX(0)
-          .alpha(1)
-          .setInterpolator(new DecelerateInterpolator())
-          .setListener(new AnimatorListenerAdapter {
-        override def onAnimationEnd(animation: Animator) {
-          super.onAnimationEnd(animation)
-          animPromise.complete(Success(()))
-        }
-      }).start()
-      animPromise.future
-  }
-
-  val animDisableOptionOut = Snail[View] {
-    view ⇒
-      val animPromise = Promise[Unit]()
-      view.animate
-          .setDuration(DURATION_OPTION)
-          .translationX(DISTANCE_OPTION)
-          .alpha(0)
-          .setInterpolator(new AccelerateInterpolator())
-          .setListener(new AnimatorListenerAdapter {
-        override def onAnimationEnd(animation: Animator) {
-          super.onAnimationEnd(animation)
-          view.setVisibility(GONE)
-          animPromise.complete(Success(()))
-        }
-      })
-          .start()
-      animPromise.future
-  }
-
   val animDisableIn = Snail[View] {
     view ⇒
       val animPromise = Promise[Unit]()
-      view.setTranslationX(DISTANCE)
+      view.setTranslationX(Dimens.distanceOut)
       view.animate
           .translationX(0)
           .setInterpolator(new DecelerateInterpolator())
@@ -176,7 +132,7 @@ object ActionsViewSnails {
     view ⇒
       val animPromise = Promise[Unit]()
       view.animate
-          .translationX(DISTANCE)
+          .translationX(Dimens.distanceOut)
           .setInterpolator(new AccelerateInterpolator())
           .setListener(new AnimatorListenerAdapter {
         override def onAnimationEnd(animation: Animator) {
@@ -191,7 +147,7 @@ object ActionsViewSnails {
   val animCloseIn = Snail[View] {
     view ⇒
       val animPromise = Promise[Unit]()
-      view.setTranslationY(DISTANCE)
+      view.setTranslationY(Dimens.distanceOut)
       view.animate
           .translationY(0)
           .setInterpolator(new DecelerateInterpolator())
@@ -208,7 +164,7 @@ object ActionsViewSnails {
     view ⇒
       val animPromise = Promise[Unit]()
       view.animate
-          .translationY(DISTANCE)
+          .translationY(Dimens.distanceOut)
           .setInterpolator(new AccelerateInterpolator())
           .setListener(new AnimatorListenerAdapter {
         override def onAnimationEnd(animation: Animator) {

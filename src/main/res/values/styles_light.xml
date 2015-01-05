@@ -13,8 +13,7 @@
     <style name="TranslateContent">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">@dimen/padding_default</item>
-        <item name="android:background">@drawable/background_card_light</item>
+        <item name="android:background">@drawable/box</item>
         <item name="android:orientation">vertical</item>
     </style>
 
@@ -29,7 +28,7 @@
         <item name="android:layout_width">0px</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_margin">@dimen/margin_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_default</item>
         <item name="android:textColor">@color/languages_content_light</item>
         <item name="android:textSize">@dimen/languages_content</item>
         <item name="android:lines">1</item>
@@ -40,7 +39,6 @@
     <style name="ContentOriginalText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/margin_default</item>
         <item name="android:textColor">@color/title_content_light</item>
         <item name="android:textSize">@dimen/text_content</item>
         <item name="android:lines">1</item>
@@ -51,7 +49,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0px</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_margin">@dimen/margin_default</item>
         <item name="android:textColor">@color/text_content_light</item>
         <item name="android:textSize">@dimen/text_content</item>
         <item name="android:ellipsize">end</item>
@@ -60,16 +57,16 @@
     <style name="ContentLine">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/line_stroke</item>
-        <item name="android:layout_margin">@dimen/margin_default</item>
+        <item name="android:layout_marginTop">@dimen/padding_default</item>
+        <item name="android:layout_marginBottom">@dimen/padding_default</item>
         <item name="android:background">@color/line_content</item>
     </style>
 
     <style name="ContentBubbleBack">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/margin_default</item>
         <item name="android:layout_gravity">top|right</item>
-        <item name="android:src">@drawable/icon_options_light</item>
+        <item name="android:src">@drawable/box_icon</item>
     </style>
 
     <!-- Actions View -->

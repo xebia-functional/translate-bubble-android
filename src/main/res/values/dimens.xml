@@ -9,10 +9,10 @@
 
     <dimen name="bubble_horizontal_displacement">16dp</dimen>
 
-    <dimen name="height_content">150dp</dimen>
+    <dimen name="height_content">170dp</dimen>
 
-    <dimen name="languages_content">13sp</dimen>
-    <dimen name="text_content">12sp</dimen>
+    <dimen name="languages_content">16sp</dimen>
+    <dimen name="text_content">14sp</dimen>
 
     <dimen name="card_shadow">2dp</dimen>
     <dimen name="card_stroke">1dp</dimen>

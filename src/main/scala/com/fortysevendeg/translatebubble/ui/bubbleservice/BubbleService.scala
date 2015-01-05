@@ -78,13 +78,13 @@ class BubbleService
             contentView.show()
           } else {
             if (actionsView.isOverCloseView(x, y)) {
-              bubble.close(paramsBubble, windowManager)
+              bubble.hideFromCloseAction(paramsBubble, windowManager)
             } else if (actionsView.isOverDisableView(x, y)) {
               persistentServices.disableTranslation()
-              bubble.close(paramsBubble, windowManager)
+              bubble.hideFromOptionAction(paramsBubble, windowManager)
             } else if (actionsView.isOver30minView(x, y)) {
               persistentServices.disable30MinutesTranslation()
-              bubble.close(paramsBubble, windowManager)
+              bubble.hideFromOptionAction(paramsBubble, windowManager)
             } else {
               bubble.drop(paramsBubble, windowManager)
             }

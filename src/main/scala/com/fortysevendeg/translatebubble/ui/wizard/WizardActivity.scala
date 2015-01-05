@@ -105,22 +105,22 @@ object Steps {
 
   def steps(implicit appContext: AppContext) = List(
     new Step(
-      R.drawable.ic_launcher,
+      R.drawable.wizard_icon,
       appContext.get.getString(R.string.wizardTitle1),
       appContext.get.getString(R.string.wizardDescription1)
     ),
     new Step(
-      R.drawable.ic_launcher,
+      R.drawable.wizard_step_01,
       appContext.get.getString(R.string.wizardTitle2),
       appContext.get.getString(R.string.wizardDescription2)
     ),
     new Step(
-      R.drawable.ic_launcher,
+      R.drawable.wizard_step_02,
       appContext.get.getString(R.string.wizardTitle3),
       appContext.get.getString(R.string.wizardDescription3)
     ),
     new Step(
-      R.drawable.ic_launcher,
+      R.drawable.wizard_step_03,
       appContext.get.getString(R.string.wizardTitle4),
       appContext.get.getString(R.string.wizardDescription4)
     )
