@@ -71,23 +71,26 @@ class BubbleService
           false
         case MotionEvent.ACTION_UP =>
           actionsView.hide()
-          if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
-              && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) {
-            bubbleStatus = BubbleStatus.CONTENT
-            bubble.hide()
-            contentView.show()
-          } else {
-            if (actionsView.isOverCloseView(x, y)) {
+          actionsView match {
+            // Bubble didn't move, we show text translated
+            case actionView if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
+                && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
+              bubbleStatus = BubbleStatus.CONTENT
+              bubble.hide()
+              contentView.show()
+            // Bubble was moved over CloseView
+            case actionsView if (actionsView.isOverCloseView(x, y)) =>
               bubble.hideFromCloseAction(paramsBubble, windowManager)
-            } else if (actionsView.isOverDisableView(x, y)) {
+            // Bubble was moved over DisableTranslation
+            case actionsView if (actionsView.isOverDisableView(x, y)) =>
               persistentServices.disableTranslation()
               bubble.hideFromOptionAction(paramsBubble, windowManager)
-            } else if (actionsView.isOver30minView(x, y)) {
+            // Bubble was moved over DisableTranslation during 30 minutes
+            case actionsView if (actionsView.isOver30minView(x, y)) =>
               persistentServices.disable30MinutesTranslation()
               bubble.hideFromOptionAction(paramsBubble, windowManager)
-            } else {
-              bubble.drop(paramsBubble, windowManager)
-            }
+            // Bubble drops somewhere else
+            case _ => bubble.drop(paramsBubble, windowManager)
           }
           moving = false
           true
@@ -96,30 +99,35 @@ class BubbleService
             if (!actionsView.isVisible()) {
               actionsView.show()
             }
-            if (actionsView.isOverCloseView(x, y)) {
-              val pos = actionsView.getClosePosition()
-              paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-              paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-            } else if (actionsView.isOverDisableView(x, y)) {
-              val pos = actionsView.getDisablePosition()
-              paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-              paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-            } else if (actionsView.isOver30minView(x, y)) {
-              val pos = actionsView.get30minPosition()
-              paramsBubble.x = pos._1 - (bubble.getWidth / 2)
-              paramsBubble.y = pos._2 - (bubble.getHeight / 2)
-            } else {
-              val newPosX = initialX + (x - initialTouchX).toInt
-              val newPosY = initialY + (y - initialTouchY).toInt
-              paramsBubble.x = newPosX
-              paramsBubble.y = newPosY match {
-                case _ if newPosY < 0 =>
-                  0
-                case _ if newPosY > heightScreen - bubble.getHeight =>
-                  heightScreen - bubble.getHeight
-                case _ =>
-                  newPosY
-              }
+            actionsView match {
+              // Bubble is over CloseView
+              case actionsView if (actionsView.isOverCloseView(x, y)) =>
+                val pos = actionsView.getClosePosition()
+                paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+                paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+              // Bubble is over DisableTranslation
+              case actionsView if (actionsView.isOverDisableView(x, y)) =>
+                val pos = actionsView.getDisablePosition()
+                paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+                paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+              // Bubble is over DisableTranslation30min
+              case actionsView if (actionsView.isOver30minView(x, y)) =>
+                val pos = actionsView.get30minPosition()
+                paramsBubble.x = pos._1 - (bubble.getWidth / 2)
+                paramsBubble.y = pos._2 - (bubble.getHeight / 2)
+              // Bubble is moving somewhere else
+              case _ =>
+                val newPosX = initialX + (x - initialTouchX).toInt
+                val newPosY = initialY + (y - initialTouchY).toInt
+                paramsBubble.x = newPosX
+                paramsBubble.y = newPosY match {
+                  case _ if newPosY < 0 =>
+                    0
+                  case _ if newPosY > heightScreen - bubble.getHeight =>
+                    heightScreen - bubble.getHeight
+                  case _ =>
+                    newPosY
+                }
             }
             windowManager.updateViewLayout(bubble, paramsBubble)
           } else {
@@ -130,7 +138,7 @@ class BubbleService
         case _ => false
       }
     }
-    def verifyMoving(x: Float, y: Float) = {
+    def verifyMoving(x: Float, y: Float): (Boolean, Boolean) = {
       val xDiff: Int = Math.abs(x - initialTouchX).toInt
       val yDiff: Int = Math.abs(y - initialTouchY).toInt
       (xDiff > touchSlop, yDiff > touchSlop)
@@ -198,7 +206,7 @@ class BubbleService
         case _ => false
       }
     }
-    def verifyMoving(x: Float, y: Float) = {
+    def verifyMoving(x: Float, y: Float): (Boolean, Boolean) = {
       val xDiff: Int = Math.abs(x - initialTouchX).toInt
       val yDiff: Int = Math.abs(y - initialTouchY).toInt
       (xDiff > touchSlop, yDiff > touchSlop)
@@ -255,11 +263,7 @@ class BubbleService
   }
 
   private val clipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener {
-    def onPrimaryClipChanged() {
-      if (persistentServices.isTranslationEnable()) {
-        onStartTranslate()
-      }
-    }
+    def onPrimaryClipChanged() = if (persistentServices.isTranslationEnable()) onStartTranslate()
   }
 
   override def onCreate() {

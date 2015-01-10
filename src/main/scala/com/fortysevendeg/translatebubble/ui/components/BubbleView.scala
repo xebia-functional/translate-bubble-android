@@ -14,17 +14,17 @@ import macroid.AppContext
 class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
     extends FrameLayout(context, attrs, defStyleAttr) {
 
-  val POSITION_LEFT = 0
+  val leftPosition = 0
 
-  val POSITION_RIGHT = 1
+  val rightPosition = 1
 
-  val BUBBLE_HORIZONTAL_DISPLACEMENT = appContext.get.getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
+  val bubbleHorizontalDisplacement = appContext.get.getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
 
   def this(context: Context)(implicit appContext: AppContext) = this(context, null, 0)
 
   def this(context: Context, attr: AttributeSet)(implicit appContext: AppContext) = this(context, attr, 0)
 
-  var positionBubble: Int = POSITION_LEFT
+  var positionBubble: Int = leftPosition
 
   var widthScreen: Int = 0
 
@@ -67,7 +67,7 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
 
   def changePositionIfIsNecessary(params: WindowManager.LayoutParams, windowManager: WindowManager): Unit = {
     val previousHeight = heightScreen
-    if (positionBubble == POSITION_RIGHT || params.y > heightScreen) {
+    if (positionBubble == rightPosition || params.y > heightScreen) {
       params.x = right()
       params.y = (heightScreen * params.y) / previousHeight
       windowManager.updateViewLayout(BubbleView.this, params)
@@ -75,13 +75,13 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
   }
 
   def left: Int = {
-    positionBubble = POSITION_LEFT
-    -BUBBLE_HORIZONTAL_DISPLACEMENT
+    positionBubble = leftPosition
+    -bubbleHorizontalDisplacement
   }
 
   def right(): Int = {
-    positionBubble = POSITION_RIGHT
-    widthScreen - getWidth + BUBBLE_HORIZONTAL_DISPLACEMENT
+    positionBubble = rightPosition
+    widthScreen - getWidth + bubbleHorizontalDisplacement
   }
 
   def stopAnimation() {

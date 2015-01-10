@@ -3,7 +3,6 @@ package com.fortysevendeg.translatebubble.services
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import macroid.AppContext
 
@@ -19,7 +18,6 @@ class RestartTranslationService
   override def onCreate(): Unit = {
     super.onCreate()
     persistentServices.enableTranslation()
-    Log.d("TranslateApp", "enabling")
   }
 
   override def onBind(intent: Intent): IBinder = null

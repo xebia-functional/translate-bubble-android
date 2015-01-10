@@ -27,16 +27,12 @@ trait ClipboardServicesComponentImpl
 
     override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = request =>
       Future {
-        var result: Option[String] = None
-        val clip: ClipData = clipboardManager.getPrimaryClip
-        if (clip != null && clip.getItemCount > 0) {
-          val aux: CharSequence = clip.getItemAt(0).getText
-          if (aux != null && aux.length > 0 && previousText.map(_ != aux).getOrElse(true)) {
-            previousText = Some(aux.toString)
-            result = previousText
-          }
+        Option(clipboardManager.getPrimaryClip) map (_.getItemAt(0)) map (_.getText) match {
+          case Some(clipDataText) if (clipDataText.length > 0 && previousText.map(_ != clipDataText).getOrElse(true)) =>
+            previousText = Some(clipDataText.toString)
+            GetTextClipboardResponse(previousText)
+          case _ => GetTextClipboardResponse(None)
         }
-        GetTextClipboardResponse(result)
       }
 
     override def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse] = request =>

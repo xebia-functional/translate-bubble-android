@@ -104,7 +104,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     (x > x1 && x < x2 && y > y1 && y < y2)
   }
 
-  def get30minPosition() =
+  def get30minPosition(): (Int, Int) =
     (getWidth - (sizeDisable / 2) - marginSeparateOptionsDisable,
         marginTopDisable + marginSeparateOptionsDisable + sizeDisable + (sizeDisable / 2))
 
@@ -113,7 +113,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 object ActionsViewSnails {
 
   val animDisableIn = Snail[View] {
-    view ⇒
+    view =>
       val animPromise = Promise[Unit]()
       view.setTranslationX(Dimens.distanceOut)
       view.animate
@@ -129,7 +129,7 @@ object ActionsViewSnails {
   }
 
   val animDisableOut = Snail[View] {
-    view ⇒
+    view =>
       val animPromise = Promise[Unit]()
       view.animate
           .translationX(Dimens.distanceOut)
@@ -139,13 +139,12 @@ object ActionsViewSnails {
           super.onAnimationEnd(animation)
           animPromise.complete(Success(()))
         }
-      })
-          .start()
+      }).start()
       animPromise.future
   }
 
   val animCloseIn = Snail[View] {
-    view ⇒
+    view =>
       val animPromise = Promise[Unit]()
       view.setTranslationY(Dimens.distanceOut)
       view.animate
@@ -161,7 +160,7 @@ object ActionsViewSnails {
   }
 
   def animCloseOut(listener: AnimatorListenerAdapter) = Snail[View] {
-    view ⇒
+    view =>
       val animPromise = Promise[Unit]()
       view.animate
           .translationY(Dimens.distanceOut)
