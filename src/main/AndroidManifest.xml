@@ -1,29 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fortysevendeg.translatebubble"
-    android:versionCode="1"
-    android:versionName="0.9">
+          package="com.fortysevendeg.translatebubble"
+          android:versionCode="1"
+          android:versionName="0.9">
 
     <uses-sdk
             android:minSdkVersion="14"
             android:targetSdkVersion="21"/>
 
     <application
-            android:icon="@drawable/ic_launcher"
+            android:icon="@drawable/icon_app"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeLight">
+            android:theme="@style/AppTheme">
         <activity
-                android:name=".ui.preferences.MainActivity"
-                android:label="@string/app_name">
+                android:name=".ui.wizard.WizardActivity"
+                android:label="@string/app_name"
+                android:theme="@style/WizardTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.preferences.MainActivity"
+                  android:label="@string/app_name"/>
 
         <service
                 android:name=".ui.bubbleservice.BubbleService"
+                />
+
+        <service
+                android:name=".services.RestartTranslationService"
                 />
 
         <receiver

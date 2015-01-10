@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:bottom="-1dp" android:left="-1dp" android:right="-1dp">
+        <shape>
+            <solid android:color="@android:color/transparent"/>
+            <stroke android:color="@color/wizard_line_button" android:width="1dp"/>
+        </shape>
+    </item>
+</layer-list>

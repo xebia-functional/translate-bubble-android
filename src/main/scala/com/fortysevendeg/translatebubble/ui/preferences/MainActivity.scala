@@ -1,140 +1,183 @@
 package com.fortysevendeg.translatebubble.ui.preferences
 
-import android.app.Activity
+import android.app.{AlertDialog, Activity}
+import android.content.{Intent, DialogInterface}
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
+import android.widget.Toast
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.macroid.{RootPreferencesFragment, AppContextProvider}
+import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
+import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
+import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
 import com.fortysevendeg.translatebubble.utils.LanguageType
-import macroid.{Ui, AppContext, Contexts}
 import macroid.FullDsl._
-import com.fortysevendeg.translatebubble.macroid.PreferencesBuildingExtra._
+import macroid.{AppContext, Contexts}
 
 class MainActivity
     extends Activity
-    with AppContextProvider
     with Contexts[Activity]
-    with ComponentRegistryImpl {
+    with AppContextProvider {
 
   override implicit lazy val appContextProvider: AppContext = activityAppContext
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
     BubbleService.launchIfIsNecessary
-    getFragmentManager.beginTransaction.replace(android.R.id.content, new DefaultPreferencesFragment).commit
+    getFragmentManager.beginTransaction.replace(android.R.id.content, new DefaultPreferencesFragment()).commit
   }
 
-  class DefaultPreferencesFragment
-      extends PreferenceFragment
-      with Contexts[PreferenceFragment] {
+}
 
-    implicit lazy val rootPreferencesFragment = new RootPreferencesFragment(this, R.xml.preferences)
+class DefaultPreferencesFragment
+    extends PreferenceFragment
+    with AppContextProvider
+    with Contexts[PreferenceFragment]
+    with ComponentRegistryImpl {
 
-    private lazy val launchFake = connect[PreferenceScreen]("launchFake")
-    private lazy val typeBubble = connect[CheckBoxPreference]("typeBubble")
-    private lazy val typeNotification = connect[CheckBoxPreference]("typeNotification")
-    private lazy val headUpNotification = connect[CheckBoxPreference]("headUpNotification")
-    private lazy val toLanguage = connect[ListPreference]("toLanguage")
-    private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
+  override implicit lazy val appContextProvider: AppContext = fragmentAppContext
 
-    override def onCreate(savedInstanceState: Bundle) {
+  implicit lazy val rootPreferencesFragment = new RootPreferencesFragment(this, R.xml.preferences)
 
-      super.onCreate(savedInstanceState)
+  private lazy val launchFake = connect[PreferenceScreen]("launchFake")
+  private lazy val typeBubble = connect[CheckBoxPreference]("typeBubble")
+  private lazy val typeNotification = connect[CheckBoxPreference]("typeNotification")
+  private lazy val headUpNotification = connect[CheckBoxPreference]("headUpNotification")
+  private lazy val toLanguage = connect[ListPreference]("toLanguage")
+  private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
+  private lazy val openSource = connect[PreferenceScreen]("openSource")
+  private lazy val showTutorial = connect[PreferenceScreen]("showTutorial")
 
-      launchFake.map(
-        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
-          override def onPreferenceClick(preference: Preference): Boolean = {
-            clipboardServices.copyToClipboard(CopyToClipboardRequest("Example Text %d".format(System.currentTimeMillis())))
+  override def onCreate(savedInstanceState: Bundle) {
+
+    super.onCreate(savedInstanceState)
+
+    // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
+
+    launchFake.map(
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          clipboardServices.copyToClipboard(CopyToClipboardRequest("Sample %d".format(System.currentTimeMillis())))
+          true
+        }
+      })
+    )
+
+    showTutorial.map(
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          val intent = new Intent(getActivity, classOf[WizardActivity])
+          val bundle = new Bundle()
+          bundle.putBoolean(WizardActivity.keyModeTutorial, true)
+          intent.putExtras(bundle)
+          getActivity.startActivity(intent)
+          true
+        }
+      })
+    )
+
+    openSource.map(
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          val builder = new AlertDialog.Builder(getActivity)
+          builder.setMessage(R.string.openSourceMessage)
+              .setPositiveButton(R.string.goToGitHub, new DialogInterface.OnClickListener() {
+            def onClick(dialog: DialogInterface, id: Int) {
+              // TODO Open github website project
+              dialog.dismiss()
+            }
+          })
+              .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            def onClick(dialog: DialogInterface, id: Int) {
+              dialog.dismiss()
+            }
+          })
+          val dialog = builder.create()
+          dialog.show()
+          true
+        }
+      })
+    )
+
+    typeBubble.map(
+      _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
+        def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
+          val value: Boolean = newValue.asInstanceOf[Boolean]
+          if (value) {
+            typeNotification.map(_.setChecked(false))
+            headUpNotification.map(_.setEnabled(false))
+          }
+          value
+        }
+      })
+    )
+
+    typeNotification.map(
+      _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
+        def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
+          val value: Boolean = newValue.asInstanceOf[Boolean]
+          if (value) {
+            typeBubble.map(_.setChecked(false))
+            headUpNotification.map(_.setEnabled(true))
+          }
+          value
+        }
+      })
+    )
+
+    for {
+      headUp <- headUpNotification
+      notification <- typeNotification
+    } yield headUp.setEnabled(notification.isChecked)
+
+    val languages: List[String] = LanguageType.resourceNames
+    val languagesValues: List[String] = LanguageType.stringNames()
+
+    fromLanguage.map {
+      from =>
+        from.setEntries(languages.toArray[CharSequence])
+        from.setEntryValues(languagesValues.toArray[CharSequence])
+        from.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
+          def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
+            changeFrom(newValue.asInstanceOf[String])
             true
           }
         })
-      )
+    }
 
-      // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
-
-      typeBubble.map(
-        _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
+    toLanguage.map {
+      to =>
+        to.setEntries(languages.toArray[CharSequence])
+        to.setEntryValues(languagesValues.toArray[CharSequence])
+        to.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
           def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
-            val value: Boolean = newValue.asInstanceOf[Boolean]
-            if (value) {
-
-              typeNotification.map(_.setChecked(false))
-              headUpNotification.map(_.setEnabled(false))
-            }
-            value
+            changeTo(newValue.asInstanceOf[String])
+            true
           }
         })
-      )
+    }
 
-      typeNotification.map(
-        _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
-          def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
-            val value: Boolean = newValue.asInstanceOf[Boolean]
-            if (value) {
-              typeBubble.map(_.setChecked(false))
-              headUpNotification.map(_.setEnabled(true))
-            }
-            value
-          }
-        })
-      )
-
-      for {
-        headUp <- headUpNotification
-        notification <- typeNotification
-      } yield headUp.setEnabled(notification.isChecked)
-
-      val languages: List[String] = LanguageType.resourceNames
-      val languagesValues: List[String] = LanguageType.stringNames()
-
-      fromLanguage.map {
-        from =>
-          from.setEntries(languages.toArray[CharSequence])
-          from.setEntryValues(languagesValues.toArray[CharSequence])
-          from.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
-            def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
-              changeFrom(newValue.asInstanceOf[String])
-              true
-            }
-          })
+    persistentServices.getLanguages(GetLanguagesRequest()).mapUi(
+      response => {
+        changeFrom(response.from.toString)
+        changeTo(response.to.toString)
       }
+    )
 
-      toLanguage.map {
-        to =>
-          to.setEntries(languages.toArray[CharSequence])
-          to.setEntryValues(languagesValues.toArray[CharSequence])
-          to.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
-            def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
-              changeTo(newValue.asInstanceOf[String])
-              true
-            }
-          })
-      }
+  }
 
-      persistentServices.getLanguages(GetLanguagesRequest()).mapUi(
-        response => {
-          changeFrom(response.from.toString)
-          changeTo(response.to.toString)
-        }
-      )
+  private def changeTo(key: String) {
+    val toNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
+    toLanguage.map(_.setTitle(getString(R.string.to, toNameLang)))
+  }
 
-    }
-
-    private def changeTo(key: String) {
-      val toNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
-      toLanguage.map(_.setTitle(getString(R.string.to, toNameLang)))
-    }
-
-    private def changeFrom(key: String) {
-      val fromNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
-      fromLanguage.map(_.setTitle(getString(R.string.from, fromNameLang)))
-    }
-
+  private def changeFrom(key: String) {
+    val fromNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
+    fromLanguage.map(_.setTitle(getString(R.string.from, fromNameLang)))
   }
 
 }

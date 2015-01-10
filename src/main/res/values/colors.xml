@@ -2,15 +2,26 @@
 <resources>
 
     <!-- Main colors -->
-    <color name="primary">#ffff791d</color>
-    <color name="primary_dark">#ffd96d1d</color>
-    <color name="accent">#ff4879f9</color>
+    <color name="primary">#00BCD4</color>
+    <color name="primary_dark">#00ACC1</color>
+    <color name="accent">#00BCD4</color>
 
-    <!-- Light -->
-    <color name="background_content_light">#ffffff</color>
+    <!-- Wizard colors -->
+    <color name="wizard_background">#ffffff</color>
+    <color name="wizard_title">#000000</color>
+    <color name="wizard_description">#ff696969</color>
+    <color name="wizard_line_button">#ffc5c5c5</color>
+    <color name="wizard_button">#dc000000</color>
+    <color name="wizard_pager_default">#ffc7c7c7</color>
+    <color name="wizard_pager_selected">#444444</color>
+
+    <!-- Content -->
+    <color name="background_content_light">#00BCD4</color>
     <color name="background_content_shadow_light">#CABBBBBB</color>
-    <color name="background_content_stroke_light">#CAeeeeee</color>
-    <color name="title_content_light">#666666</color>
-    <color name="text_content_light">#111111</color>
+    <color name="background_content_stroke_light">#ff00aac3</color>
+    <color name="languages_content_light">#ffffff</color>
+    <color name="title_content_light">#99ffffff</color>
+    <color name="text_content_light">#ffffff</color>
+    <color name="line_content">#99ffffff</color>
 
 </resources>

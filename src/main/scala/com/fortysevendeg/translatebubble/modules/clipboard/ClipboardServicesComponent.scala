@@ -2,7 +2,6 @@ package com.fortysevendeg.translatebubble.modules.clipboard
 
 import android.content.ClipboardManager
 import com.fortysevendeg.translatebubble.service._
-import macroid.AppContext
 
 trait ClipboardServices {
   def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit

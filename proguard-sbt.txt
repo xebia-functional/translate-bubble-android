@@ -166,23 +166,36 @@
 # view res/layout/abc_search_view.xml #generated:78
 -keep class android.support.v7.widget.SearchView$SearchAutoComplete { <init>(...); }
 
-# view AndroidManifest.xml #generated:24
+# view AndroidManifest.xml #generated:26
 -keep class android.support.v7.widget.TestActivity { <init>(...); }
 
 # view res/layout/abc_screen_toolbar.xml #generated:36
 -keep class android.support.v7.widget.Toolbar { <init>(...); }
 
-# view AndroidManifest.xml #generated:34
+# view AndroidManifest.xml #generated:36
 -keep class android.test.InstrumentationTestRunner { <init>(...); }
 
-# view AndroidManifest.xml #generated:18
+# view AndroidManifest.xml #generated:20
 -keep class com.fortysevendeg.translatebubble.receivers.BootReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:18
+-keep class com.fortysevendeg.translatebubble.services.RestartTranslationService { <init>(...); }
 
 # view AndroidManifest.xml #generated:16
 -keep class com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService { <init>(...); }
 
-# view AndroidManifest.xml #generated:7
+# view res/layout/actions_view.xml #generated:21
+-keep class com.fortysevendeg.translatebubble.ui.components.CloseView { <init>(...); }
+
+# view res/layout/actions_view.xml #generated:11
+# view res/layout/actions_view.xml #generated:15
+-keep class com.fortysevendeg.translatebubble.ui.components.DisableView { <init>(...); }
+
+# view AndroidManifest.xml #generated:14
 -keep class com.fortysevendeg.translatebubble.ui.preferences.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:7
+-keep class com.fortysevendeg.translatebubble.ui.wizard.WizardActivity { <init>(...); }
 
 -ignorewarnings
 -keep class scala.Dynamic

@@ -1,48 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<FrameLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        style="@style/TranslateContent">
 
-    <FrameLayout
-            style="@style/TranslateContentLight">
+    <LinearLayout
+            style="@style/TranslateContentTitle">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/info_layout"
-                android:orientation="vertical">
-
-            <TextView
-                    style="@style/TranslateTitleLight"
-                    android:id="@+id/original"/>
-
-            <TextView
-                    style="@style/TranslateTextLight"
-                    android:id="@+id/translate"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/buttons_layout"
-                style="@style/TranslateButtonsLight">
-
-            <TextView
-                    style="@style/TranslateIconCollapseLight"
-                    android:id="@+id/collapse"/>
-
-            <TextView
-                    style="@style/TranslateIconCloseLight"
-                    android:id="@+id/close"/>
-
-        </LinearLayout>
+        <TextView
+                style="@style/ContentLanguages"
+                android:id="@+id/languages"/>
 
         <ImageView
-                style="@style/TranslateIconOptionsLight"
+                style="@style/ContentBubbleBack"
                 android:id="@+id/options"/>
 
-    </FrameLayout>
+    </LinearLayout>
 
-</FrameLayout>
+    <TextView
+            style="@style/ContentOriginalText"
+            android:id="@+id/original"/>
+
+    <ImageView style="@style/ContentLine"/>
+
+    <TextView
+            style="@style/ContentTranslatedText"
+            android:id="@+id/translate"/>
+
+</LinearLayout>

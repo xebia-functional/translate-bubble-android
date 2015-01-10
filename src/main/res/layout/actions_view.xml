@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             style="@style/ActionsContent">
+
+    <LinearLayout
+            android:id="@+id/content_options"
+            style="@style/ActionsContentDisable">
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/disable"
+                style="@style/ActionsDisable"/>
+
+        <com.fortysevendeg.translatebubble.ui.components.DisableView
+                android:id="@+id/min_15"
+                style="@style/Actions30minDisable"/>
+
+    </LinearLayout>
+
+    <com.fortysevendeg.translatebubble.ui.components.CloseView
+            android:id="@+id/close"
+            style="@style/ActionsClose"/>
+
+</FrameLayout>

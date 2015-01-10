@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="translateServiceUrl">http://api.mymemory.translated.net/get?q=%1$s&amp;langpair=%2$s</string>
+
+</resources>

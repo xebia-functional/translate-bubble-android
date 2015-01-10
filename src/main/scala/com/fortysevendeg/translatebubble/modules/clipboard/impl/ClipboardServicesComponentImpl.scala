@@ -1,10 +1,9 @@
 package com.fortysevendeg.translatebubble.modules.clipboard.impl
 
 import android.content.{ClipData, Context, ClipboardManager}
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.clipboard._
 import com.fortysevendeg.translatebubble.service._
-import macroid.AppContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
@@ -26,30 +25,22 @@ trait ClipboardServicesComponentImpl
       appContextProvider.get.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
     }
 
-    override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = {
-      request =>
-        Future {
-          var result: Option[String] = None
-          val clip: ClipData = clipboardManager.getPrimaryClip
-          if (clip != null && clip.getItemCount > 0) {
-            val aux: CharSequence = clip.getItemAt(0).getText
-            if (aux != null && aux.length > 0 && previousText.map(_ != aux).getOrElse(true)) {
-              previousText = Some(aux.toString)
-              result = previousText
-            }
-          }
-          GetTextClipboardResponse(result)
+    override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = request =>
+      Future {
+        Option(clipboardManager.getPrimaryClip) map (_.getItemAt(0)) map (_.getText) match {
+          case Some(clipDataText) if (clipDataText.length > 0 && previousText.map(_ != clipDataText).getOrElse(true)) =>
+            previousText = Some(clipDataText.toString)
+            GetTextClipboardResponse(previousText)
+          case _ => GetTextClipboardResponse(None)
         }
-    }
+      }
 
-    override def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse] = {
-      request =>
-        Future {
-          val clip = ClipData.newPlainText("label", request.text)
-          clipboardManager.setPrimaryClip(clip)
-          CopyToClipboardResponse()
-        }
-    }
+    override def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse] = request =>
+      Future {
+        val clip = ClipData.newPlainText("label", request.text)
+        clipboardManager.setPrimaryClip(clip)
+        CopyToClipboardResponse()
+      }
 
     def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit = {
       if (clipChangedListener.isDefined) {
@@ -63,9 +54,9 @@ trait ClipboardServicesComponentImpl
       clipChangedListener map clipboardManager.removePrimaryClipChangedListener
       clipChangedListener = None
     }
-    def reset(): Unit = {
-      previousText = None
-    }
+
+    def reset(): Unit = previousText = None
+
   }
 
 }

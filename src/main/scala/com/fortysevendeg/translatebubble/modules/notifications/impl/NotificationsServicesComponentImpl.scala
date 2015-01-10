@@ -3,14 +3,12 @@ package com.fortysevendeg.translatebubble.modules.notifications.impl
 import android.app.{Notification, NotificationManager, PendingIntent}
 import android.content.{Context, Intent}
 import android.support.v4.app.NotificationCompat
+import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
-import com.fortysevendeg.translatebubble.macroid.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.notifications._
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
-import com.fortysevendeg.translatebubble.modules.persistent.impl.PersistentServicesComponentImpl
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
-import macroid.AppContext
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -29,35 +27,33 @@ trait NotificationsServicesComponentImpl
 
     val notifyManager = appContextProvider.get.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
 
-    override def showTextTranslated: Service[ShowTextTranslatedRequest, ShowTextTranslatedResponse] = {
-      request =>
-          Future {
-            val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
-            val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
+    override def showTextTranslated: Service[ShowTextTranslatedRequest, ShowTextTranslatedResponse] = request =>
+        Future {
+          val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
+          val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
 
-            val builder = new NotificationCompat.Builder(appContextProvider.get)
-            val title = appContextProvider.get.getString(R.string.translatedTitle, request.original)
+          val builder = new NotificationCompat.Builder(appContextProvider.get)
+          val title = appContextProvider.get.getString(R.string.translatedTitle, request.original)
+          builder
+              .setContentTitle(title)
+              .setContentText(request.translated)
+              .setTicker(title)
+              .setContentIntent(contentIntent)
+              .setSmallIcon(R.drawable.icon_app)
+              .setAutoCancel(true)
+
+          if (persistentServices.isHeadsUpEnable()) {
             builder
-                .setContentTitle(title)
-                .setContentText(request.translated)
-                .setTicker(title)
-                .setContentIntent(contentIntent)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setAutoCancel(true)
-
-            if (persistentServices.isHeadsUpEnable()) {
-              builder
-                  .setDefaults(Notification.DEFAULT_VIBRATE)
-                  .setPriority(NotificationCompat.PRIORITY_HIGH)
-            }
-
-            val notification: Notification = new NotificationCompat.BigTextStyle(builder)
-                .bigText(request.translated).build
-
-            notifyManager.notify(NOTIFICATION_ID, notification)
-            ShowTextTranslatedResponse()
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
           }
-    }
+
+          val notification: Notification = new NotificationCompat.BigTextStyle(builder)
+              .bigText(request.translated).build
+
+          notifyManager.notify(NOTIFICATION_ID, notification)
+          ShowTextTranslatedResponse()
+        }
 
     override def translating(): Unit = {
       val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
@@ -69,7 +65,7 @@ trait NotificationsServicesComponentImpl
           .setContentTitle(title)
           .setTicker(title)
           .setContentIntent(contentIntent)
-          .setSmallIcon(R.drawable.ic_launcher)
+          .setSmallIcon(R.drawable.icon_app)
           .setAutoCancel(true)
 
       if (persistentServices.isHeadsUpEnable()) {
@@ -93,16 +89,14 @@ trait NotificationsServicesComponentImpl
           .setContentTitle(title)
           .setContentText(message)
           .setTicker(title).setContentIntent(contentIntent)
-          .setSmallIcon(R.drawable.ic_launcher)
+          .setSmallIcon(R.drawable.icon_app)
           .setAutoCancel(true)
           .build
 
       notifyManager.notify(NOTIFICATION_ID, notification)
     }
 
-    def getUniqueId: Int = {
-      (System.currentTimeMillis & 0xfffffff).toInt
-    }
+    def getUniqueId(): Int = (System.currentTimeMillis & 0xfffffff).toInt
 
   }
 

@@ -41,7 +41,17 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/more">
+    <PreferenceCategory android:title="@string/about">
+
+        <PreferenceScreen
+                android:key="showTutorial"
+                android:title="@string/showTutorial"
+                />
+
+        <PreferenceScreen
+                android:key="openSource"
+                android:title="@string/openSource"
+                />
 
         <PreferenceScreen
                 android:key="launchFake"
