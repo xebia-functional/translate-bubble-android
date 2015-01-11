@@ -9,7 +9,7 @@ import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
-import android.widget.Toast
+import com.fortysevendeg.macroid.extras.DevicesQueries._
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
@@ -240,8 +240,12 @@ class BubbleService
   private lazy val (contentView, paramsContentView) = {
     val contentView = new ContentView(this)
     contentView.hide()
+    val width = {
+      val w = if (widthScreen > heightScreen) heightScreen else widthScreen
+      if (tablet) (w * 0.7f).toInt else w
+    }
     val paramsContentView = new WindowManager.LayoutParams(
-      if (widthScreen > heightScreen) heightScreen else widthScreen,
+      width,
       getResources.getDimension(R.dimen.height_content).toInt,
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
@@ -301,7 +305,7 @@ class BubbleService
   }
 
   override def onStartCommand(intent: Intent, flags: Int, startId: Int): Int = {
-//    ensureServiceStaysRunning()
+    //    ensureServiceStaysRunning()
     Service.START_STICKY
   }
 
