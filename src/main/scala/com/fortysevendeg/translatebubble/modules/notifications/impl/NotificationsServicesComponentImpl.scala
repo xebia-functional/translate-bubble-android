@@ -55,28 +55,6 @@ trait NotificationsServicesComponentImpl
           ShowTextTranslatedResponse()
         }
 
-    override def translating(): Unit = {
-      val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
-      val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
-      val builder = new NotificationCompat.Builder(appContextProvider.get)
-      // TODO Simplify this using MacroidExtras when it's available
-      val title = appContextProvider.get.getString(R.string.translating)
-      builder
-          .setContentTitle(title)
-          .setTicker(title)
-          .setContentIntent(contentIntent)
-          .setSmallIcon(R.drawable.icon_app)
-          .setAutoCancel(true)
-
-      if (persistentServices.isHeadsUpEnable()) {
-        builder
-            .setDefaults(Notification.DEFAULT_VIBRATE)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-      }
-
-      notifyManager.notify(NOTIFICATION_ID, builder.build())
-    }
-
     override def failed(): Unit = {
       val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
       val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)

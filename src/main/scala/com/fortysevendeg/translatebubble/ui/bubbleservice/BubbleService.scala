@@ -241,7 +241,7 @@ class BubbleService
     val contentView = new ContentView(this)
     contentView.hide()
     val paramsContentView = new WindowManager.LayoutParams(
-      widthScreen,
+      if (widthScreen > heightScreen) heightScreen else widthScreen,
       getResources.getDimension(R.dimen.height_content).toInt,
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
@@ -301,7 +301,7 @@ class BubbleService
   }
 
   override def onStartCommand(intent: Intent, flags: Int, startId: Int): Int = {
-    ensureServiceStaysRunning()
+//    ensureServiceStaysRunning()
     Service.START_STICKY
   }
 
@@ -339,8 +339,6 @@ class BubbleService
       } else {
         contentView.setTexts(getString(R.string.translating), "", "")
       }
-    } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
-      notificationsServices.translating()
     }
 
     val result = for {
@@ -392,6 +390,7 @@ class BubbleService
     super.onConfigurationChanged(newConfig)
     reloadSizeDisplay()
     bubble.changePositionIfIsNecessary(paramsBubble, windowManager)
+    contentView.changePositionIfIsNecessary(widthScreen, heightScreen, paramsContentView, windowManager)
   }
 
 }
