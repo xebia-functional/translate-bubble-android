@@ -14,7 +14,7 @@ import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardReques
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
 import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
-import com.fortysevendeg.translatebubble.utils.LanguageType
+import com.fortysevendeg.translatebubble.utils.{TranslateUIType, LanguageType}
 import macroid.FullDsl._
 import macroid.{AppContext, Contexts}
 
@@ -44,8 +44,7 @@ class DefaultPreferencesFragment
   implicit lazy val rootPreferencesFragment = new RootPreferencesFragment(this, R.xml.preferences)
 
   private lazy val launchFake = connect[PreferenceScreen]("launchFake")
-  private lazy val typeBubble = connect[CheckBoxPreference]("typeBubble")
-  private lazy val typeNotification = connect[CheckBoxPreference]("typeNotification")
+  private lazy val typeTranslate = connect[ListPreference]("typeTranslate")
   private lazy val headUpNotification = connect[CheckBoxPreference]("headUpNotification")
   private lazy val toLanguage = connect[ListPreference]("toLanguage")
   private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
@@ -103,36 +102,20 @@ class DefaultPreferencesFragment
       })
     )
 
-    typeBubble.map(
-      _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
-        def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
-          val value: Boolean = newValue.asInstanceOf[Boolean]
-          if (value) {
-            typeNotification.map(_.setChecked(false))
-            headUpNotification.map(_.setEnabled(false))
+    typeTranslate.map {
+      translate =>
+        setTypeTranslated(translate.getValue)
+        val translates: List[String] = TranslateUIType.resourceNames
+        val translatesValues: List[String] = TranslateUIType.stringNames()
+        translate.setEntries(translates.toArray[CharSequence])
+        translate.setEntryValues(translatesValues.toArray[CharSequence])
+        translate.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
+          def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
+            setTypeTranslated(newValue.asInstanceOf[String])
+            true
           }
-          value
-        }
-      })
-    )
-
-    typeNotification.map(
-      _.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
-        def onPreferenceChange(preference: Preference, newValue: AnyRef): Boolean = {
-          val value: Boolean = newValue.asInstanceOf[Boolean]
-          if (value) {
-            typeBubble.map(_.setChecked(false))
-            headUpNotification.map(_.setEnabled(true))
-          }
-          value
-        }
-      })
-    )
-
-    for {
-      headUp <- headUpNotification
-      notification <- typeNotification
-    } yield headUp.setEnabled(notification.isChecked)
+        })
+    }
 
     val languages: List[String] = LanguageType.resourceNames
     val languagesValues: List[String] = LanguageType.stringNames()
@@ -170,12 +153,27 @@ class DefaultPreferencesFragment
 
   }
 
-  private def changeTo(key: String) {
+  private def setTypeTranslated(key: String) = {
+    headUpNotification.map(_.setEnabled(key.equals(TranslateUIType.NOTIFICATION.toString)))
+    typeTranslate.map {
+      translate =>
+        key match {
+          case _ if key.equals(TranslateUIType.NOTIFICATION.toString) =>
+            translate.setTitle(R.string.notificationTitle)
+            translate.setSummary(R.string.notificationMessage)
+          case _ =>
+            translate.setTitle(R.string.bubbleTitle)
+            translate.setSummary(R.string.bubbleMessage)
+        }
+    }
+  }
+
+  private def changeTo(key: String) = {
     val toNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
     toLanguage.map(_.setTitle(getString(R.string.to, toNameLang)))
   }
 
-  private def changeFrom(key: String) {
+  private def changeFrom(key: String) = {
     val fromNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
     fromLanguage.map(_.setTitle(getString(R.string.from, fromNameLang)))
   }

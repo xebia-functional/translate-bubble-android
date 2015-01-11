@@ -56,6 +56,9 @@
 
     <string name="gotIt">Got it!</string>
 
+    <string name="BUBBLE">Bubble</string>
+    <string name="NOTIFICATION">Notification</string>
+
     <string name="AUTO_DETECT">Autodetect</string>
     <string name="ARABIC">Arabic</string>
     <string name="BULGARIAN">Bulgarian</string>

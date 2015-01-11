@@ -29,7 +29,7 @@ trait PersistentServicesComponentImpl
 
   val toLanguageKey = "toLanguage"
 
-  val typeNotificationKey = "typeNotification"
+  val typeTranslateKey = "typeTranslate"
 
   val englishKey = "ENGLISH"
 
@@ -76,8 +76,10 @@ trait PersistentServicesComponentImpl
     }
 
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {
-      case s: SharedPreferences if s.getBoolean(typeNotificationKey, false) => TranslateUIType.NOTIFICATION
-      case _ => TranslateUIType.BUBBLE
+      case s: SharedPreferences if s.getString(typeTranslateKey, "").equals(TranslateUIType.NOTIFICATION.toString) =>
+        TranslateUIType.NOTIFICATION
+      case _ =>
+        TranslateUIType.BUBBLE
     }
 
     def getString(res: String) = {
