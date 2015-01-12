@@ -7,20 +7,15 @@ object TranslateUIType extends Enumeration {
   val NOTIFICATION, BUBBLE = Value
 
   def stringNames(): List[String] = {
-    var result: List[String] = List.empty
-    for (value <- values) {
-      result = value.toString :: result
-    }
-    result
+    TranslateUIType.values.map(_.toString).toList
   }
 
   def resourceNames(implicit appContext: AppContext): List[String] = {
-    var result: List[String] = List.empty
-    for (value <- values) {
-      val id = appContext.get.getResources.getIdentifier(value.toString, "string", appContext.get.getPackageName)
-      result = (if (id == 0) value.toString else appContext.get.getString(id)) :: result
-    }
-    result
+    TranslateUIType.values.map {
+      v =>
+        val id = appContext.get.getResources.getIdentifier(v.toString, "string", appContext.get.getPackageName)
+        if (id == 0) v.toString else appContext.get.getString(id)
+    }.toList
   }
 
 }

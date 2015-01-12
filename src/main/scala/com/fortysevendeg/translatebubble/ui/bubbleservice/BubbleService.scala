@@ -305,7 +305,7 @@ class BubbleService
   }
 
   override def onStartCommand(intent: Intent, flags: Int, startId: Int): Int = {
-    //    ensureServiceStaysRunning()
+    ensureServiceStaysRunning()
     Service.START_STICKY
   }
 
@@ -318,7 +318,8 @@ class BubbleService
   }
 
   private def ensureServiceStaysRunning() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    // We have detected a KitKat bug that sometimes the service falls. We're trying to fix this bug here
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
       val restartAlarmInterval: Int = 5 * 60 * 1000
       val resetAlarmTimer: Int = 2 * 60 * 1000
       val restartIntent: Intent = new Intent(this, classOf[BubbleService])
@@ -326,8 +327,8 @@ class BubbleService
       val alarmMgr: AlarmManager = getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
       val restartServiceHandler: Handler = new Handler {
         override def handleMessage(msg: Message) {
-          val pintent: PendingIntent = PendingIntent.getService(getApplicationContext, 0, restartIntent, 0)
-          alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime + restartAlarmInterval, pintent)
+          val pendingIntent: PendingIntent = PendingIntent.getService(getApplicationContext, 0, restartIntent, 0)
+          alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime + restartAlarmInterval, pendingIntent)
           sendEmptyMessageDelayed(0, resetAlarmTimer)
         }
       }
