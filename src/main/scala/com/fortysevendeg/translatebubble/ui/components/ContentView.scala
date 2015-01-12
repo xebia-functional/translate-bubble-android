@@ -72,4 +72,18 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     animator.start()
   }
 
+  def changePositionIfIsNecessary(
+      widthScreen: Int,
+      heightScreen: Int,
+      params: WindowManager.LayoutParams,
+      windowManager: WindowManager): Unit = {
+    if (params.x + getWidth > widthScreen) {
+      params.x = widthScreen - getWidth
+    }
+    if (params.y + getHeight > heightScreen) {
+      params.y = heightScreen - getHeight
+    }
+    windowManager.updateViewLayout(ContentView.this, params)
+  }
+
 }

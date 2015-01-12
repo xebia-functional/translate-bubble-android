@@ -9,7 +9,7 @@ import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
-import android.widget.Toast
+import com.fortysevendeg.macroid.extras.DevicesQueries._
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
@@ -240,8 +240,12 @@ class BubbleService
   private lazy val (contentView, paramsContentView) = {
     val contentView = new ContentView(this)
     contentView.hide()
+    val width = {
+      val w = if (widthScreen > heightScreen) heightScreen else widthScreen
+      if (tablet) (w * 0.7f).toInt else w
+    }
     val paramsContentView = new WindowManager.LayoutParams(
-      widthScreen,
+      width,
       getResources.getDimension(R.dimen.height_content).toInt,
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
@@ -314,7 +318,8 @@ class BubbleService
   }
 
   private def ensureServiceStaysRunning() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    // We have detected a KitKat bug that sometimes the service falls. We're trying to fix this bug here
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
       val restartAlarmInterval: Int = 5 * 60 * 1000
       val resetAlarmTimer: Int = 2 * 60 * 1000
       val restartIntent: Intent = new Intent(this, classOf[BubbleService])
@@ -322,8 +327,8 @@ class BubbleService
       val alarmMgr: AlarmManager = getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
       val restartServiceHandler: Handler = new Handler {
         override def handleMessage(msg: Message) {
-          val pintent: PendingIntent = PendingIntent.getService(getApplicationContext, 0, restartIntent, 0)
-          alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime + restartAlarmInterval, pintent)
+          val pendingIntent: PendingIntent = PendingIntent.getService(getApplicationContext, 0, restartIntent, 0)
+          alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime + restartAlarmInterval, pendingIntent)
           sendEmptyMessageDelayed(0, resetAlarmTimer)
         }
       }
@@ -339,8 +344,6 @@ class BubbleService
       } else {
         contentView.setTexts(getString(R.string.translating), "", "")
       }
-    } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
-      notificationsServices.translating()
     }
 
     val result = for {
@@ -392,6 +395,7 @@ class BubbleService
     super.onConfigurationChanged(newConfig)
     reloadSizeDisplay()
     bubble.changePositionIfIsNecessary(paramsBubble, windowManager)
+    contentView.changePositionIfIsNecessary(widthScreen, heightScreen, paramsContentView, windowManager)
   }
 
 }

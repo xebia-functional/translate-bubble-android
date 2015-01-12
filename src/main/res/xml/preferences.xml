@@ -9,17 +9,9 @@
 
     <PreferenceCategory android:title="@string/typeFeedback">
 
-        <CheckBoxPreference
-                android:key="typeBubble"
-                android:title="@string/bubbleTitle"
-                android:summary="@string/bubbleMessage"
-                android:defaultValue="true"/>
-
-        <CheckBoxPreference
-                android:key="typeNotification"
-                android:title="@string/notificationTitle"
-                android:summary="@string/notificationMessage"
-                android:defaultValue="false"/>
+        <ListPreference
+                android:defaultValue="bubble"
+                android:key="typeTranslate"/>
 
         <CheckBoxPreference
                 android:key="headUpNotification"
