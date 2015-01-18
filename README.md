@@ -1,15 +1,34 @@
 Translate Bubble for Android
 ============================
 
-Translate Bubble for Android
-============================
-
 Translate Bubble is an application that facilitates the texts translation on your cell phone. You only has to send to clipboard some text and immediately you can see a bubble in your screen with you translation. You don't have to leave your application.
 
 Scala on Android
 ==============
 
 This application is done in Scala on Android completely and we wanna share the code with you. We use [macroid](http://macroid.github.io/) library for this project and we have created some utilities in a separate project called [macroid-extras](http://macroid.github.io/) that they are necessaries for Translate Bubble
+
+Compile
+======
+
+You can compile this project and contribute if you want. You have to do the next steps:
+
+* Download [Activator](https://typesafe.com/community/core-tools/activator-and-sbt) and install it
+* You need Android SDK configured in your computer
+* Clone this project in your computer
+* From root directory project write:
+
+```
+$ ./activator
+```
+
+* Connect your phone and write:
+
+```
+> run
+```
+
+You can use your favorite IDE. We use IntelliJ with Scala pluging. If you wanna configure this project from IntelliJ only you have to import the project. 
 
 Download
 ========

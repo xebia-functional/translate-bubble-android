@@ -25,6 +25,27 @@ object Libraries {
     lazy val androidCardView = androidDep("cardview-v7")
   }
 
+  object playServices {
+
+    def playServicesDep(module: String) = "com.google.android.gms" % module % Versions.playServicesV
+
+    lazy val playServicesGooglePlus = playServicesDep("play-services-plus")
+    lazy val playServicesAccountLogin = playServicesDep("play-services-identity")
+    lazy val playServicesActivityRecognition = playServicesDep("play-services-location")
+    lazy val playServicesAppIndexing = playServicesDep("play-services-appindexing")
+    lazy val playServicesCast = playServicesDep("play-services-cast")
+    lazy val playServicesDrive = playServicesDep("play-services-drive")
+    lazy val playServicesFit = playServicesDep("play-services-fitness")
+    lazy val playServicesMaps = playServicesDep("play-services-maps")
+    lazy val playServicesAds = playServicesDep("play-services-ads")
+    lazy val playServicesPanoramaViewer = playServicesDep("play-services-panorama")
+    lazy val playServicesGames = playServicesDep("play-services-games")
+    lazy val playServicesWallet = playServicesDep("play-services-wallet")
+    lazy val playServicesWear = playServicesDep("play-services-wearable")
+    // Google Actions, Google Analytics and Google Cloud Messaging
+    lazy val playServicesBase = playServicesDep("play-services-base")
+  }
+
   object macroid {
 
     def macroid(module: String = "") =

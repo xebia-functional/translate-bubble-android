@@ -1,5 +1,6 @@
 import Libraries.android._
 import Libraries.macroid._
+import Libraries.playServices._
 import Libraries.json._
 
 android.Plugin.androidBuild
@@ -27,9 +28,8 @@ resolvers ++= Settings.resolvers
 libraryDependencies ++= Seq(
   aar(macroidRoot),
   aar(androidAppCompat),
-  aar(androidCardView),
-  aar(androidRecyclerview),
   aar(macroidExtras),
+  aar(playServicesBase),
   json4s,
   compilerPlugin(Libraries.wartRemover))
 

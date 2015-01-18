@@ -37,6 +37,7 @@ import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView,
 import com.fortysevendeg.translatebubble.utils.TranslateUIType
 import macroid.FullDsl._
 import macroid.{AppContext, Ui}
+import com.fortysevendeg.translatebubble.ui.commons.Strings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Try}
@@ -99,10 +100,16 @@ class BubbleService
               bubble.hideFromCloseAction(paramsBubble, windowManager)
             // Bubble was moved over DisableTranslation
             case actionsView if (actionsView.isOverDisableView(x, y)) =>
+              analyticsServices.send(
+                analyticsTranslateService,
+                Some(analyticsDisable))
               persistentServices.disableTranslation()
               bubble.hideFromOptionAction(paramsBubble, windowManager)
             // Bubble was moved over DisableTranslation during 30 minutes
             case actionsView if (actionsView.isOver30minView(x, y)) =>
+              analyticsServices.send(
+                analyticsTranslateService,
+                Some(analytics30MinDisable))
               persistentServices.disable30MinutesTranslation()
               bubble.hideFromOptionAction(paramsBubble, windowManager)
             // Bubble drops somewhere else
@@ -355,11 +362,8 @@ class BubbleService
   private def onStartTranslate() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     if (typeTranslateUI == TranslateUIType.BUBBLE) {
-      if (bubbleStatus == BubbleStatus.FLOATING) {
-        bubble.show(paramsBubble, windowManager)
-      } else {
-        contentView.setTexts(getString(R.string.translating), "", "")
-      }
+      bubble.show(paramsBubble, windowManager)
+      contentView.setTexts(getString(R.string.translating), "", "")
     }
 
     val result = for {
@@ -368,40 +372,49 @@ class BubbleService
       translateResponse <- translateServices.translate(
         TranslateRequest(text = textResponse.text, from = persistentResponse.from, to = persistentResponse.to)
       )
-    } yield (textResponse.text, translateResponse.translated)
-    result.mapUi(texts => onEndTranslate(texts._1, texts._2)).recover {
+    } yield (textResponse.text, translateResponse.translated,
+          "%s-%s".format(persistentResponse.from.toString, persistentResponse.to.toString))
+    result.mapUi(texts => onEndTranslate(texts._1, texts._2, texts._3)).recover {
       case _ => translatedFailed()
     }
 
   }
 
-  private def onEndTranslate(maybeOriginalText: Option[String], maybeTranslatedText: Option[String]) = {
+  private def onEndTranslate(
+      maybeOriginalText: Option[String],
+      maybeTranslatedText: Option[String],
+      label: String) = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
+
+    analyticsServices.send(
+      analyticsTranslateService,
+      Some(typeTranslateUI.toString),
+      Some(analyticsClipboard),
+      Some(label))
+
     for {
       originalText <- maybeOriginalText
       translatedText <- maybeTranslatedText
       languages <- persistentServices.getLanguagesString
     } yield {
-      if (typeTranslateUI == TranslateUIType.BUBBLE) {
-        contentView.setTexts(languages, originalText, translatedText)
-        if (bubbleStatus == BubbleStatus.FLOATING) {
+      typeTranslateUI match {
+        case _ if typeTranslateUI == TranslateUIType.BUBBLE =>
+          contentView.setTexts(languages, originalText, translatedText)
           bubble.stopAnimation()
-        }
-      } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
-        notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
+        case _ if typeTranslateUI == TranslateUIType.NOTIFICATION =>
+          notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
       }
     }
   }
 
   private def translatedFailed() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
-    if (typeTranslateUI == TranslateUIType.BUBBLE) {
-      contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "")
-      if (bubbleStatus == BubbleStatus.FLOATING) {
+    typeTranslateUI match {
+      case _ if typeTranslateUI == TranslateUIType.BUBBLE =>
+        contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "")
         bubble.stopAnimation()
-      }
-    } else if (typeTranslateUI == TranslateUIType.NOTIFICATION) {
-      notificationsServices.failed()
+      case _ if typeTranslateUI == TranslateUIType.NOTIFICATION =>
+        notificationsServices.failed()
     }
   }
 

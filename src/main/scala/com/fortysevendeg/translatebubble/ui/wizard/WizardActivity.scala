@@ -27,6 +27,7 @@ import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
 import macroid.FullDsl._
 import macroid.{AppContext, Contexts, Transformer}
+import com.fortysevendeg.translatebubble.ui.commons.Strings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -46,6 +47,10 @@ class WizardActivity
       startActivity(new Intent(this, classOf[MainActivity]))
       finish()
     }
+
+    analyticsServices.send(
+      if (modeTutorial) analyticsTutorialScreen else analyticsWizardScreen)
+
     setContentView(layout)
 
     val steps = Steps.steps.length
