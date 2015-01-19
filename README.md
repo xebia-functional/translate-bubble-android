@@ -28,7 +28,8 @@ $ ./activator
 > run
 ```
 
-You can use your favorite IDE. At 47 Degrees we use IntelliJ with the Scala plugin. If you want to run this project from IntelliJ you only need to import the project. 
+You can use your favorite IDE. At 47 Degrees we use IntelliJ with the Scala plugin. If you want to run this project from IntelliJ you only need to import the project.
+
 Download
 ========
 
