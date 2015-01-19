@@ -36,7 +36,7 @@ You can download Translate Bubble from [Google Play](http://www.47deg.com). If y
 Contribute
 ========
 
-You can contribute to this application and we will do our best to upload your changes to Google Play. We are also in need of people to contribute additional translations of the application. If you have the desire to translate the applicaiton and unsure how to go about it, please email us at *hello@47deg.com*
+You can contribute to this application and we will do our best to upload your changes to Google Play. We are also in need of people to contribute additional translations of the application. If you have the desire to translate the application and unsure how to go about it, please email us at *hello@47deg.com*
 
 License
 ======
