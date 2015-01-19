@@ -20,30 +20,30 @@
     <string name="app_name">Translate Bubble</string>
     <string name="action_settings">Settings</string>
 
-    <string name="noClipboardText">There isn\'t test in clipboard</string>
+    <string name="noClipboardText">There isn\'t any text on the clipboard</string>
 
     <string name="translatedTitle">%1$s translated</string>
 
     <string name="failedTitle">Failed</string>
-    <string name="failedMessage">We have a problem. Try again</string>
+    <string name="failedMessage">There was a problem. Please, try again</string>
 
     <string name="translating">Translating</string>
     <string name="collapse">Collapse</string>
     <string name="close">Close</string>
     <string name="toLanguages">%1$s to %2$s</string>
 
-    <string name="translationEnable">Translation Enable</string>
+    <string name="translationEnable">Translation Enabled</string>
 
-    <string name="typeFeedback">Type Feedback</string>
+    <string name="typeFeedback">Feedback Type</string>
 
     <string name="notificationTitle">Notification</string>
-    <string name="notificationMessage">Launch a System Android Notification</string>
+    <string name="notificationMessage">Trigger an Android system notification</string>
 
     <string name="bubbleTitle">Bubble</string>
-    <string name="bubbleMessage">A bubble over content</string>
+    <string name="bubbleMessage">A unobtrusive bubble overlaid on the screen</string>
 
     <string name="headUpNotificationTitle">Heads-Up Notification</string>
-    <string name="headUpNotificationMessage">Show Heads-Up. Only in Lollipop or upper</string>
+    <string name="headUpNotificationMessage">Show Heads-Up. Only in Lollipop and greater</string>
 
     <string name="launchFake">Launch Fake Translation</string>
 
@@ -51,24 +51,23 @@
     <string name="showTutorial">Show Tutorial</string>
     <string name="openSource">Open Source</string>
     <string name="openSourceMessage">This app is licensed under the Apache License, Version 2.0 and
-        we\'ve made in Scala on Android. You can download the code and learn how you can write code
-        in Android using Scala</string>
+        developed using Scala on Android. You can download the source code to learn more about writing applications in Scala on Android.</string>
 
-    <string name="goToGitHub">Go to GitHub</string>
+    <string name="goToGitHub">View on GitHub</string>
     <string name="cancel">Cancel</string>
 
     <string name="languages">Languages</string>
     <string name="from">From %1$s</string>
     <string name="to">To %1$s</string>
 
-    <string name="wizardTitle1">Bubble Translate</string>
-    <string name="wizardDescription1">Instantly Translates</string>
-    <string name="wizardTitle2">Send to clipboard</string>
+    <string name="wizardTitle1">Translate Bubble</string>
+    <string name="wizardDescription1">Instantly Translate</string>
+    <string name="wizardTitle2">Copy to clipboard</string>
     <string name="wizardDescription2">Select the text you want to translate and copy it to the clipboard</string>
-    <string name="wizardTitle3">Bubble is here</string>
-    <string name="wizardDescription3">The bubble contains the translation and will not bother your reading</string>
-    <string name="wizardTitle4">Clicking on the bubble</string>
-    <string name="wizardDescription4">You\'ll see the translation and you can scroll through your screen</string>
+    <string name="wizardTitle3">Bubble appears</string>
+    <string name="wizardDescription3">A bubble containing the translation appear and will not interrupt your current task</string>
+    <string name="wizardTitle4">Click the bubble</string>
+    <string name="wizardDescription4">You\'ll see the translation. You can move the results around on your screen</string>
 
     <string name="gotIt">Got it!</string>
 
