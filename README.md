@@ -1,25 +1,42 @@
 Translate Bubble for Android
 ============================
 
-Translate Bubble for Android
-============================
-
-Translate Bubble is an application that facilitates the texts translation on your cell phone. You only has to send to clipboard some text and immediately you can see a bubble in your screen with you translation. You don't have to leave your application.
+Translate Bubble is an application that facilitates the translation of text on your cell phone. You only has to copy any text to clipboard and immediately you will see a bubble appear on your screen with your translation. You don't even need to to leave your current application.
 
 Scala on Android
 ==============
 
-This application is done in Scala on Android completely and we wanna share the code with you. We use [macroid](http://macroid.github.io/) library for this project and we have created some utilities in a separate project called [macroid-extras](http://macroid.github.io/) that they are necessaries for Translate Bubble
+This application is written entirely in Scala on Android. We are excited to make the application open source and share the code with you. We have used the [macroid](http://macroid.github.io/) library extensively in this project. In addition we have contributed our own Macroid extenions to this application, that can be found here: [macroid-extras](http://macroid.github.io/).
+Compile
+======
 
+You can compile this project and contribute improvements. To compile the project:
+
+* Download [Activator](https://typesafe.com/community/core-tools/activator-and-sbt) and install it
+* Configure the Android SDK on your computer
+* Clone this GitHub project to your computer
+* From project root directory run:
+
+```
+$ ./activator
+```
+
+* Connect your phone and execute:
+
+```
+> run
+```
+
+You can use your favorite IDE. At 47 Degrees we use IntelliJ with the Scala plugin. If you want to run this project from IntelliJ you only need to import the project. 
 Download
 ========
 
-You can download it from [Google Play](http://www.47deg.com). If you like your rating will be appreciated :-)
+You can download Translate Bubble from [Google Play](http://www.47deg.com). If you enjoy the application, please take a moment and rate it in the Google Play store :-)
 
 Contribute
 ========
 
-You can contribute a this application and we'll try to upload to Google Play with your changes. We need new languages, if you wanna to translate the application and you don't know how you can do it, write us to *hello@47deg.com*
+You can contribute to this application and we will do our best to upload your changes to Google Play. We are also in need of people to contribute additional translations of the application. If you have the desire to translate the applicaiton and unsure how to go about it, please email us at *hello@47deg.com*
 
 License
 ======
