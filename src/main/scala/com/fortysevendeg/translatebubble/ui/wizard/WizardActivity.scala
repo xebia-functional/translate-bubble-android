@@ -54,8 +54,6 @@ class WizardActivity
 
     val steps = Steps.steps.length
 
-    // TODO we should create a new Tweak for ViewPagers in MacroidExtras
-    
     for {
       page <- paginationContent
       pager <- viewPager
@@ -143,6 +141,11 @@ object Steps {
       R.drawable.wizard_step_03,
       appContext.get.getString(R.string.wizardTitle4),
       appContext.get.getString(R.string.wizardDescription4)
+    ),
+    new Step(
+      R.drawable.wizard_step_04,
+      appContext.get.getString(R.string.wizardTitle5),
+      appContext.get.getString(R.string.wizardDescription5)
     )
   )
 

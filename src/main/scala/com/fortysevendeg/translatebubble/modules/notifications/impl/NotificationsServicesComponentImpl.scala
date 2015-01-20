@@ -55,7 +55,7 @@ trait NotificationsServicesComponentImpl
               .setContentText(request.translated)
               .setTicker(title)
               .setContentIntent(contentIntent)
-              .setSmallIcon(R.drawable.icon_app)
+              .setSmallIcon(R.drawable.ic_notification_default)
               .setAutoCancel(true)
 
           if (persistentServices.isHeadsUpEnable()) {
@@ -83,7 +83,7 @@ trait NotificationsServicesComponentImpl
           .setContentTitle(title)
           .setContentText(message)
           .setTicker(title).setContentIntent(contentIntent)
-          .setSmallIcon(R.drawable.icon_app)
+          .setSmallIcon(R.drawable.ic_notification_default)
           .setAutoCancel(true)
           .build
 

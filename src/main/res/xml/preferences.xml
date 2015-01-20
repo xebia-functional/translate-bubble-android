@@ -61,11 +61,6 @@
                 android:title="@string/openSource"
                 />
 
-        <PreferenceScreen
-                android:key="launchFake"
-                android:title="@string/launchFake"
-                />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

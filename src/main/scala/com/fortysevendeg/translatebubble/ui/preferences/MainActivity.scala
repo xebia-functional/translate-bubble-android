@@ -73,17 +73,6 @@ class DefaultPreferencesFragment
 
     analyticsServices.send(analyticsPreferencesScreen)
 
-    // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
-
-    launchFake map (
-      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
-        override def onPreferenceClick(preference: Preference): Boolean = {
-          clipboardServices.copyToClipboard(CopyToClipboardRequest("Sample %d".format(System.currentTimeMillis())))
-          true
-        }
-      })
-    )
-
     showTutorial map (
       _.setOnPreferenceClickListener(new OnPreferenceClickListener {
         override def onPreferenceClick(preference: Preference): Boolean = {
@@ -125,8 +114,9 @@ class DefaultPreferencesFragment
     typeTranslate map {
       translate =>
         setTypeTranslated(translate.getValue)
-        val translates: List[String] = TranslateUIType.resourceNames
-        val translatesValues: List[String] = TranslateUIType.stringNames()
+        val translateSortedTuples = TranslateUIType.toSortedTuples()
+        val translates: List[String] = translateSortedTuples map (_._2)
+        val translatesValues: List[String] = translateSortedTuples map (_._1)
         translate.setEntries(translates.toArray[CharSequence])
         translate.setEntryValues(translatesValues.toArray[CharSequence])
         translate.setOnPreferenceChangeListener(new OnPreferenceChangeListener {
@@ -137,8 +127,10 @@ class DefaultPreferencesFragment
         })
     }
 
-    val languages: List[String] = LanguageType.resourceNames
-    val languagesValues: List[String] = LanguageType.stringNames()
+    val languagesSortedTuples = LanguageType.toSortedTuples()
+
+    val languages: List[String] = languagesSortedTuples map (_._2)
+    val languagesValues: List[String] = languagesSortedTuples map (_._1)
 
     fromLanguage map {
       from =>

@@ -20,16 +20,12 @@
     <string name="app_name">Translate Bubble</string>
     <string name="action_settings">Settings</string>
 
-    <string name="noClipboardText">There isn\'t any text on the clipboard</string>
-
     <string name="translatedTitle">%1$s translated</string>
 
     <string name="failedTitle">Failed</string>
     <string name="failedMessage">There was a problem. Please, try again</string>
 
     <string name="translating">Translating</string>
-    <string name="collapse">Collapse</string>
-    <string name="close">Close</string>
     <string name="toLanguages">%1$s to %2$s</string>
 
     <string name="translationEnable">Translation Enabled</string>
@@ -44,8 +40,6 @@
 
     <string name="headUpNotificationTitle">Heads-Up Notification</string>
     <string name="headUpNotificationMessage">Show Heads-Up. Only in Lollipop and greater</string>
-
-    <string name="launchFake">Launch Fake Translation</string>
 
     <string name="about">About</string>
     <string name="showTutorial">Show Tutorial</string>
@@ -68,6 +62,8 @@
     <string name="wizardDescription3">A bubble containing the translation appear and will not interrupt your current task</string>
     <string name="wizardTitle4">Click the bubble</string>
     <string name="wizardDescription4">You\'ll see the translation. You can move the results around on your screen</string>
+    <string name="wizardTitle5">Use your Android Wear</string> <!-- Language revision -->
+    <string name="wizardDescription5">You can send your translations to your watch if you don\'t like bubbles in your cell phone</string> <!-- Language revision -->
 
     <string name="gotIt">Got it!</string>
 

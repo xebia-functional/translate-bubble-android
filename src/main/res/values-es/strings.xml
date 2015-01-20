@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 47 Degrees, LLC http://47deg.com hello@47deg.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may
+  ~ not use this file except in compliance with the License. You may obtain
+  ~ a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <string name="action_settings">Preferencias</string>
+
+    <string name="translatedTitle">%1$s traducido</string>
+
+    <string name="failedTitle">Error</string>
+    <string name="failedMessage">Hay un problema. Por favor inténtalo otra vez</string>
+
+    <string name="translating">Traduciendo</string>
+    <string name="toLanguages">%1$s a %2$s</string>
+
+    <string name="translationEnable">Habilitar Traducción</string>
+
+    <string name="typeFeedback">Tipo de Respuesta</string>
+
+    <string name="notificationTitle">Notificación</string>
+    <string name="notificationMessage">Lanza notificación al sistema de notificaciones de Android</string>
+
+    <string name="bubbleTitle">Bubble</string>
+    <string name="bubbleMessage">Discreta burbuja superpuesta en tu pantalla</string>
+
+    <string name="headUpNotificationTitle">Notificaciones Heads-Up</string>
+    <string name="headUpNotificationMessage">Muestra Heads-Up. Sólo en Lollipop o superior</string>
+
+    <string name="about">Sobre esta App</string>
+    <string name="showTutorial">Mostrar Tutorial</string>
+    <string name="openSource">Open Source</string>
+    <string name="openSourceMessage">Esta app está licenciada bajo licenca Apache Version 2.0 y desarrollada
+        usando Scala en Android. Tu puede descargar el código fuente y aprender como hacer aplicaciones en Scala en Android.</string>
+
+    <string name="goToGitHub">Ver en GitHub</string>
+    <string name="cancel">Cancelar</string>
+
+    <string name="languages">Lenguajes</string>
+    <string name="from">Desde %1$s</string>
+    <string name="to">A %1$s</string>
+
+    <string name="wizardTitle1">Translate Bubble</string>
+    <string name="wizardDescription1">Tranducción Instantánea</string>
+    <string name="wizardTitle2">Copiar al portapapeles</string>
+    <string name="wizardDescription2">Selecciona el texto que quieras y cópialo a tu portapapeles</string>
+    <string name="wizardTitle3">La burbuja aparece</string>
+    <string name="wizardDescription3">La burbuja que contiene tu traducción y no interrumpirá lo que estás haciendo</string>
+    <string name="wizardTitle4">Clickea en la burbuja</string>
+    <string name="wizardDescription4">Tu puedes ver tu traducción. Tu puedes mover el resultado por la pantalla</string>
+    <string name="wizardTitle5">Usa tu Android Wear</string>
+    <string name="wizardDescription5">Tu puedes enviar tus traducciones a tu reloj si no te gusta las burbuja en tu pantalla</string>
+
+    <string name="gotIt">¡Entendido!</string>
+
+    <string name="BUBBLE">Burbuja</string>
+    <string name="NOTIFICATION">Notificación</string>
+
+    <string name="AUTO_DETECT">Autodetectar</string>
+    <string name="ARABIC">Arabe</string>
+    <string name="BULGARIAN">Búlgaro</string>
+    <string name="CATALAN">Catalán</string>
+    <string name="CHINESE_SIMPLIFIED">Chino Simplificado</string>
+    <string name="CHINESE_TRADITIONAL">Chino Tradicional</string>
+    <string name="CZECH">Checo</string>
+    <string name="DANISH">Danés</string>
+    <string name="DUTCH">Holandés</string>
+    <string name="ENGLISH">Inglés</string>
+    <string name="ESTONIAN">Estonio</string>
+    <string name="FINNISH">Finlandés</string>
+    <string name="FRENCH">Francés</string>
+    <string name="GERMAN">Alemán</string>
+    <string name="GREEK">Griego</string>
+    <string name="HAITIAN_CREOLE">Haitiano</string>
+    <string name="HEBREW">Hebreo</string>
+    <string name="HINDI">Hindi</string>
+    <string name="HMONG_DAW">Hmong Daw</string>
+    <string name="HUNGARIAN">Húngaro</string>
+    <string name="INDONESIAN">Indonesio</string>
+    <string name="ITALIAN">Italiano</string>
+    <string name="JAPANESE">Japonés</string>
+    <string name="KOREAN">Coreano</string>
+    <string name="LATVIAN">Letón</string>
+    <string name="LITHUANIAN">Lituano</string>
+    <string name="MALAY">Malayo</string>
+    <string name="NORWEGIAN">Noruego</string>
+    <string name="PERSIAN">Persa</string>
+    <string name="POLISH">Polaco</string>
+    <string name="PORTUGUESE">Portugués</string>
+    <string name="ROMANIAN">Rumano</string>
+    <string name="RUSSIAN">Ruso</string>
+    <string name="SLOVAK">Eslovaco</string>
+    <string name="SLOVENIAN">Esloveno</string>
+    <string name="SPANISH">Español</string>
+    <string name="SWEDISH">Sueco</string>
+    <string name="THAI">Tailandés</string>
+    <string name="TURKISH">Turco</string>
+    <string name="UKRAINIAN">Ucraniano</string>
+    <string name="URDU">Urdu</string>
+    <string name="VIETNAMESE">Vietnamita</string>
+
+</resources>
