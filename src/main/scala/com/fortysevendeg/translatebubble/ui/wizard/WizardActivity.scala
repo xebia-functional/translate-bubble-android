@@ -48,8 +48,7 @@ class WizardActivity
       finish()
     }
 
-    analyticsServices.send(
-      if (modeTutorial) analyticsTutorialScreen else analyticsWizardScreen)
+    analyticsServices.send(if (modeTutorial) analyticsTutorialScreen else analyticsWizardScreen)
 
     setContentView(layout)
 

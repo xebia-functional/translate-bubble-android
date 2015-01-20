@@ -71,8 +71,7 @@ class DefaultPreferencesFragment
 
     super.onCreate(savedInstanceState)
 
-    analyticsServices.send(
-      analyticsPreferencesScreen)
+    analyticsServices.send(analyticsPreferencesScreen)
 
     // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
 
@@ -101,15 +100,13 @@ class DefaultPreferencesFragment
     openSource map (
       _.setOnPreferenceClickListener(new OnPreferenceClickListener {
         override def onPreferenceClick(preference: Preference): Boolean = {
-          analyticsServices.send(
-            analyticsOpenSourceDialog)
+          analyticsServices.send(analyticsOpenSourceDialog)
           val builder = new AlertDialog.Builder(getActivity)
           builder.setMessage(R.string.openSourceMessage)
               .setPositiveButton(R.string.goToGitHub, new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, id: Int) {
               // TODO Open github website project
-              analyticsServices.send(
-                analyticsGoToGitHub)
+              analyticsServices.send(analyticsGoToGitHub)
               dialog.dismiss()
             }
           })

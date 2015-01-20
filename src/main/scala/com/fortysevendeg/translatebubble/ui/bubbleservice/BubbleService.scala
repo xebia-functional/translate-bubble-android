@@ -398,10 +398,10 @@ class BubbleService
       languages <- persistentServices.getLanguagesString
     } yield {
       typeTranslateUI match {
-        case _ if typeTranslateUI == TranslateUIType.BUBBLE =>
+        case TranslateUIType.BUBBLE =>
           contentView.setTexts(languages, originalText, translatedText)
           bubble.stopAnimation()
-        case _ if typeTranslateUI == TranslateUIType.NOTIFICATION =>
+        case TranslateUIType.NOTIFICATION =>
           notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
       }
     }
@@ -410,10 +410,10 @@ class BubbleService
   private def translatedFailed() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     typeTranslateUI match {
-      case _ if typeTranslateUI == TranslateUIType.BUBBLE =>
+      case TranslateUIType.BUBBLE =>
         contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "")
         bubble.stopAnimation()
-      case _ if typeTranslateUI == TranslateUIType.NOTIFICATION =>
+      case TranslateUIType.NOTIFICATION =>
         notificationsServices.failed()
     }
   }
