@@ -166,9 +166,6 @@
 # view res/layout/abc_search_view.xml #generated:78
 -keep class android.support.v7.widget.SearchView$SearchAutoComplete { <init>(...); }
 
-# view AndroidManifest.xml #generated:26
--keep class android.support.v7.widget.TestActivity { <init>(...); }
-
 # view res/layout/abc_screen_toolbar.xml #generated:36
 -keep class android.support.v7.widget.Toolbar { <init>(...); }
 
@@ -184,11 +181,11 @@
 # view AndroidManifest.xml #generated:16
 -keep class com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService { <init>(...); }
 
-# view res/layout/actions_view.xml #generated:21
+# view res/layout/actions_view.xml #generated:37
 -keep class com.fortysevendeg.translatebubble.ui.components.CloseView { <init>(...); }
 
-# view res/layout/actions_view.xml #generated:11
-# view res/layout/actions_view.xml #generated:15
+# view res/layout/actions_view.xml #generated:27
+# view res/layout/actions_view.xml #generated:31
 -keep class com.fortysevendeg.translatebubble.ui.components.DisableView { <init>(...); }
 
 # view AndroidManifest.xml #generated:14

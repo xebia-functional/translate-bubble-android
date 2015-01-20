@@ -7,6 +7,7 @@ Scala on Android
 ==============
 
 This application is written entirely in Scala on Android. We are excited to make the application open source and share the code with you. We have used the [macroid](http://macroid.github.io/) library extensively in this project. In addition we have contributed our own Macroid extenions to this application, that can be found here: [macroid-extras](http://macroid.github.io/).
+
 Compile
 ======
 
@@ -27,7 +28,8 @@ $ ./activator
 > run
 ```
 
-You can use your favorite IDE. At 47 Degrees we use IntelliJ with the Scala plugin. If you want to run this project from IntelliJ you only need to import the project. 
+You can use your favorite IDE. At 47 Degrees we use IntelliJ with the Scala plugin. If you want to run this project from IntelliJ you only need to import the project.
+
 Download
 ========
 

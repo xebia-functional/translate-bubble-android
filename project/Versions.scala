@@ -9,4 +9,5 @@ object Versions {
   val macroidV = "2.0.0-M3"
   val wartremoverV = "0.11"
   val json4s = "3.2.10"
+  val playServicesV = "6.5.87"
 }

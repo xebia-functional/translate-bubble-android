@@ -21,7 +21,6 @@ import android.content.{Intent, DialogInterface}
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
-import android.widget.Toast
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
 import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
@@ -29,6 +28,7 @@ import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
+import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
 import com.fortysevendeg.translatebubble.utils.{TranslateUIType, LanguageType}
 import macroid.FullDsl._
@@ -71,6 +71,8 @@ class DefaultPreferencesFragment
 
     super.onCreate(savedInstanceState)
 
+    analyticsServices.send(analyticsPreferencesScreen)
+
     // TODO Don't use 'map'. We should create a Tweak when MacroidExtra module works
 
     launchFake map (
@@ -98,11 +100,13 @@ class DefaultPreferencesFragment
     openSource map (
       _.setOnPreferenceClickListener(new OnPreferenceClickListener {
         override def onPreferenceClick(preference: Preference): Boolean = {
+          analyticsServices.send(analyticsOpenSourceDialog)
           val builder = new AlertDialog.Builder(getActivity)
           builder.setMessage(R.string.openSourceMessage)
               .setPositiveButton(R.string.goToGitHub, new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, id: Int) {
               // TODO Open github website project
+              analyticsServices.send(analyticsGoToGitHub)
               dialog.dismiss()
             }
           })

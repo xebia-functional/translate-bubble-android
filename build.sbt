@@ -1,6 +1,8 @@
 import Libraries.android._
 import Libraries.macroid._
+import Libraries.playServices._
 import Libraries.json._
+import android.PromptPasswordsSigningConfig
 
 android.Plugin.androidBuild
 
@@ -27,13 +29,20 @@ resolvers ++= Settings.resolvers
 libraryDependencies ++= Seq(
   aar(macroidRoot),
   aar(androidAppCompat),
-  aar(androidCardView),
-  aar(androidRecyclerview),
   aar(macroidExtras),
+  aar(playServicesBase),
   json4s,
   compilerPlugin(Libraries.wartRemover))
 
+
+apkSigningConfig in Android := Option(
+  PromptPasswordsSigningConfig(
+    keystore = new File(Path.userHome.absolutePath + "/.android/translate-bubble.keystore"),
+    alias = "47deg"))
+
 run <<= run in Android
+
+packageRelease <<= packageRelease in Android
 
 proguardScala in Android := true
 
