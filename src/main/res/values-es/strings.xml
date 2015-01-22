@@ -22,14 +22,14 @@
     <string name="translatedTitle">%1$s traducido</string>
 
     <string name="failedTitle">Error</string>
-    <string name="failedMessage">Hay un problema. Por favor inténtalo otra vez</string>
+    <string name="failedMessage">Por favor inténtalo otra vez</string>
 
     <string name="translating">Traduciendo</string>
     <string name="toLanguages">%1$s a %2$s</string>
 
-    <string name="translationEnable">Habilitar Traducción</string>
+    <string name="translationEnable">Activar Translate Bubble</string>
 
-    <string name="typeFeedback">Tipo de Respuesta</string>
+    <string name="typeFeedback">Mostrar traducción como</string>
 
     <string name="notificationTitle">Notificación</string>
     <string name="notificationMessage">Lanza notificación al sistema de notificaciones de Android</string>
@@ -37,16 +37,16 @@
     <string name="bubbleTitle">Bubble</string>
     <string name="bubbleMessage">Discreta burbuja superpuesta en tu pantalla</string>
 
-    <string name="headUpNotificationTitle">Notificaciones Heads-Up</string>
-    <string name="headUpNotificationMessage">Muestra Heads-Up. Sólo en Lollipop o superior</string>
+    <string name="headUpNotificationTitle">Notificaciones Ampliadas</string>
+    <string name="headUpNotificationMessage">Muestra aviso emergente. Sólo en Lollipop o superior</string>
 
-    <string name="about">Sobre esta App</string>
-    <string name="showTutorial">Mostrar Tutorial</string>
-    <string name="openSource">Open Source</string>
-    <string name="openSourceMessage">Esta app está licenciada bajo licenca Apache Version 2.0 y desarrollada
-        usando Scala en Android. Tu puede descargar el código fuente y aprender como hacer aplicaciones en Scala en Android.</string>
+    <string name="about">Sobre Translate Bubble</string>
+    <string name="showTutorial">Ver Tutorial</string>
+    <string name="openSource">Bubble Translate es Open Source</string>
+    <string name="openSourceMessage">Tu puedes descargar el código fuente y aprender como hacer aplicaciones en Scala en Android.
+        El código está licenciada bajo licencia Apache Version 2.0 y desarrollado usando Scala en Android. </string>
 
-    <string name="goToGitHub">Ver en GitHub</string>
+    <string name="goToGitHub">Ir a GitHub</string>
     <string name="cancel">Cancelar</string>
 
     <string name="languages">Lenguajes</string>
@@ -57,12 +57,12 @@
     <string name="wizardDescription1">Tranducción Instantánea</string>
     <string name="wizardTitle2">Copiar al portapapeles</string>
     <string name="wizardDescription2">Selecciona el texto que quieras y cópialo a tu portapapeles</string>
-    <string name="wizardTitle3">La burbuja aparece</string>
-    <string name="wizardDescription3">La burbuja que contiene tu traducción y no interrumpirá lo que estás haciendo</string>
-    <string name="wizardTitle4">Clickea en la burbuja</string>
-    <string name="wizardDescription4">Tu puedes ver tu traducción. Tu puedes mover el resultado por la pantalla</string>
-    <string name="wizardTitle5">Usa tu Android Wear</string>
-    <string name="wizardDescription5">Tu puedes enviar tus traducciones a tu reloj si no te gusta las burbuja en tu pantalla</string>
+    <string name="wizardTitle3">Empieza la magia</string>
+    <string name="wizardDescription3">Una burbuja que contiene tu traducción aparece y no interrumpirá lo que estás haciendo</string>
+    <string name="wizardTitle4">Pincha en la burbuja</string>
+    <string name="wizardDescription4">En todo momento puedes ver la traducción del texto seleccionado</string>
+    <string name="wizardTitle5">Úsalo con Android Wear</string>
+    <string name="wizardDescription5">¿Tienes un reloj Android? Activalo como notificación y llegará a tu muñeca</string>
 
     <string name="gotIt">¡Entendido!</string>
 

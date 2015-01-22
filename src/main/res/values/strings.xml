@@ -62,8 +62,8 @@
     <string name="wizardDescription3">A bubble containing the translation appear and will not interrupt your current task</string>
     <string name="wizardTitle4">Click the bubble</string>
     <string name="wizardDescription4">You\'ll see the translation. You can move the results around on your screen</string>
-    <string name="wizardTitle5">Use your Android Wear</string> <!-- Language revision -->
-    <string name="wizardDescription5">You can send your translations to your watch if you don\'t like bubbles in your cell phone</string> <!-- Language revision -->
+    <string name="wizardTitle5">Use with Android Wear</string>
+    <string name="wizardDescription5">Have a Android Wear watch? Select notifications and your translations appear directly on your wrist!</string>
 
     <string name="gotIt">Got it!</string>
 

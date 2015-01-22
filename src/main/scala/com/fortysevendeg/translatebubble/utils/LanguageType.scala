@@ -28,9 +28,9 @@ object LanguageType extends Enumeration {
   INDONESIAN, ITALIAN, JAPANESE, KOREAN, LATVIAN, LITHUANIAN, MALAY, NORWEGIAN, PERSIAN, POLISH, PORTUGUESE,
   ROMANIAN, RUSSIAN, SLOVAK, SLOVENIAN, SPANISH, SWEDISH, THAI, TURKISH, UKRAINIAN, URDU, VIETNAMESE = Value
 
-  def toSortedTuples()(implicit appContext: AppContext) = (stringNames() zip resourceNames).sortBy(_._2)
+  def toSortedTuples()(implicit appContext: AppContext) = (stringNames zip resourceNames).sortBy(_._2)
 
-  private def stringNames(): List[String] = LanguageType.values.toList.map(_.toString)
+  val stringNames: List[String] = LanguageType.values.toList.map(_.toString)
 
   private def resourceNames(implicit appContext: AppContext): List[String] =
     LanguageType.values.toList.map {

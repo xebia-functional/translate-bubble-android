@@ -22,16 +22,16 @@ object TranslateUIType extends Enumeration {
   type TypeTranslateUI = Value
   val NOTIFICATION, BUBBLE = Value
 
-  def toSortedTuples()(implicit appContext: AppContext) = (stringNames() zip resourceNames).sortBy(_._2)
+  def toSortedTuples()(implicit appContext: AppContext) = (stringNames zip resourceNames).sortBy(_._2)
 
-  private def stringNames(): List[String] = TranslateUIType.values.map(_.toString).toList
+  val stringNames: List[String] = TranslateUIType.values.toList.map(_.toString)
 
   private def resourceNames(implicit appContext: AppContext): List[String] =
-    TranslateUIType.values.map {
+    TranslateUIType.values.toList.map {
       v =>
         val id = appContext.get.getResources.getIdentifier(v.toString, "string", appContext.get.getPackageName)
         if (id == 0) v.toString else appContext.get.getString(id)
-    }.toList
+    }
 
 
 }

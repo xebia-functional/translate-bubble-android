@@ -52,13 +52,13 @@
     <PreferenceCategory android:title="@string/about">
 
         <PreferenceScreen
-                android:key="showTutorial"
-                android:title="@string/showTutorial"
+                android:key="openSource"
+                android:title="@string/openSource"
                 />
 
         <PreferenceScreen
-                android:key="openSource"
-                android:title="@string/openSource"
+                android:key="showTutorial"
+                android:title="@string/showTutorial"
                 />
 
     </PreferenceCategory>
