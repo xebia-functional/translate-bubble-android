@@ -19,4 +19,6 @@
 
     <string name="translateServiceUrl">http://api.mymemory.translated.net/get?q=%1$s&amp;langpair=%2$s</string>
 
+    <string name="gitHubProjectUrl">https://github.com/47deg/translate-bubble-android</string>
+
 </resources>

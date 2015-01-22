@@ -18,6 +18,7 @@ package com.fortysevendeg.translatebubble.ui.preferences
 
 import android.app.{AlertDialog, Activity}
 import android.content.{Intent, DialogInterface}
+import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
@@ -25,7 +26,7 @@ import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
 import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
+import com.fortysevendeg.macroid.extras.ExtraResources._
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
@@ -94,7 +95,8 @@ class DefaultPreferencesFragment
           builder.setMessage(R.string.openSourceMessage)
               .setPositiveButton(R.string.goToGitHub, new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, id: Int) {
-              // TODO Open github website project
+              val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.gitHubProjectUrl)));
+              startActivity(webIntent);
               analyticsServices.send(analyticsGoToGitHub)
               dialog.dismiss()
             }
