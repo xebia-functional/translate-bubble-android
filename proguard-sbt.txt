@@ -195,4 +195,6 @@
 -keep class com.fortysevendeg.translatebubble.ui.wizard.WizardActivity { <init>(...); }
 
 -ignorewarnings
+-keep class com.fortysevendeg.** { *; }
+-keep class macroid.** { *; }
 -keep class scala.Dynamic

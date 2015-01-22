@@ -28,18 +28,16 @@ object LanguageType extends Enumeration {
   INDONESIAN, ITALIAN, JAPANESE, KOREAN, LATVIAN, LITHUANIAN, MALAY, NORWEGIAN, PERSIAN, POLISH, PORTUGUESE,
   ROMANIAN, RUSSIAN, SLOVAK, SLOVENIAN, SPANISH, SWEDISH, THAI, TURKISH, UKRAINIAN, URDU, VIETNAMESE = Value
 
+  def toSortedTuples()(implicit appContext: AppContext) = (stringNames zip resourceNames).sortBy(_._2)
 
-  def stringNames(): List[String] = {
-    LanguageType.values.map(_.toString).toList
-  }
+  val stringNames: List[String] = LanguageType.values.toList.map(_.toString)
 
-  def resourceNames(implicit appContext: AppContext): List[String] = {
-    LanguageType.values.map {
+  private def resourceNames(implicit appContext: AppContext): List[String] =
+    LanguageType.values.toList.map {
       v =>
         val id = appContext.get.getResources.getIdentifier(v.toString, "string", appContext.get.getPackageName)
         if (id == 0) v.toString else appContext.get.getString(id)
-    }.toList
-  }
+    }
 
 }
 
