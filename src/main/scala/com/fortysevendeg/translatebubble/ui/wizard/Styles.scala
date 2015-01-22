@@ -52,10 +52,11 @@ object Styles {
   def placeHolderStyle(implicit appContext: AppContext) = vWrapContent + vPadding(8 dp, 8 dp, 8 dp, 24 dp)
 
   def titleStepStyle(implicit appContext: AppContext) = vWrapContent + vPadding(24 dp, 8 dp, 24 dp, 8 dp) +
-      tvSize(29) + tvColor(appContext.get.getResources.getColor(R.color.wizard_title))
+      tvSize(29) + tvColor(appContext.get.getResources.getColor(R.color.wizard_title)) +
+      tvGravity(Gravity.CENTER_HORIZONTAL)
 
   def descriptionStepStyle(implicit appContext: AppContext) = vWrapContent + vPadding(24 dp, 8 dp, 24 dp, 8 dp) +
       tvSize(17) + tvColor(appContext.get.getResources.getColor(R.color.wizard_description)) +
-      tvGravity(Gravity.CENTER_HORIZONTAL)
+      tvGravity(Gravity.CENTER_HORIZONTAL) + tvLines(3)
 
 }

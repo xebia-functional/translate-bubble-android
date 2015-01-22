@@ -26,6 +26,7 @@ import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.services.RestartTranslationService
 import com.fortysevendeg.translatebubble.utils.TranslateUIType.TypeTranslateUI
 import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
+import com.fortysevendeg.macroid.extras.ExtraResources._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -87,8 +88,8 @@ trait PersistentServicesComponentImpl
 
     override def getLanguagesString: Option[String] = {
       Some(appContextProvider.get.getString(R.string.toLanguages,
-        getString(sharedPreferences.getString(fromLanguageKey, englishKey)),
-        getString(sharedPreferences.getString(toLanguageKey, spanishKey))))
+        resGetString(sharedPreferences.getString(fromLanguageKey, englishKey)),
+        resGetString(sharedPreferences.getString(toLanguageKey, spanishKey))))
     }
 
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {
@@ -96,12 +97,6 @@ trait PersistentServicesComponentImpl
         TranslateUIType.NOTIFICATION
       case _ =>
         TranslateUIType.BUBBLE
-    }
-
-    def getString(res: String) = {
-      // TODO Add this to macroid-extras
-      val id = appContextProvider.get.getResources.getIdentifier(res, "string", appContextProvider.get.getPackageName)
-      (if (id == 0) res else appContextProvider.get.getString(id))
     }
 
   }
