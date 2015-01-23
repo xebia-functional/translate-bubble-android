@@ -10,4 +10,5 @@ object Versions {
   val wartremoverV = "0.11"
   val json4s = "3.2.10"
   val playServicesV = "6.5.87"
+  val apacheCommons = "3.3.2"
 }
