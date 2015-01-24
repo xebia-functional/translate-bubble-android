@@ -87,12 +87,10 @@ trait PersistentServicesComponentImpl
       }
 
     override def getLanguagesString: Option[String] = {
-      val fromLanguage = sharedPreferences.getString(fromLanguageKey, englishKey)
-      val toLanguage = sharedPreferences.getString(toLanguageKey, spanishKey)
-
-      Some(appContextProvider.get.getString(R.string.toLanguages,
-        resGetString(fromLanguage) getOrElse fromLanguage,
-        resGetString(toLanguage) getOrElse toLanguage))
+      for {
+        from <- resGetString(sharedPreferences.getString(fromLanguageKey, englishKey))
+        to <- resGetString(sharedPreferences.getString(toLanguageKey, spanishKey))
+      } yield appContextProvider.get.getString(R.string.toLanguages, from, to)
     }
 
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {
