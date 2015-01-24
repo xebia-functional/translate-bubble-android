@@ -24,6 +24,7 @@ import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, Tr
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.LanguageType.LanguageType
 import com.fortysevendeg.translatebubble.utils.{NetUtils, TypeLanguageTransformer}
+import org.apache.commons.lang3.StringEscapeUtils
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
@@ -55,7 +56,7 @@ trait TranslateServicesComponentImpl
                 implicit val formats = org.json4s.DefaultFormats
                 val json = parse(jsonStr)
                 val translatedText = (json \ "responseData" \ "translatedText").extract[String]
-                translatedText
+                StringEscapeUtils.unescapeHtml4(translatedText)
             }
         } match {
           case Some(translatedText) => TranslateResponse(translatedText)

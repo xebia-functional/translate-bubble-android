@@ -20,13 +20,13 @@ import android.app.{AlarmManager, PendingIntent}
 import android.content.{Context, Intent, SharedPreferences}
 import android.preference.PreferenceManager
 import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.macroid.extras.ExtraResources._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.persistent._
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.services.RestartTranslationService
 import com.fortysevendeg.translatebubble.utils.TranslateUIType.TypeTranslateUI
 import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
-import com.fortysevendeg.macroid.extras.ExtraResources._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -87,9 +87,10 @@ trait PersistentServicesComponentImpl
       }
 
     override def getLanguagesString: Option[String] = {
-      Some(appContextProvider.get.getString(R.string.toLanguages,
-        resGetString(sharedPreferences.getString(fromLanguageKey, englishKey)),
-        resGetString(sharedPreferences.getString(toLanguageKey, spanishKey))))
+      for {
+        from <- resGetString(sharedPreferences.getString(fromLanguageKey, englishKey))
+        to <- resGetString(sharedPreferences.getString(toLanguageKey, spanishKey))
+      } yield appContextProvider.get.getString(R.string.toLanguages, from, to)
     }
 
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {

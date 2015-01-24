@@ -1,6 +1,7 @@
 import Libraries.android._
 import Libraries.macroid._
 import Libraries.playServices._
+import Libraries.apacheCommons._
 import Libraries.json._
 import android.PromptPasswordsSigningConfig
 
@@ -31,6 +32,7 @@ libraryDependencies ++= Seq(
   aar(androidAppCompat),
   aar(macroidExtras),
   aar(playServicesBase),
+  apacheCommonsLang,
   json4s,
   compilerPlugin(Libraries.wartRemover))
 

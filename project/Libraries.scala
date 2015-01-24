@@ -55,6 +55,13 @@ object Libraries {
     lazy val macroidExtras = "com.fortysevendeg" %% "macroid-extras" % Versions.macroidExtras
   }
 
+  object apacheCommons {
+    def apacheCommonsDep(module: String) = "org.apache.commons" % module % Versions.apacheCommons
+    
+    lazy val apacheCommonsLang = apacheCommonsDep("commons-lang3")
+    
+  }
+  
   object json {
     lazy val json4s = "org.json4s" %% "json4s-native" % Versions.json4s
   }
