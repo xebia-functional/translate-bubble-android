@@ -55,7 +55,7 @@
     <string name="to">To %1$s</string>
 
     <string name="wizardTitle1">Translate Bubble</string>
-    <string name="wizardDescription1">Instantly Translate</string>
+    <string name="wizardDescription1">Translations without interruptions</string>
     <string name="wizardTitle2">Copy to clipboard</string>
     <string name="wizardDescription2">Select the text you want to translate and copy it to the clipboard</string>
     <string name="wizardTitle3">Bubble appears</string>

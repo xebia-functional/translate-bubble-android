@@ -100,6 +100,11 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
     widthScreen - getWidth + bubbleHorizontalDisplacement
   }
 
+  def startAnimation() {
+    loading.setVisibility(VISIBLE)
+    loading.startAnimation(anim)
+  }
+
   def stopAnimation() {
     loading.clearAnimation()
     loading.setVisibility(INVISIBLE)

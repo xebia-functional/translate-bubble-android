@@ -362,8 +362,11 @@ class BubbleService
   private def onStartTranslate() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     if (typeTranslateUI == TranslateUIType.BUBBLE) {
-      bubble.show(paramsBubble, windowManager)
-      contentView.setTexts(getString(R.string.translating), "", "")
+      bubbleStatus match {
+        case BubbleStatus.FLOATING => bubble.show(paramsBubble, windowManager)
+        case BubbleStatus.CONTENT => bubble.startAnimation()
+      }
+      contentView.setTexts(getString(R.string.translating), "-", "-")
     }
 
     val result = for {

@@ -72,7 +72,6 @@ object TypeLanguageTransformer {
     case LanguageType.NORWEGIAN => "no-NO"
     case LanguageType.PERSIAN => "fa-IR"
     case LanguageType.POLISH => "pl-PL"
-    case LanguageType.LATVIAN => "lv"
     case LanguageType.PORTUGUESE => "pt-PT"
     case LanguageType.ROMANIAN => "ro-RO"
     case LanguageType.RUSSIAN => "ru-RU"
