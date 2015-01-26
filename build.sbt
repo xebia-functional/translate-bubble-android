@@ -23,8 +23,6 @@ scalaVersion := Versions.scalaV
 
 scalacOptions ++= Seq("-feature", "-deprecation")
 
-credentials += Credentials(new File(Path.userHome.absolutePath + "/.ivy2/.credentials"))
-
 resolvers ++= Settings.resolvers
 
 libraryDependencies ++= Seq(
