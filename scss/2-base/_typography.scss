@@ -138,3 +138,20 @@ section#opensource {
         }
     }
 }
+
+footer#bottom {
+    p {
+    color: rgba($white, 0.7);
+    
+    a {
+        color: $white;
+        text-decoration: underline;
+
+        &:hover {
+                text-decoration: none;
+            }
+    }
+
+
+    }
+}

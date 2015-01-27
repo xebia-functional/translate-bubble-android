@@ -499,6 +499,14 @@ section#opensource .github {
   section#opensource .github:hover {
     background: #006e7c; }
 
+footer#bottom p {
+  color: rgba(255, 255, 255, 0.7); }
+  footer#bottom p a {
+    color: white;
+    text-decoration: underline; }
+    footer#bottom p a:hover {
+      text-decoration: none; }
+
 img {
   margin: 0; }
 
@@ -796,7 +804,7 @@ section#opensource {
     left: 0; }
 
 footer#bottom {
-  height: 100px;
+  padding: 30px 0;
   background: #006572;
   position: relative;
   z-index: 2; }
