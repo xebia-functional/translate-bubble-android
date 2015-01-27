@@ -1,0 +1,74 @@
+// Images
+//---------------------------------------
+//---------------------------------------
+
+img {
+    margin: 0;
+}
+
+header#top {
+    .presentation {
+        img {
+            width: 211px;
+            height: auto;
+            @include margin(null null 25px null);
+            @include bp(medium) {
+                width: 160px;
+                @include margin(null null 10px null);
+            }
+        }
+    }
+}
+
+section#step1,
+section#step2,
+section#step3,
+section#step4 {
+    img {
+        display: block;
+        max-height: 380px;
+        width: auto;
+        @include bp(large) {
+            max-height: 280px;
+        }
+        
+        @include bp(medium) {
+            margin: auto;
+        }
+        
+        @include bp(small) {
+            max-height: 200px;
+        }
+    }
+}
+
+section#step2,
+section#step4 {
+    background: $light-gray;
+    @include direction-context(right-to-left) {
+        .mobile {
+            img {
+                float: right;
+                @include bp(medium) {
+                    float: none;
+                }
+            }
+        }
+    }
+}
+
+section#opensource {
+    .content-opensource {
+        text-align: center;
+        
+        img {
+            width: 140px;
+            height: auto;
+            
+            @include bp(large) {
+                width: 100px;
+                height: auto;
+            }
+        }
+    }
+}

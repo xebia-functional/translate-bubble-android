@@ -1,0 +1,58 @@
+// Base
+//---------------------------------------
+//---------------------------------------
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+    background: $primary-color;
+    overflow-x: hidden;
+}
+
+.wrapper {
+    @include outer-container;
+    @include padding(0 20px);
+}
+
+.stick {
+    position:fixed;
+    top:0px;
+}
+
+// Alignment properties
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-left {
+  text-align: left;
+}
+
+.hidden{
+     opacity:0;
+}
+.visible{
+     opacity:1;
+}
+
+h1::selection,
+h2::selection,
+p::selection{
+    background: #38AEBD; /* WebKit/Blink Browsers */
+    color: $white;
+    
+}
+
+h1::-moz-selection,
+h2::-moz-selection,
+p::-moz-selection {
+    background: #38AEBD; /* WebKit/Blink Browsers */
+    color: $white;
+}
+

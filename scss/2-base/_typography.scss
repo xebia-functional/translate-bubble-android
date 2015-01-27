@@ -1,0 +1,140 @@
+// Typography
+//---------------------------------------
+//---------------------------------------
+
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+html {
+     font-size: $base-font-size;
+}
+
+body {
+    font: {
+        family: $base-font-family;
+        weight: $font-light;  
+    }
+    
+    @include font-size(1.8);
+    line-height: $base-line-height;
+    color: $dark-gray;
+    @include bp(large) {
+        @include font-size(1.5);
+    }
+}
+
+h1,
+h2,
+h3,
+h4 {
+    line-height: $header-line-height;
+    font-weight: $font-regular;
+    margin: 0;
+}
+
+h1 {
+    @include font-size(4);
+    @include bp(medium) {
+        @include font-size(2.9);
+    }
+}
+
+h2 {
+    @include font-size(3.4);
+    @include bp(large) {
+        @include font-size(2.4);
+    }
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: $base-link-color;
+    text-decoration: underline;
+    
+    &:hover {
+        color: $hover-link-color;
+        text-decoration: none;
+    }
+    
+    &:active,
+    &:focus {
+        color: $hover-link-color;
+        outline: none;
+    }
+}
+
+header#top {
+    h1,
+    p {
+        color: $white;
+    }
+    
+    p {
+        @include font-size(2.6);
+        font-weight: $font-light;
+        color: rgba($white, 0.7);
+        @include bp(medium) {
+            @include font-size(1.8);
+        }
+    }
+    
+    .text-opensource {
+        @include bp(medium) {
+            @include font-size(1.4);
+            line-height: ($base-line-height / 1.2);
+        }
+    }
+}
+
+section {
+    h2 {
+        color: $primary-color;
+        @include margin(50px 0 20px 0);
+        @include bp(large) {
+            margin: 30px 0 10px 0;
+        }
+    }
+}
+
+section#opensource {
+    .content-opensource {
+        text-align: center;
+    
+        h2 {
+            color: $white;
+            @include margin(20px 0 20px 0);
+        }
+        
+        p {
+            color: rgba($white, 0.8);
+        }
+    }
+    
+    .github {
+        transition: all 0.4s ease 0s;
+        p {
+            color: $white;
+             @include font-size(2.5);
+            
+            @include bp(large) {
+                @include font-size(1.9);
+            }
+            
+            i {
+                margin: 0 5px;
+
+            }
+            
+            span {
+                text-decoration: underline;
+            }
+            
+        }
+        
+        &:hover {
+            background: darken($primary-color, 8%);
+        }
+    }
+}

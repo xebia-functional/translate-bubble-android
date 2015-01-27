@@ -1,0 +1,40 @@
+// Variables
+//---------------------------------------
+//---------------------------------------
+
+// Color
+$primary-color: #0092A5;
+$dark-gray: #707070;
+$medium-gray: #DDDDDD;
+$light-gray: #F1F3F3;
+$white: white;
+
+// Typography
+$base-font-size: 62.5%;
+$base-font-family: 'Roboto', sans-serif;
+
+$font-light: 300;
+$font-regular: 400;
+$font-medium: 500;
+$font-bold: 700;
+
+// Link Colors
+$base-link-color: $primary-color;
+$hover-link-color: darken($primary-color, 10);
+
+// Line height
+$base-line-height: 1.7;
+$header-line-height: 1.25;
+
+// Background Color
+$base-background-color: $white;
+
+// Border color
+$base-border-color: $medium-gray;
+$base-border: 1px solid $base-border-color;
+
+// Breakpoints
+$bp-small: 400px;
+$bp-medium: 768px;
+$bp-large: 992px;
+$bp-xlarge: 1600px;

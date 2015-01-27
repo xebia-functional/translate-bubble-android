@@ -1,0 +1,112 @@
+// Content
+//---------------------------------------
+//---------------------------------------
+
+section {
+    
+    position: relative;
+    z-index: 1;
+    @include padding(100px null null);
+    @include bp(large) {
+        @include padding(50px null null);
+    }
+}
+
+section#step1,
+section#step2,
+section#step3,
+section#step4,
+section#opensource {
+    overflow: hidden;
+    .info {
+        position: relative;
+    }    
+    
+    @include bp(medium) {
+        @include padding(null null 50px);
+    }
+    
+    @include bp(small) {
+        text-align: center;
+    }
+}
+
+section#step1,
+section#step3 {
+    background: $white;
+    .mobile {
+        @include span-columns(4);
+        @include shift(2);
+        
+        @include bp(medium) {
+            @include span-columns(12);
+            @include shift(0);
+        }
+    }
+    
+    .info {
+        @include span-columns(4);
+        @include bp(medium) {
+            @include span-columns(12);
+        }
+    }
+}
+
+section#step2,
+section#step4 {
+    background: $light-gray;
+    @include direction-context(right-to-left) {
+        .mobile {
+            @include span-columns(4);
+            @include shift(2);
+            
+            @include bp(medium) {
+                @include span-columns(12);
+                @include shift(0);
+            }
+            
+            img {
+                float: right;
+                @include bp(medium) {
+                    float: none;
+                }
+            }
+        }
+        
+        .info {
+            @include span-columns(4);
+            @include bp(medium) {
+                @include span-columns(12);
+            }
+        }
+    }
+}
+
+section#opensource {
+    background: rgba($primary-color, 0.8);
+    
+    @include padding(100px null 160px null);
+    @include bp(large) {
+        @include padding(50px null 100px null);
+    }
+    
+    .content-opensource {
+        @include span-columns(4);
+            @include bp(medium) {
+            @include span-columns(12);
+        }
+        
+        @include bp(large) {
+            @include padding(30px null);
+        }
+    }
+    
+    .github {
+        @include padding(20px null);
+        background: darken($primary-color, 4%);
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+}

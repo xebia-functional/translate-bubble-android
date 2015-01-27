@@ -1,0 +1,26 @@
+// Buttons
+//---------------------------------------
+//---------------------------------------
+
+.button-normal {
+    @include padding(12px 32px);
+    text-decoration: none;
+    @include margin(40px null null);
+    background: darken($primary-color, 6%);
+    display: inline-block;
+    color: $white;
+    @include border-top-radius(40px);
+    @include border-bottom-radius(40px);
+    transition: all 0.4s ease 0s;
+    
+    @include bp(medium) {
+        @include margin(20px null null);
+    }
+    
+    &:hover {
+        color: $white;
+        text-decoration: none;
+        background: darken($primary-color, 10%);
+    }
+}
+

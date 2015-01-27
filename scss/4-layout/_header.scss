@@ -1,0 +1,52 @@
+// Header
+//---------------------------------------
+//---------------------------------------
+
+header#top {
+    position: relative;
+    display: table;
+    height: 100%;
+    width: 100%;
+    background: $primary-color;
+    z-index: 0;
+    
+    .presentation {
+        position: relative;
+        display: table-cell;
+        vertical-align: middle;
+        z-index: 10;
+        @include bp(medium) {
+            @include padding(null null 60px null);
+        }
+    }
+    
+    .image {
+        @include blur (8px);
+        background: url('../img/background.jpg') no-repeat fixed;
+        @include image-size;
+        opacity: 0.3;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        display: block;
+        left: 0;
+        z-index: 5;
+    }
+    
+    .text-opensource {
+        position: absolute;
+        @include padding(12px null);
+        width: 100%;
+        height: 70;
+        display: block;
+        left: 0;
+        bottom: 0;
+        border-bottom: $base-border;
+        background: $white;
+        z-index: 15;
+        
+        @include bp(medium) {
+            @include padding(7px null);
+        }
+    }
+}

@@ -1,0 +1,9 @@
+// Footer
+//---------------------------------------
+//---------------------------------------
+footer#bottom {
+    height: 100px;
+    background: darken($primary-color, 10%);
+    position: relative;
+    z-index: 2;
+}
