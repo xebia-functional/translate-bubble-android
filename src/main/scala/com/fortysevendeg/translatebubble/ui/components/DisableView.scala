@@ -40,7 +40,7 @@ class DisableView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
 
   import com.fortysevendeg.translatebubble.ui.components.DisableView._
 
-  var typeIcon = TYPE_DISABLE
+  var iconType = TYPE_DISABLE
 
   val paintStroke: Paint = {
     val paint = new Paint
@@ -86,14 +86,14 @@ class DisableView(context: Context, attrs: AttributeSet, defStyleAttr: Int)
     canvas.drawCircle(middleWidth, middleHeight, (width / 2) - stroke, paintFillCircle)
     canvas.drawCircle(middleWidth, middleHeight, (width / 2) - stroke, paintStroke)
 
-    typeIcon match {
-      case typeIcon if (typeIcon == TYPE_DISABLE) => {
+    iconType match {
+      case TYPE_DISABLE => {
         val sizeAcross = width / 6
         canvas.drawCircle(middleWidth, middleHeight, sizeAcross, paintStroke)
         canvas.drawLine(middleWidth + sizeAcross, middleHeight - sizeAcross, middleWidth - sizeAcross, middleHeight + sizeAcross, paintStroke)
       }
-      case typeIcon if (typeIcon == TYPE_30_MIN) => canvas.drawText("30m", middleWidth, baseline, paintWords)
-      case typeIcon if (typeIcon == TYPE_MANUALLY) => canvas.drawText("M", middleWidth, baseline, paintWords)
+      case TYPE_30_MIN => canvas.drawText("30m", middleWidth, baseline, paintWords)
+      case TYPE_MANUALLY => canvas.drawText("M", middleWidth, baseline, paintWords)
     }
 
   }
@@ -109,6 +109,6 @@ object DisableView {
 object DisableViewTweaks {
   type W = DisableView
 
-  def dvTypeIcon(typeIcon: Int) = Tweak[W](_.typeIcon = typeIcon)
+  def dvTypeIcon(iconType: Int) = Tweak[W](_.iconType = iconType)
 
 }

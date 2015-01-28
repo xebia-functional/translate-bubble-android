@@ -42,7 +42,7 @@ class WizardActivity
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
     val extras = getIntent.getExtras
-    val modeTutorial = (if (extras != null) extras.getBoolean(WizardActivity.keyModeTutorial, false) else false)
+    val modeTutorial = if (extras != null) extras.getBoolean(WizardActivity.keyModeTutorial, false) else false
     if (!modeTutorial && persistentServices.isWizardWasSeen()) {
       startActivity(new Intent(this, classOf[MainActivity]))
       finish()
@@ -59,11 +59,11 @@ class WizardActivity
       pager <- viewPager
     } yield {
       def activateImages(position: Int) = Transformer {
-        case i: ImageView if (i.getTag.equals("position_%d".format(position))) => i <~ vActivated(true)
+        case i: ImageView if i.getTag.equals("position_%d".format(position)) => i <~ vActivated(true)
         case i: ImageView => i <~ vActivated(false)
       }
 
-      pager.setAdapter(new StepsPagerAdapter(getSupportFragmentManager()))
+      pager.setAdapter(new StepsPagerAdapter(getSupportFragmentManager))
       pager.setOnPageChangeListener(new OnPageChangeListener {
         var isLastStep = false
         override def onPageScrollStateChanged(i: Int): Unit = {}
@@ -108,7 +108,7 @@ class WizardActivity
       fragment
     }
 
-    override def getCount() = {
+    override def getCount = {
       steps.length
     }
   }
@@ -122,32 +122,26 @@ object WizardActivity {
 object Steps {
 
   def steps(implicit appContext: AppContext) = List(
-    new Step(
+    Step(
       R.drawable.wizard_icon,
       appContext.get.getString(R.string.wizardTitle1),
-      appContext.get.getString(R.string.wizardDescription1)
-    ),
-    new Step(
+      appContext.get.getString(R.string.wizardDescription1)),
+    Step(
       R.drawable.wizard_step_01,
       appContext.get.getString(R.string.wizardTitle2),
-      appContext.get.getString(R.string.wizardDescription2)
-    ),
-    new Step(
+      appContext.get.getString(R.string.wizardDescription2)),
+    Step(
       R.drawable.wizard_step_02,
       appContext.get.getString(R.string.wizardTitle3),
-      appContext.get.getString(R.string.wizardDescription3)
-    ),
-    new Step(
+      appContext.get.getString(R.string.wizardDescription3)),
+    Step(
       R.drawable.wizard_step_03,
       appContext.get.getString(R.string.wizardTitle4),
-      appContext.get.getString(R.string.wizardDescription4)
-    ),
-    new Step(
+      appContext.get.getString(R.string.wizardDescription4)),
+    Step(
       R.drawable.wizard_step_04,
       appContext.get.getString(R.string.wizardTitle5),
-      appContext.get.getString(R.string.wizardDescription5)
-    )
-  )
+      appContext.get.getString(R.string.wizardDescription5)))
 
 
 }

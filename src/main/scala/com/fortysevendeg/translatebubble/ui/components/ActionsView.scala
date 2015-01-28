@@ -63,9 +63,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   val disable30MinView: Option[DisableView] = connect[DisableView](R.id.min_15)
 
-  runUi(
-    (disable30MinView <~ dvTypeIcon(DisableView.TYPE_30_MIN))
-  )
+  runUi(disable30MinView <~ dvTypeIcon(DisableView.TYPE_30_MIN))
 
   addView(rootView.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
@@ -89,27 +87,27 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     )
   }
 
-  def isVisible(): Boolean = getVisibility == VISIBLE
+  def isVisible: Boolean = getVisibility == VISIBLE
 
   def isOverCloseView(x: Float, y: Float): Boolean = {
     val x2 = (getWidth / 2) + (sizeClose / 2)
     val y2 = getHeight - marginClose
     val x1 = (getWidth / 2) - (sizeClose / 2)
     val y1 = y2 - sizeClose
-    (x > x1 && x < x2 && y > y1 && y < y2)
+    x > x1 && x < x2 && y > y1 && y < y2
   }
 
-  def getClosePosition() = (getWidth / 2, (getHeight - marginClose - (sizeClose / 2)))
+  def getClosePosition = (getWidth / 2, getHeight - marginClose - (sizeClose / 2))
 
   def isOverDisableView(x: Float, y: Float): Boolean = {
     val x1 = getWidth - sizeDisable - marginSeparateOptionsDisable
     val y1 = marginTopDisable
     val x2 = x1 + sizeDisable
     val y2 = y1 + sizeDisable
-    (x > x1 && x < x2 && y > y1 && y < y2)
+    x > x1 && x < x2 && y > y1 && y < y2
   }
 
-  def getDisablePosition() =
+  def getDisablePosition =
     (getWidth - (sizeDisable / 2) - marginSeparateOptionsDisable, marginTopDisable + (sizeDisable / 2))
 
   def isOver30minView(x: Float, y: Float): Boolean = {
@@ -117,7 +115,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     val y1 = marginTopDisable + sizeDisable + marginSeparateOptionsDisable
     val x2 = x1 + sizeDisable
     val y2 = y1 + sizeDisable
-    (x > x1 && x < x2 && y > y1 && y < y2)
+    x > x1 && x < x2 && y > y1 && y < y2
   }
 
   def get30minPosition(): (Int, Int) =
