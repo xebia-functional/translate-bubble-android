@@ -119,18 +119,18 @@ class BubbleService
           true
         case MotionEvent.ACTION_MOVE =>
           if (moving) {
-            if (!actionsView.isVisible()) {
+            if (!actionsView.isVisible) {
               actionsView.show()
             }
             actionsView match {
               // Bubble is over CloseView
               case actionsView if actionsView.isOverCloseView(x, y) =>
-                val pos = actionsView.getClosePosition()
+                val pos = actionsView.getClosePosition
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
               // Bubble is over DisableTranslation
               case actionsView if actionsView.isOverDisableView(x, y) =>
-                val pos = actionsView.getDisablePosition()
+                val pos = actionsView.getDisablePosition
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
               // Bubble is over DisableTranslation30min
