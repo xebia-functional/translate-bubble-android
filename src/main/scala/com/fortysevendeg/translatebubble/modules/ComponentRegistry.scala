@@ -17,10 +17,10 @@
 package com.fortysevendeg.translatebubble.modules
 
 import com.fortysevendeg.translatebubble.modules.analytics.AnalyticsServicesComponent
-import com.fortysevendeg.translatebubble.modules.clipboard.{ClipboardServicesComponent, ClipboardServices}
-import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsServicesComponent, NotificationsServices}
-import com.fortysevendeg.translatebubble.modules.persistent.{PersistentServicesComponent, PersistentServices}
-import com.fortysevendeg.translatebubble.modules.translate.{TranslateServicesComponent, TranslateServices}
+import com.fortysevendeg.translatebubble.modules.clipboard.ClipboardServicesComponent
+import com.fortysevendeg.translatebubble.modules.notifications.NotificationsServicesComponent
+import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
+import com.fortysevendeg.translatebubble.modules.translate.TranslateServicesComponent
 
 trait ComponentRegistry
     extends ClipboardServicesComponent

@@ -31,10 +31,10 @@ trait AnalyticsServicesComponentImpl
   class AnalyticsServicesImpl
       extends AnalyticsServices {
 
-    lazy val tracker = {
-      val googleAnalytics = GoogleAnalytics.getInstance(appContextProvider.get)
-      googleAnalytics.newTracker(R.xml.app_tracker)
-    }
+    lazy val tracker = GoogleAnalytics
+        .getInstance(appContextProvider.get)
+        .newTracker(R.xml.app_tracker)
+
 
     def send(screenName: String,
         category: Option[String] = None,
@@ -42,9 +42,9 @@ trait AnalyticsServicesComponentImpl
         label: Option[String] = None): Unit = {
       tracker.setScreenName(screenName)
       val event = new HitBuilders.EventBuilder()
-      category map (event.setCategory(_))
-      action map (event.setAction(_))
-      label map (event.setLabel(_))
+      category map event.setCategory
+      action map event.setAction
+      label map event.setLabel
       tracker.send(event.build())
     }
 

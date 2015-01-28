@@ -19,7 +19,9 @@ package com.fortysevendeg.translatebubble.utils
 import macroid.AppContext
 
 object TranslateUIType extends Enumeration {
+
   type TypeTranslateUI = Value
+
   val NOTIFICATION, BUBBLE = Value
 
   def toSortedTuples()(implicit appContext: AppContext) = (stringNames zip resourceNames).sortBy(_._2)
@@ -32,7 +34,6 @@ object TranslateUIType extends Enumeration {
         val id = appContext.get.getResources.getIdentifier(v.toString, "string", appContext.get.getPackageName)
         if (id == 0) v.toString else appContext.get.getString(id)
     }
-
 
 }
 
