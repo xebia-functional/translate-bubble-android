@@ -65,4 +65,8 @@ object Libraries {
   object json {
     lazy val json4s = "org.json4s" %% "json4s-native" % Versions.json4s
   }
+
+  object test {
+    lazy val specs2 = "org.specs2" %% "specs2-core" % "2.4.15" % "test"
+  }
 }
