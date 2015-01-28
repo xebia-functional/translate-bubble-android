@@ -44,7 +44,7 @@ trait ClipboardServicesComponentImpl
     override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = request =>
       Future {
         Option(clipboardManager.getPrimaryClip) map (_.getItemAt(0)) map (_.getText) match {
-          case Some(clipDataText) if (clipDataText.length > 0 && previousText.map(_ != clipDataText).getOrElse(true)) =>
+          case Some(clipDataText) if clipDataText.length > 0 && previousText.map(_ != clipDataText).getOrElse(true) =>
             previousText = Some(clipDataText.toString)
             GetTextClipboardResponse(previousText)
           case _ => GetTextClipboardResponse(None)

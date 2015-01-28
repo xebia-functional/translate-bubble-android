@@ -16,16 +16,14 @@
 
 package com.fortysevendeg.translatebubble.ui.wizard
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.{LayoutInflater, View, ViewGroup}
-import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
-import macroid.{Ui, AppContext, Contexts}
-import macroid.FullDsl._
 import com.fortysevendeg.macroid.extras.ImageViewTweaks._
 import com.fortysevendeg.macroid.extras.TextTweaks._
+import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
+import macroid.FullDsl._
+import macroid.{AppContext, Contexts}
 
 class StepFragment
     extends Fragment
