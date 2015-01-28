@@ -67,6 +67,7 @@ class DefaultPreferencesFragment
   private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
   private lazy val openSource = connect[PreferenceScreen]("openSource")
   private lazy val showTutorial = connect[PreferenceScreen]("showTutorial")
+  private lazy val about = connect[PreferenceScreen]("about")
 
   override def onCreate(savedInstanceState: Bundle) {
 
@@ -101,8 +102,11 @@ class DefaultPreferencesFragment
               dialog.dismiss()
             }
           })
-              .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+              .setNeutralButton(R.string.goToWeb, new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, id: Int) {
+              val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.translateBubbleUrl)));
+              startActivity(webIntent);
+              analyticsServices.send(analyticsGoToWebProject)
               dialog.dismiss()
             }
           })
@@ -112,6 +116,35 @@ class DefaultPreferencesFragment
         }
       })
     )
+
+    about map (
+        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+          override def onPreferenceClick(preference: Preference): Boolean = {
+            analyticsServices.send(analyticsOpenSourceDialog)
+            val builder = new AlertDialog.Builder(getActivity)
+            builder.setMessage(R.string.aboutMessage)
+                .setPositiveButton(R.string.goTo47Deg, new DialogInterface.OnClickListener() {
+              def onClick(dialog: DialogInterface, id: Int) {
+                val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.fortySevenUrl)));
+                startActivity(webIntent);
+                analyticsServices.send(analyticsGoTo47Deg)
+                dialog.dismiss()
+              }
+            })
+                .setNeutralButton(R.string.goToMyMemory, new DialogInterface.OnClickListener() {
+              def onClick(dialog: DialogInterface, id: Int) {
+                val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.myMemoryUrl)));
+                startActivity(webIntent);
+                analyticsServices.send(analyticsGoToMyMemory)
+                dialog.dismiss()
+              }
+            })
+            val dialog = builder.create()
+            dialog.show()
+            true
+          }
+        })
+        )
 
     typeTranslate map {
       translate =>
