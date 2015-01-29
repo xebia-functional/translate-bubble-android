@@ -61,6 +61,11 @@
                 android:title="@string/showTutorial"
                 />
 
+        <PreferenceScreen
+                android:key="about"
+                android:title="@string/about"
+                />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

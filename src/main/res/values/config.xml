@@ -21,4 +21,10 @@
 
     <string name="gitHubProjectUrl">https://github.com/47deg/translate-bubble-android</string>
 
+    <string name="fortySevenUrl">http://www.47deg.com</string>
+
+    <string name="myMemoryUrl">http://mymemory.translated.net</string>
+
+    <string name="translateBubbleUrl">http://47deg.github.io/translate-bubble-android</string>
+
 </resources>

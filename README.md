@@ -6,7 +6,7 @@ Translate Bubble is an application that facilitates the translation of text on y
 Scala on Android
 ==============
 
-This application is written entirely in Scala on Android. We are excited to make the application open source and share the code with you. We have used the [macroid](http://macroid.github.io/) library extensively in this project. In addition we have contributed our own Macroid extenions to this application, that can be found here: [macroid-extras](http://macroid.github.io/).
+This application is written entirely in Scala on Android. We are excited to make the application open source and share the code with you. We have used the [macroid](http://macroid.github.io/) library extensively in this project. In addition we have contributed our own Macroid extenions to this application, that can be found here: [macroid-extras](https://github.com/47deg/macroid-extras).
 
 Compile
 ======
@@ -33,7 +33,7 @@ You can use your favorite IDE. At 47 Degrees we use IntelliJ with the Scala plug
 Download
 ========
 
-You can download Translate Bubble from [Google Play](http://www.47deg.com). If you enjoy the application, please take a moment and rate it in the Google Play store :-)
+You can download Translate Bubble from [Google Play](https://play.google.com/store/apps/details?id=com.fortysevendeg.translatebubble). If you enjoy the application, please take a moment and rate it in the Google Play store :-)
 
 Contribute
 ========
