@@ -18,7 +18,6 @@ package com.fortysevendeg.translatebubble.modules.clipboard
 
 import android.content.ClipData
 import com.fortysevendeg.translatebubble.modules.utils.AsyncUtils._
-import com.fortysevendeg.translatebubble.modules.utils.{BaseClipboardMocks, ClipboardMocks}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
 

@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-package com.fortysevendeg.translatebubble.modules.utils
+package com.fortysevendeg.translatebubble.modules.clipboard
 
-import android.content.{ClipData, ClipboardManager, Context}
+import android.content.{Context, ClipboardManager, ClipData}
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.TestConfig
 import com.fortysevendeg.translatebubble.modules.clipboard.impl.{ClipDataBuilder, ClipboardServicesComponentImpl}
 import macroid.AppContext
-import org.specs2.matcher.{ExceptionMatchers, MustMatchers, ThrownExpectations}
 import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+trait ClipboardMocks
+    extends BaseClipboardMocks {
 
+  val mockClipData = mock[ClipData]
+  val mockClipItem = mock[ClipData.Item]
 
-
-object AsyncUtils {
-
-  implicit class RichAsyncResponseMatcher[T](futureResult: Future[T])
-      extends ThrownExpectations
-      with ExceptionMatchers
-      with MustMatchers {
-
-    def *===[U](expected: => U) = Await.result(futureResult, Duration.Inf) === expected
-
-  }
-
+  mockClipData.getItemAt(0) returns mockClipItem
+  clipboardManager.getPrimaryClip returns mockClipData
 }
 
+trait BaseClipboardMocks
+    extends Mockito
+    with AppContextProvider
+    with ClipboardServicesComponentImpl
+    with TestConfig
+    with Scope {
+  implicit val appContextProvider: AppContext = mock[AppContext]
+
+  override lazy val clipDataBuilder = mock[ClipDataBuilder]
+
+  val clipboardManager = mock[ClipboardManager]
+  mockContext.getSystemService(Context.CLIPBOARD_SERVICE) returns clipboardManager
+  appContextProvider.get returns mockContext
+}

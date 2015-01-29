@@ -32,7 +32,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait TranslateServicesComponentImpl
-    extends TranslateServicesComponent {
+    extends TranslateServicesComponent
+    with NetUtils
+    with MyMemoryUtils {
 
   self: AppContextProvider =>
 
@@ -41,17 +43,11 @@ trait TranslateServicesComponentImpl
   class TranslateServicesImpl
       extends TranslateServices {
 
-    private def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) =
-      appContextProvider.get.getString(R.string.translateServiceUrl,
-        URLEncoder.encode(text, "UTF-8"),
-        URLEncoder.encode("%s|%s".format(TypeLanguageTransformer.toMyMemory(from),
-          TypeLanguageTransformer.toMyMemory(to)), "UTF-8"))
-
     override def translate: Service[TranslateRequest, TranslateResponse] = request =>
       Future {
         request.text.map {
           text =>
-            NetUtils.getJson(getTranslateServiceUrl(text, request.from, request.to)).map {
+            getJson(getTranslateServiceUrl(text, request.from, request.to)).map {
               jsonStr =>
                 implicit val formats = org.json4s.DefaultFormats
                 val json = parse(jsonStr)

@@ -24,7 +24,7 @@ import org.apache.http.{HttpEntity, HttpResponse}
 
 import scala.util.{Failure, Success, Try}
 
-object NetUtils {
+trait NetUtils {
 
   def getJson(url: String): Option[String] = {
     Try {

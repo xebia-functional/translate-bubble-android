@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package com.fortysevendeg.translatebubble.modules.utils
+package com.fortysevendeg.translatebubble.modules.translate
 
-import android.content.{ClipData, ClipboardManager, Context}
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.TestConfig
-import com.fortysevendeg.translatebubble.modules.clipboard.impl.{ClipDataBuilder, ClipboardServicesComponentImpl}
+import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateServicesComponentImpl
 import macroid.AppContext
-import org.specs2.matcher.{ExceptionMatchers, MustMatchers, ThrownExpectations}
 import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+trait BaseTranslateMocks
+    extends Mockito
+    with AppContextProvider
+    with TranslateServicesComponentImpl
+    with TestConfig
+    with Scope {
+  implicit val appContextProvider: AppContext = mock[AppContext]
 
-
-
-object AsyncUtils {
-
-  implicit class RichAsyncResponseMatcher[T](futureResult: Future[T])
-      extends ThrownExpectations
-      with ExceptionMatchers
-      with MustMatchers {
-
-    def *===[U](expected: => U) = Await.result(futureResult, Duration.Inf) === expected
-
-  }
+  appContextProvider.get returns mockContext
 
 }
-
