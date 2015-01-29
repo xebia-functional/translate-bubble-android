@@ -56,6 +56,20 @@ class TranslateServiceComponentSpec
 
     }
 
+    "TranslateService should get None when json is invalid" in new BaseTranslateMocks {
+
+      override def getJson(url: String): Option[String] = Some("{ invalidJson }")
+
+      override def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) = "http://fakeUrl"
+
+      val text = Some("text")
+      val from = LanguageType.ENGLISH
+      val to = LanguageType.SPANISH
+
+      translateServices.translate(TranslateRequest(text, from, to)) *=== TranslateResponse(None)
+
+    }
+
   }
 
 }
