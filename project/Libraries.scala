@@ -52,21 +52,23 @@ object Libraries {
       "org.macroid" %% s"macroid${if(!module.isEmpty) s"-$module" else ""}" % Versions.macroidV
 
     lazy val macroidRoot = macroid()
-    lazy val macroidExtras = "com.fortysevendeg" %% "macroid-extras" % Versions.macroidExtras
+    lazy val macroidExtras = "com.fortysevendeg" %% "macroid-extras" % Versions.macroidExtrasV
   }
 
   object apacheCommons {
-    def apacheCommonsDep(module: String) = "org.apache.commons" % module % Versions.apacheCommons
+    def apacheCommonsDep(module: String) = "org.apache.commons" % module % Versions.apacheCommonsV
     
     lazy val apacheCommonsLang = apacheCommonsDep("commons-lang3")
     
   }
   
   object json {
-    lazy val json4s = "org.json4s" %% "json4s-native" % Versions.json4s
+    lazy val json4s = "org.json4s" %% "json4s-native" % Versions.json4sV
   }
 
   object test {
-    lazy val specs2 = "org.specs2" %% "specs2-core" % "2.4.15" % "test"
+    lazy val specs2 = "org.specs2" %% "specs2" % Versions.specs2V % "test"
+    lazy val androidTest = "com.google.android" % "android" % "4.1.1.4" % "test"
+    lazy val mockito = "org.specs2" % "specs2-mock_2.11" % Versions.mockitoV
   }
 }
