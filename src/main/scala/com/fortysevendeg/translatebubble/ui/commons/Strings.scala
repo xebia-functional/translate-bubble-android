@@ -26,6 +26,12 @@ object Strings {
 
   val analyticsGoToGitHub = "Go To GitHub"
 
+  val analyticsGoTo47Deg = "Go To 47Deg"
+
+  val analyticsGoToMyMemory = "Go To MyMemory"
+
+  val analyticsGoToWebProject = "Go To Web TranslateBubble"
+
   val analyticsTutorialScreen = "Tutorial Screen"
 
   val analyticsTranslateService = "Translate Service"

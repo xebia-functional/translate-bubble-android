@@ -45,8 +45,13 @@
     <string name="openSource">Bubble Translate es Open Source</string>
     <string name="openSourceMessage">Tu puedes descargar el código fuente y aprender como hacer aplicaciones en Scala en Android.
         El código está licenciada bajo licencia Apache Version 2.0 y desarrollado usando Scala en Android. </string>
+    <string name="aboutMessage">Translate Bubble esta hecho con Scala y mucho cariño para Android por el equipo de 47 Degrees.
+        Implementado con la API gratuita de traducciones de MyMemory</string>
 
     <string name="goToGitHub">Ir a GitHub</string>
+    <string name="goTo47Deg">Ir a 47 Degrees</string>
+    <string name="goToMyMemory">Ir a MyMemory</string>
+    <string name="goToWeb">Ir a la Web</string>
     <string name="cancel">Cancelar</string>
 
     <string name="languages">Lenguajes</string>
