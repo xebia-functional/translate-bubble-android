@@ -16,65 +16,50 @@
 
 package com.fortysevendeg.translatebubble.modules.clipboard
 
-import android.content.ClipData.Item
-import com.fortysevendeg.macroid.extras.AppContextProvider
-import com.fortysevendeg.translatebubble.modules.clipboard.impl.{ClipDataBuilder, ClipboardServicesComponentImpl}
-import com.fortysevendeg.translatebubble.modules.{TestConfig, BaseTestSupport}
-import macroid.AppContext
+import android.content.ClipData
+import com.fortysevendeg.translatebubble.modules.utils.AsyncUtils._
+import com.fortysevendeg.translatebubble.modules.utils.{BaseClipboardMocks, ClipboardMocks}
 import org.specs2.mock.Mockito
 import org.specs2.mutable._
-import android.content.{Context, ClipData, ClipboardManager}
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 class ClipboardServiceComponentSpec
     extends Specification
-    with ClipboardSupportTestSupport
-    with AppContextProvider
-    with ClipboardServicesComponentImpl {
+    with Mockito {
 
-  override lazy val clipDataBuilder = mock[ClipDataBuilder]
 
   "ClipboardService component" should {
 
-    "ClipboardService should get a text" in {
-      val out = "test"
-      mockClipItem.getText returns (out)
-      val response = Await.result(clipboardServices.getText(GetTextClipboardRequest()), Duration.Inf)
-      there was one(mockClipItem).getText()
-      response.text shouldEqual Some(out)
+    "ClipboardService should get a text" in new ClipboardMocks {
+      val text = "test"
+      mockClipItem.getText returns text
+
+      clipboardServices.getText(GetTextClipboardRequest()) *=== GetTextClipboardResponse(Some(text))
+
+      there was one(mockClipItem).getText
     }
 
-    "ClipboardService should copy to clipboard" in {
+    "ClipboardService should get None if text is empty" in new ClipboardMocks {
+      val empty = ""
+      mockClipItem.getText returns empty
+
+      clipboardServices.getText(GetTextClipboardRequest()) *=== GetTextClipboardResponse(None)
+
+      there was one(mockClipItem).getText
+    }
+
+    "ClipboardService should copy to clipboard" in new BaseClipboardMocks {
       val text = "text"
       val request = CopyToClipboardRequest(text)
+      val mockClipData = mock[ClipData]
 
-      clipDataBuilder.newPlainText(text) returns (mock[ClipData])
+      clipDataBuilder.newPlainText(text) returns mockClipData
 
-      val response = Await.result(clipboardServices.copyToClipboard(request), Duration.Inf)
-      response must haveClass[CopyToClipboardResponse]
+      clipboardServices.copyToClipboard(request) *=== CopyToClipboardResponse()
+
+      there was one(clipboardManager).setPrimaryClip(mockClipData)
+
     }
 
   }
-
-}
-
-trait ClipboardSupportTestSupport
-    extends BaseTestSupport
-    with TestConfig
-    with Mockito {
-
-  val clipboardManager = mock[ClipboardManager]
-
-  implicit val appContextProvider: AppContext = mock[AppContext]
-  mockContext.getSystemService(Context.CLIPBOARD_SERVICE) returns (clipboardManager)
-  appContextProvider.get returns (mockContext)
-
-  val mockClipData = mock[ClipData]
-  val mockClipItem = mock[ClipData.Item]
-
-  mockClipData.getItemAt(0) returns (mockClipItem)
-  clipboardManager.getPrimaryClip returns (mockClipData)
 
 }
