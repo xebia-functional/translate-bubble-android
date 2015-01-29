@@ -68,6 +68,7 @@
 -dontnote scala.concurrent.forkjoin.**
 -dontwarn scala.beans.ScalaBeanInfo
 -dontwarn scala.concurrent.**
+-dontnote scala.reflect.**
 -dontwarn scala.reflect.**
 -dontwarn scala.sys.process.package$
 
@@ -172,13 +173,13 @@
 # view AndroidManifest.xml #generated:36
 -keep class android.test.InstrumentationTestRunner { <init>(...); }
 
-# view AndroidManifest.xml #generated:20
+# view AndroidManifest.xml #generated:25
 -keep class com.fortysevendeg.translatebubble.receivers.BootReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:18
+# view AndroidManifest.xml #generated:23
 -keep class com.fortysevendeg.translatebubble.services.RestartTranslationService { <init>(...); }
 
-# view AndroidManifest.xml #generated:16
+# view AndroidManifest.xml #generated:22
 -keep class com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService { <init>(...); }
 
 # view res/layout/actions_view.xml #generated:37
@@ -188,10 +189,10 @@
 # view res/layout/actions_view.xml #generated:31
 -keep class com.fortysevendeg.translatebubble.ui.components.DisableView { <init>(...); }
 
-# view AndroidManifest.xml #generated:14
+# view AndroidManifest.xml #generated:20
 -keep class com.fortysevendeg.translatebubble.ui.preferences.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:7
+# view AndroidManifest.xml #generated:13
 -keep class com.fortysevendeg.translatebubble.ui.wizard.WizardActivity { <init>(...); }
 
 -ignorewarnings
