@@ -34,6 +34,7 @@ libraryDependencies ++= Seq(
   apacheCommonsLang,
   json4s,
   specs2,
+  mockito,
   androidTest,
   compilerPlugin(Libraries.wartRemover))
 
