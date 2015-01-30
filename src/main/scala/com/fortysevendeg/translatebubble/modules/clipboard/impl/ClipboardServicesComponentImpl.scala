@@ -29,6 +29,8 @@ trait ClipboardServicesComponentImpl
 
   self : AppContextProvider =>
 
+  lazy val clipDataBuilder = new ClipDataBuilder
+
   lazy val clipboardServices = new ClipboardServicesImpl
 
   class ClipboardServicesImpl extends ClipboardServices {
@@ -53,7 +55,7 @@ trait ClipboardServicesComponentImpl
 
     override def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse] = request =>
       Future {
-        val clip = ClipData.newPlainText("label", request.text)
+        val clip = clipDataBuilder.newPlainText(request.text)
         clipboardManager.setPrimaryClip(clip)
         CopyToClipboardResponse()
       }
@@ -74,5 +76,11 @@ trait ClipboardServicesComponentImpl
     def reset(): Unit = previousText = None
 
   }
+
+}
+
+class ClipDataBuilder {
+
+  def newPlainText(text: String) = ClipData.newPlainText("label", text)
 
 }
