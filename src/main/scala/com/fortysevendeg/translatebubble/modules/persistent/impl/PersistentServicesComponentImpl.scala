@@ -20,7 +20,7 @@ import android.app.{AlarmManager, PendingIntent}
 import android.content.{Context, Intent, SharedPreferences}
 import android.preference.PreferenceManager
 import com.fortysevendeg.macroid.extras.AppContextProvider
-import com.fortysevendeg.macroid.extras.ExtraResources._
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.persistent._
 import com.fortysevendeg.translatebubble.service.Service
