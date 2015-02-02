@@ -24,7 +24,7 @@ import macroid.FullDsl._
 import macroid.{IdGeneration, ActivityContext, AppContext}
 import Styles._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
-import com.fortysevendeg.macroid.extras.ExtraUIActions._
+import com.fortysevendeg.macroid.extras.UIActionsExtras._
 
 trait Layout extends IdGeneration {
 

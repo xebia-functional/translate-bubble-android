@@ -26,7 +26,7 @@ import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
 import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import com.fortysevendeg.macroid.extras.ExtraResources._
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
