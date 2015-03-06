@@ -62,6 +62,11 @@
                 />
 
         <PreferenceScreen
+                android:key="showHistory"
+                android:title="@string/showHistory"
+                />
+
+        <PreferenceScreen
                 android:key="about"
                 android:title="@string/about"
                 />
