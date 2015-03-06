@@ -29,6 +29,8 @@ resolvers ++= Settings.resolvers
 libraryDependencies ++= Seq(
   aar(macroidRoot),
   aar(androidAppCompat),
+  aar(androidCardView),
+  aar(androidRecyclerview),
   aar(macroidExtras),
   aar(playServicesBase),
   apacheCommonsLang,

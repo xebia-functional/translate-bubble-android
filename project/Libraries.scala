@@ -62,6 +62,10 @@ object Libraries {
     
   }
   
+  object data {
+    lazy val sqliteJdbc = "org.xerial" % "sqlite-jdbc" % Versions.sqliteV
+    
+  }
   object json {
     lazy val json4s = "org.json4s" %% "json4s-native" % Versions.json4sV
   }
