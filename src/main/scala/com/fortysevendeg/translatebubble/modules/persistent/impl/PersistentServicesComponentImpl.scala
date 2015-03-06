@@ -93,6 +93,13 @@ trait PersistentServicesComponentImpl
       } yield appContextProvider.get.getString(R.string.toLanguages, from, to)
     }
 
+    override def getLanguagesStringFromData(from: String, to: String): Option[String] = {
+      for {
+        from <- resGetString(from)
+        to <- resGetString(to)
+      } yield appContextProvider.get.getString(R.string.toLanguages, from, to)
+    }
+
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {
       case s: SharedPreferences if s.getString(typeTranslateKey, "").equals(TranslateUIType.NOTIFICATION.toString) =>
         TranslateUIType.NOTIFICATION
