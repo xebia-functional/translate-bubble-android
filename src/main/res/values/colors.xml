@@ -22,6 +22,17 @@
     <color name="primary_dark">#00ACC1</color>
     <color name="accent">#00BCD4</color>
 
+    <!-- Placeholder -->
+    <color name="text_error_message">#87364550</color>
+    <color name="text_error_button">#ffffff</color>
+    <color name="background_error_button_default">#E05F5E</color>
+    <color name="background_error_button_pressed">#ffc45453</color>
+
+    <!-- History colors -->
+    <color name="history_line_default">#50364550</color>
+    <color name="history_text_title">#DE000000</color>
+    <color name="history_text_content">#8A000000</color>
+
     <!-- Wizard colors -->
     <color name="wizard_background">#ffffff</color>
     <color name="wizard_title">#000000</color>

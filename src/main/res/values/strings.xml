@@ -24,6 +24,9 @@
 
     <string name="failedTitle">Failed</string>
     <string name="failedMessage">There was a problem. Please, try again</string>
+    <string name="generalMessageError">There was an error while trying to retrieve the translation history information. Please tap on the \"Reload\" button to try again</string>
+    <string name="generalMessageEmpty">We haven\'t found enough data for this section yet. Please tap on the \"Reload\" button to try again</string>
+    <string name="reload">Reload</string>
 
     <string name="translating">Translating</string>
     <string name="toLanguages">%1$s to %2$s</string>
@@ -43,6 +46,7 @@
 
     <string name="about">About</string>
     <string name="showTutorial">Show Tutorial</string>
+    <string name="showHistory">Show History</string>
     <string name="openSource">Open Source</string>
     <string name="openSourceMessage">This app is licensed under the Apache License, Version 2.0 and
         developed using Scala on Android. You can download the source code to learn more about writing applications in Scala on Android.</string>
