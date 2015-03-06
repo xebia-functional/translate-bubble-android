@@ -18,21 +18,20 @@ package com.fortysevendeg.translatebubble.ui.components
 
 import android.animation.{Animator, AnimatorListenerAdapter}
 import android.content.Context
-import android.util.{Log, AttributeSet}
+import android.util.AttributeSet
 import android.view.View._
 import android.view.animation.{AccelerateInterpolator, DecelerateInterpolator}
 import android.view.{View, ViewGroup}
-import android.widget.{LinearLayout, FrameLayout}
+import android.widget.{FrameLayout, LinearLayout}
 import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
-import com.fortysevendeg.macroid.extras.ViewTweaks._
-import com.fortysevendeg.translatebubble.ui.commons.Dimens
-import com.fortysevendeg.translatebubble.ui.components.DisableViewTweaks._
 import com.fortysevendeg.macroid.extras.RootView
 import com.fortysevendeg.translatebubble.R
-import macroid.{Snail, AppContext}
+import com.fortysevendeg.translatebubble.ui.commons.Dimens
+import com.fortysevendeg.translatebubble.ui.components.DisableViewTweaks._
 import macroid.FullDsl._
-import scala.concurrent.ExecutionContext.Implicits.global
+import macroid.{AppContext, Snail}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Promise
 import scala.util.Success
 
