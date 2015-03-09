@@ -16,7 +16,6 @@
 
 package com.fortysevendeg.translatebubble.utils
 
-import com.fortysevendeg.translatebubble.utils.LanguageType.LanguageType
 import macroid.AppContext
 
 object LanguageType extends Enumeration {
@@ -38,13 +37,56 @@ object LanguageType extends Enumeration {
         val id = appContext.get.getResources.getIdentifier(v.toString, "string", appContext.get.getPackageName)
         if (id == 0) v.toString else appContext.get.getString(id)
     }
-
 }
 
-object TypeLanguageTransformer {
-  
-  import LanguageType._
-  
+object LanguageTypeTransformer {
+
+  import com.fortysevendeg.translatebubble.utils.LanguageType._
+
+  def fromMyMemory(value: String): LanguageType = value match {
+    case "ar-SA" => ARABIC
+    case "bg-BG" => BULGARIAN
+    case "ca-ES" => CATALAN
+    case "zh-CN" => CHINESE_SIMPLIFIED
+    case "zh-TW" => CHINESE_TRADITIONAL
+    case "cs" => CZECH
+    case "da-DK" => DANISH
+    case "nl-AN" => DUTCH
+    case "en-GB" => ENGLISH
+    case "et" => ESTONIAN
+    case "fi-FI" => FINNISH
+    case "fr-FR" => FRENCH
+    case "de-DE" => GERMAN
+    case "el-GR" => GREEK
+    case "ht" => HAITIAN_CREOLE
+    case "he" => HEBREW
+    case "hi-IN" => HINDI
+    case "mww" => HMONG_DAW
+    case "hu-HU" => HUNGARIAN
+    case "id-ID" => INDONESIAN
+    case "it-IT" => ITALIAN
+    case "ja-JA" => JAPANESE
+    case "ko-KR" => KOREAN
+    case "lv" => LATVIAN
+    case "lt-LT" => LITHUANIAN
+    case "ms-MY" => MALAY
+    case "no-NO" => NORWEGIAN
+    case "fa-IR" => PERSIAN
+    case "pl-PL" => POLISH
+    case "pt-PT" => PORTUGUESE
+    case "ro-RO" => ROMANIAN
+    case "ru-RU" => RUSSIAN
+    case "sk-SK" => SLOVAK
+    case "sl-SI" => SLOVENIAN
+    case "es-ES" => SPANISH
+    case "sv-SE" => SWEDISH
+    case "th-TH" => THAI
+    case "tr-TR" => TURKISH
+    case "uk-UA" => UKRAINIAN
+    case "ur-PK" => URDU
+    case "vi-VN" => VIETNAMESE
+  }
+
   def toMyMemory(value: LanguageType): String = value match {
     case ARABIC => "ar-SA"
     case BULGARIAN => "bg-BG"
