@@ -25,19 +25,21 @@ import android.support.v4.view.ViewConfigurationCompat
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
-import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
 import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
+import com.fortysevendeg.translatebubble.modules.repository.AddTranslationHistoryRequest
 import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
+import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntityData
+import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
 import com.fortysevendeg.translatebubble.utils.TranslateUIType
 import macroid.FullDsl._
 import macroid.{AppContext, Ui}
-import com.fortysevendeg.translatebubble.ui.commons.Strings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Try}
@@ -375,6 +377,15 @@ class BubbleService
       translateResponse <- translateServices.translate(
         TranslateRequest(text = textResponse.text, from = persistentResponse.from, to = persistentResponse.to)
       )
+      addTranslationHistoryResponse <- repositoryServices.addTranslationHistory(AddTranslationHistoryRequest(
+        TranslationHistoryEntityData(
+          originalText = textResponse.text.getOrElse(""),
+          translatedText = translateResponse.translated.getOrElse(""),
+          from = persistentResponse.from,
+          to = persistentResponse.to
+        )
+
+      ))
     } yield (textResponse.text, translateResponse.translated,
           "%s-%s".format(persistentResponse.from.toString, persistentResponse.to.toString))
     result.mapUi(texts => onEndTranslate(texts._1, texts._2, texts._3)).recover {
