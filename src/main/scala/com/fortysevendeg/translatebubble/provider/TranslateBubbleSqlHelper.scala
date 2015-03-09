@@ -14,8 +14,8 @@ class TranslateBubbleSqlHelper(context: Context)
         "(" + TranslateBubbleSqlHelper.id + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
         TranslationHistoryEntity.originalText + " TEXT not null, " +
         TranslationHistoryEntity.translatedText + " TEXT not null, " +
-        TranslationHistoryEntity.fromLanguage + " INTEGER not null, " +
-        TranslationHistoryEntity.toLanguage + " INTEGER not null)")
+        TranslationHistoryEntity.fromLanguage + " TEXT not null, " +
+        TranslationHistoryEntity.toLanguage + " TEXT not null)")
 
     new Handler().postDelayed(
       new Runnable() {
