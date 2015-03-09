@@ -23,6 +23,9 @@
 
     <string name="failedTitle">Error</string>
     <string name="failedMessage">Por favor inténtalo otra vez</string>
+    <string name="generalMessageError">Se produjo un error intentando recuperar el histórico de las traducciones. Por favor inténtalo otra vez</string>
+    <string name="generalMessageEmpty">No se ha encontrado ningún dato en el histórico.</string>
+    <string name="reload">Volver a cargar</string>
 
     <string name="translating">Traduciendo</string>
     <string name="toLanguages">%1$s a %2$s</string>
