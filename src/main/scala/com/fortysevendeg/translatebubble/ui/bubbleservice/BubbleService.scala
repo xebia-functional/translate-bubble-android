@@ -27,27 +27,31 @@ import android.view.WindowManager.LayoutParams._
 import android.view._
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
-import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
-import com.fortysevendeg.translatebubble.modules.repository.AddTranslationHistoryRequest
-import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
+import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesRequest, GetLanguagesResponse}
+import com.fortysevendeg.translatebubble.modules.repository.{AddTranslationHistoryRequest, FetchTranslationHistoryRequest, FetchTranslationHistoryResponse}
+import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateResponse}
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntityData
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
-import com.fortysevendeg.translatebubble.utils.TranslateUIType
+import com.fortysevendeg.translatebubble.utils.Exceptions.{ClipboardException, TranslationException}
+import com.fortysevendeg.translatebubble.utils.{OptionOps, TranslateUIType}
 import macroid.FullDsl._
 import macroid.{AppContext, Ui}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.{Failure, Try}
 
 class BubbleService
     extends Service
     with AppContextProvider
-    with ComponentRegistryImpl {
+    with ComponentRegistryImpl
+    with OptionOps {
 
   override implicit lazy val appContextProvider = AppContext(getApplicationContext)
 
@@ -373,21 +377,27 @@ class BubbleService
 
     val result = for {
       textResponse <- clipboardServices.getText(GetTextClipboardRequest())
+      originalText = textResponse.text flattenOr ClipboardException(resGetString(R.string.clipboardMessageError))
       persistentResponse <- persistentServices.getLanguages(GetLanguagesRequest())
-      translateResponse <- translateServices.translate(
-        TranslateRequest(text = textResponse.text, from = persistentResponse.from, to = persistentResponse.to)
+      fetchResponse <- repositoryServices.fetchTranslationHistory(
+        FetchTranslationHistoryRequest(
+          from = persistentResponse.from,
+          to = persistentResponse.to,
+          originalText = originalText)
       )
+      translateResponse <- translateText(originalText, fetchResponse, persistentResponse)
+      translatedText = translateResponse.translated flattenOr TranslationException(resGetString(R.string.translationMessageError))
       addTranslationHistoryResponse <- repositoryServices.addTranslationHistory(AddTranslationHistoryRequest(
         TranslationHistoryEntityData(
-          originalText = textResponse.text.getOrElse(""),
-          translatedText = translateResponse.translated.getOrElse(""),
+          originalText = originalText,
+          translatedText = translatedText,
           from = persistentResponse.from,
           to = persistentResponse.to
         )
-
       ))
     } yield (textResponse.text, translateResponse.translated,
           "%s-%s".format(persistentResponse.from.toString, persistentResponse.to.toString))
+
     result.mapUi(texts => onEndTranslate(texts._1, texts._2, texts._3)).recover {
       case _ => translatedFailed()
     }
@@ -421,7 +431,7 @@ class BubbleService
     }
   }
 
-  private def translatedFailed() {
+  private def translatedFailed() = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     typeTranslateUI match {
       case TranslateUIType.BUBBLE =>
@@ -430,6 +440,15 @@ class BubbleService
       case TranslateUIType.NOTIFICATION =>
         notificationsServices.failed()
     }
+  }
+
+  private def translateText(
+      originalText: String,
+      fetchResponse: FetchTranslationHistoryResponse,
+      getLanguagesResponse: GetLanguagesResponse): Future[TranslateResponse] = fetchResponse.result match {
+    case Some(translationHistoryEntity) => Future(TranslateResponse(Some(translationHistoryEntity.data.translatedText)))
+    case None => translateServices.translate(
+      TranslateRequest(text = originalText, from = getLanguagesResponse.from, to = getLanguagesResponse.to))
   }
 
   override def onBind(intent: Intent): IBinder = null
