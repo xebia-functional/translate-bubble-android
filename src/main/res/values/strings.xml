@@ -24,8 +24,11 @@
 
     <string name="failedTitle">Failed</string>
     <string name="failedMessage">There was a problem. Please, try again</string>
-    <string name="generalMessageError">There was an error while trying to retrieve the translation history information. Please tap on the \"Reload\" button to try again</string>
+    <string name="generalMessageError">There was an error while trying to retrieve the translation history information.
+        Please tap on the \"Reload\" button to try again</string>
     <string name="generalMessageEmpty">We haven\'t found enough data for this section yet.</string>
+    <string name="clipboardMessageError">There was an error while trying to retrieve the text from the clipboard.</string>
+    <string name="translationMessageError">There was an error while trying to translated the text.</string>
     <string name="reload">Reload</string>
 
     <string name="translating">Translating</string>
