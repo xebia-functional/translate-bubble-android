@@ -45,6 +45,7 @@
 
     <string name="about">Sobre Translate Bubble</string>
     <string name="showTutorial">Ver Tutorial</string>
+    <string name="showHistory">Ver Historial</string>
     <string name="openSource">Bubble Translate es Open Source</string>
     <string name="openSourceMessage">Tu puedes descargar el código fuente y aprender como hacer aplicaciones en Scala en Android.
         El código está licenciada bajo licencia Apache Version 2.0 y desarrollado usando Scala en Android. </string>
