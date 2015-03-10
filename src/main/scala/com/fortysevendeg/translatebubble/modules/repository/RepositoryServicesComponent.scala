@@ -4,6 +4,7 @@ import com.fortysevendeg.translatebubble.service.Service
 
 trait RepositoryServices {
   def addTranslationHistory: Service[AddTranslationHistoryRequest, AddTranslationHistoryResponse]
+  def fetchTranslationHistory: Service[FetchTranslationHistoryRequest, FetchTranslationHistoryResponse]
   def fetchAllTranslationHistory: Service[FetchAllTranslationHistoryRequest, FetchAllTranslationHistoryResponse]
 }
 

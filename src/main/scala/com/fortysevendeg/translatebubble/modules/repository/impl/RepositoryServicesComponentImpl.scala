@@ -5,8 +5,9 @@ import android.database.Cursor
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.repository._
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity._
-import com.fortysevendeg.translatebubble.provider.{TranslateBubbleContentProvider, TranslationHistoryEntity}
+import com.fortysevendeg.translatebubble.provider.{TranslationHistoryEntity, TranslateBubbleContentProvider}
 import com.fortysevendeg.translatebubble.service.Service
+import com.fortysevendeg.translatebubble.utils.LanguageTypeTransformer._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.annotation.tailrec
@@ -55,6 +56,22 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent {
         }
       }
 
+    override def fetchTranslationHistory:
+    Service[FetchTranslationHistoryRequest, FetchTranslationHistoryResponse] =
+      request =>
+        tryToFuture {
+          Try {
+            val cursor: Option[Cursor] = Option(appContextProvider.get.getContentResolver.query(
+              TranslateBubbleContentProvider.contentUriTranslationHistory,
+              TranslationHistoryEntity.allFields.toArray,
+              s"${TranslationHistoryEntity.fromLanguage}=? AND ${TranslationHistoryEntity.toLanguage}=? AND ${TranslationHistoryEntity.originalText}=?",
+              Seq(toMyMemory(request.from),toMyMemory(request.to),request.originalText).toArray,
+              ""))
+
+            FetchTranslationHistoryResponse(getEntityFromCursor(cursor))
+          }
+        }
+
     override def fetchAllTranslationHistory:
     Service[FetchAllTranslationHistoryRequest, FetchAllTranslationHistoryResponse] =
       request =>
@@ -67,7 +84,7 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent {
               Seq.empty.toArray,
               ""))
 
-            FetchAllTranslationHistoryResponse(getListFromEntity(cursor))
+            FetchAllTranslationHistoryResponse(getListFromCursor(cursor))
           }
         }
 
@@ -77,7 +94,18 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent {
         case Failure(failure) => Future.failed(failure)
       }
 
-    private def getListFromEntity(cursor: Option[Cursor]) = {
+    private def getEntityFromCursor(cursor: Option[Cursor]): Option[TranslationHistoryEntity] = {
+      cursor match {
+        case Some(cursorObject) if cursorObject.moveToFirst() => {
+          val result = Some(translationHistoryEntityFromCursor(cursorObject))
+          cursorObject.close()
+          result
+        }
+        case _ => None
+      }
+    }
+
+    private def getListFromCursor(cursor: Option[Cursor]): Seq[TranslationHistoryEntity] = {
       @tailrec
       def getListFromEntityLoop(cursor: Cursor, result: Seq[TranslationHistoryEntity]): Seq[TranslationHistoryEntity] = {
         cursor match {
