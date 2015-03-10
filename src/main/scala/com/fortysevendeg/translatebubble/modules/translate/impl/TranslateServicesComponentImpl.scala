@@ -26,8 +26,8 @@ import org.json4s.native.JsonMethods._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 import scala.language.postfixOps
+import scala.util.{Failure, Success, Try}
 
 trait TranslateServicesComponentImpl
     extends TranslateServicesComponent
@@ -43,22 +43,19 @@ trait TranslateServicesComponentImpl
 
     override def translate: Service[TranslateRequest, TranslateResponse] = request =>
       Future {
-        request.text.map {
-          text =>
-            getJson(getTranslateServiceUrl(text, request.from, request.to)).map {
-              jsonStr =>
-                Try {
-                  implicit val formats = org.json4s.DefaultFormats
-                  val json = parse(jsonStr)
-                  val translatedText = (json \ "responseData" \ "translatedText").extract[String]
-                  StringEscapeUtils.unescapeHtml4(translatedText)
-                } match {
-                  case Success(response) => Some(response)
-                  case Failure(ex) => None
-                }
+        getJson(getTranslateServiceUrl(request.text, request.from, request.to)).map {
+          jsonStr =>
+            Try {
+              implicit val formats = org.json4s.DefaultFormats
+              val json = parse(jsonStr)
+              val translatedText = (json \ "responseData" \ "translatedText").extract[String]
+              StringEscapeUtils.unescapeHtml4(translatedText)
+            } match {
+              case Success(response) => Some(response)
+              case Failure(ex) => None
             }
         } flatten match {
-          case Some(translatedText) => TranslateResponse(translatedText)
+          case translatedText @ Some(_) => TranslateResponse(translatedText)
           case _ => TranslateResponse(None)
         }
       }
