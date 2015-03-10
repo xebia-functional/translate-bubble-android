@@ -25,6 +25,7 @@ import com.fortysevendeg.macroid.extras.RecyclerViewTweaks._
 import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
+import com.fortysevendeg.macroid.extras.ViewGroupTweaks._
 import com.fortysevendeg.translatebubble.R
 import macroid.{AppContext, Tweak}
 
@@ -43,9 +44,11 @@ trait ListStyles {
   def rootStyle(implicit appContext: AppContext): Tweak[FrameLayout] =
     vMatchParent
 
-  val recyclerViewStyle: Tweak[RecyclerView] =
+  def recyclerViewStyle(implicit appContext: AppContext): Tweak[RecyclerView] =
     vMatchParent +
-        rvNoFixedSize
+        rvNoFixedSize +
+        vPaddings(resGetDimensionPixelSize(R.dimen.padding_default)) +
+        vgClipToPadding(false)
 
   val progressBarStyle: Tweak[ProgressBar] =
     vWrapContent +
