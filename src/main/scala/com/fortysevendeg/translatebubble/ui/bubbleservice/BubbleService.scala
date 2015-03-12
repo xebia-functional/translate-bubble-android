@@ -27,24 +27,19 @@ import android.view.WindowManager.LayoutParams._
 import android.view._
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
-import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
+import com.fortysevendeg.translatebubble.modules.clipboard.{GetTextClipboardRequest, GetTextClipboardResponse}
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
 import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesRequest, GetLanguagesResponse}
-import com.fortysevendeg.translatebubble.modules.repository.{AddTranslationHistoryRequest, FetchTranslationHistoryRequest, FetchTranslationHistoryResponse}
 import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateResponse}
-import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntityData
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
-import com.fortysevendeg.translatebubble.utils.Exceptions.{ClipboardException, TranslationException}
 import com.fortysevendeg.translatebubble.utils.{OptionOps, TranslateUIType}
 import macroid.FullDsl._
 import macroid.{AppContext, Ui}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.util.{Failure, Try}
 
 class BubbleService
@@ -376,37 +371,21 @@ class BubbleService
     }
 
     val result = for {
-      textResponse <- clipboardServices.getText(GetTextClipboardRequest())
-      originalText = textResponse.text flattenOr ClipboardException(resGetString(R.string.clipboardMessageError))
-      persistentResponse <- persistentServices.getLanguages(GetLanguagesRequest())
-      fetchResponse <- repositoryServices.fetchTranslationHistory(
-        FetchTranslationHistoryRequest(
-          from = persistentResponse.from,
-          to = persistentResponse.to,
-          originalText = originalText)
-      )
-      translateResponse <- translateText(originalText, fetchResponse, persistentResponse)
-      translatedText = translateResponse.translated flattenOr TranslationException(resGetString(R.string.translationMessageError))
-      addTranslationHistoryResponse <- repositoryServices.addTranslationHistory(AddTranslationHistoryRequest(
-        TranslationHistoryEntityData(
-          originalText = originalText,
-          translatedText = translatedText,
-          from = persistentResponse.from,
-          to = persistentResponse.to
-        )
-      ))
-    } yield (textResponse.text, translateResponse.translated,
-          "%s-%s".format(persistentResponse.from.toString, persistentResponse.to.toString))
+      GetTextClipboardResponse(Some(text)) <- clipboardServices.getText(GetTextClipboardRequest())
+      GetLanguagesResponse(from, to) <- persistentServices.getLanguages(GetLanguagesRequest())
+      TranslateResponse(Some(translatedText)) <- translateServices.translate(
+        TranslateRequest(text = text, from = from, to = to))
+    } yield (text, translatedText, "%s-%s".format(from.toString, to.toString))
 
-    result.mapUi(texts => onEndTranslate(texts._1, texts._2, texts._3)).recover {
+    result mapUi {
+      case (text: String, translated: String, langs: String) => onEndTranslate(text, translated, langs)
       case _ => translatedFailed()
     }
-
   }
 
   private def onEndTranslate(
-      maybeOriginalText: Option[String],
-      maybeTranslatedText: Option[String],
+      originalText: String,
+      translatedText: String,
       label: String) = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
 
@@ -416,18 +395,15 @@ class BubbleService
       Some(analyticsClipboard),
       Some(label))
 
-    for {
-      originalText <- maybeOriginalText
-      translatedText <- maybeTranslatedText
-      languages <- persistentServices.getLanguagesString
-    } yield {
-      typeTranslateUI match {
-        case TranslateUIType.BUBBLE =>
-          contentView.setTexts(languages, originalText, translatedText)
-          bubble.stopAnimation()
-        case TranslateUIType.NOTIFICATION =>
-          notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
-      }
+    persistentServices.getLanguagesString foreach {
+      languages =>
+        typeTranslateUI match {
+          case TranslateUIType.BUBBLE =>
+            contentView.setTexts(languages, originalText, translatedText)
+            bubble.stopAnimation()
+          case TranslateUIType.NOTIFICATION =>
+            notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
+        }
     }
   }
 
@@ -440,15 +416,6 @@ class BubbleService
       case TranslateUIType.NOTIFICATION =>
         notificationsServices.failed()
     }
-  }
-
-  private def translateText(
-      originalText: String,
-      fetchResponse: FetchTranslationHistoryResponse,
-      getLanguagesResponse: GetLanguagesResponse): Future[TranslateResponse] = fetchResponse.result match {
-    case Some(translationHistoryEntity) => Future(TranslateResponse(Some(translationHistoryEntity.data.translatedText)))
-    case None => translateServices.translate(
-      TranslateRequest(text = originalText, from = getLanguagesResponse.from, to = getLanguagesResponse.to))
   }
 
   override def onBind(intent: Intent): IBinder = null
