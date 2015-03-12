@@ -34,7 +34,7 @@ class TranslateServiceComponentSpec
 
       override def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) = "http://fakeUrl"
 
-      val text = Some("text")
+      val text = "text"
       val from = LanguageType.ENGLISH
       val to = LanguageType.SPANISH
 
@@ -48,7 +48,7 @@ class TranslateServiceComponentSpec
 
       override def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) = "http://fakeUrl"
 
-      val text = Some("text")
+      val text = "text"
       val from = LanguageType.ENGLISH
       val to = LanguageType.SPANISH
 
@@ -62,7 +62,7 @@ class TranslateServiceComponentSpec
 
       override def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) = "http://fakeUrl"
 
-      val text = Some("text")
+      val text = "text"
       val from = LanguageType.ENGLISH
       val to = LanguageType.SPANISH
 

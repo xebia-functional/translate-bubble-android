@@ -18,6 +18,7 @@ package com.fortysevendeg.translatebubble.modules.translate
 
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.TestConfig
+import com.fortysevendeg.translatebubble.modules.repository.impl.RepositoryServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateServicesComponentImpl
 import macroid.AppContext
 import org.specs2.mock.Mockito
@@ -27,6 +28,7 @@ trait BaseTranslateMocks
     extends Mockito
     with AppContextProvider
     with TranslateServicesComponentImpl
+    with RepositoryServicesComponentImpl
     with TestConfig
     with Scope {
   implicit val appContextProvider: AppContext = mock[AppContext]
