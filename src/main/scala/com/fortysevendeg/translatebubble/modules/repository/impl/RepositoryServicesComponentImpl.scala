@@ -5,7 +5,7 @@ import android.database.Cursor
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.repository._
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity._
-import com.fortysevendeg.translatebubble.provider.{TranslateBubbleContentProvider, TranslationHistoryEntity}
+import com.fortysevendeg.translatebubble.provider.{TranslateBubbleSqlHelper, TranslateBubbleContentProvider, TranslationHistoryEntity}
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.DBUtils
 import com.fortysevendeg.translatebubble.utils.LanguageTypeTransformer._
@@ -48,6 +48,28 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent with D
                 success = false,
                 message = "Unexpected error when adding a translation history item",
                 translationHistoryEntity = None)
+          }
+        }
+      }
+
+    override def deleteTranslationHistory: Service[DeleteTranslationHistoryRequest, DeleteTranslationHistoryResponse] =
+      request => {
+        tryToFuture {
+          Try {
+            appContextProvider.get.getContentResolver.delete(
+              TranslateBubbleContentProvider.contentUriTranslationHistory,
+              s"${TranslateBubbleSqlHelper.id}=?",
+              Seq(request.entity.id.toString).toArray)
+
+            DeleteTranslationHistoryResponse(
+              success = true,
+              message = "The translation history item has been deleted successfully")
+
+          } recover {
+            case e: Exception =>
+              DeleteTranslationHistoryResponse(
+                success = false,
+                message = "Unexpected error when deleting a translation history item")
           }
         }
       }
