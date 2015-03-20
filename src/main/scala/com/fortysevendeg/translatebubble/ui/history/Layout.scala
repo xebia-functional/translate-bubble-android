@@ -23,7 +23,6 @@ class TranslationHistoryLayoutAdapter(implicit context: ActivityContext, appCont
           w[TextView] <~ wire(languages) <~ languagesStyle
         ) <~ translateTitleStyle,
         w[TextView] <~ wire(originalText) <~ originalTextStyle,
-        //      w[ImageView] <~ lineStyle,
         w[TextView] <~ wire(translatedText) <~ translatedTextStyle
       ) <~ translateStyle
     ) <~ cardStyle
