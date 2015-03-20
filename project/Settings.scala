@@ -13,8 +13,7 @@ object Settings {
         Resolver.sonatypeRepo("snapshots"),
         Resolver.defaultLocal,
         "jcenter" at "http://jcenter.bintray.com",
-        "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
-        "SQLite-JDBC Repository" at "https://oss.sonatype.org/content/repositories/snapshots"
+        "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases"
       )
 
   lazy val proguardCommons = Seq(
