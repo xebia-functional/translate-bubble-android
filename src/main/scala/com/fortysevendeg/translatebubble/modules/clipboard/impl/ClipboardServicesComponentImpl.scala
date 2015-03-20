@@ -75,7 +75,7 @@ trait ClipboardServicesComponentImpl
         } yield text
 
         result match {
-          case Some(text) => GetTextClipboardResponse(Some(text.toString))
+          case Some(text) if text.toString.length > 0 => GetTextClipboardResponse(Some(text.toString))
           case _ => GetTextClipboardResponse(None)
         }
       }
