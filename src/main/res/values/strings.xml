@@ -49,6 +49,7 @@
 
     <string name="about">About</string>
     <string name="showTutorial">Show Tutorial</string>
+    <string name="history">History</string>
     <string name="showHistory">Show History</string>
     <string name="openSource">Open Source</string>
     <string name="openSourceMessage">This app is licensed under the Apache License, Version 2.0 and
