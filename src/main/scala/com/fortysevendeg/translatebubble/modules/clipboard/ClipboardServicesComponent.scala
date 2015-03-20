@@ -23,6 +23,7 @@ trait ClipboardServices {
   def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit
   def destroy(): Unit
   def reset(): Unit
+  def isValidCall: Boolean
   def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse]
   def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse]
 }

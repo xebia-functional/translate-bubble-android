@@ -92,23 +92,23 @@ class BubbleService
           actionsView.hide()
           actionsView match {
             // Bubble didn't move, we show text translated
-            case actionView if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
+            case `actionsView` if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
                 && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
               bubbleStatus = BubbleStatus.CONTENT
               bubble.hide()
               contentView.show()
             // Bubble was moved over CloseView
-            case actionsView if actionsView.isOverCloseView(x, y) =>
+            case `actionsView` if actionsView.isOverCloseView(x, y) =>
               bubble.hideFromCloseAction(paramsBubble, windowManager)
             // Bubble was moved over DisableTranslation
-            case actionsView if actionsView.isOverDisableView(x, y) =>
+            case `actionsView` if actionsView.isOverDisableView(x, y) =>
               analyticsServices.send(
                 analyticsTranslateService,
                 Some(analyticsDisable))
               persistentServices.disableTranslation()
               bubble.hideFromOptionAction(paramsBubble, windowManager)
             // Bubble was moved over DisableTranslation during 30 minutes
-            case actionsView if actionsView.isOver30minView(x, y) =>
+            case `actionsView` if actionsView.isOver30minView(x, y) =>
               analyticsServices.send(
                 analyticsTranslateService,
                 Some(analytics30MinDisable))
@@ -292,7 +292,7 @@ class BubbleService
   }
 
   private val clipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener {
-    def onPrimaryClipChanged() = if (persistentServices.isTranslationEnable()) onStartTranslate()
+    def onPrimaryClipChanged() = if (persistentServices.isTranslationEnable() && clipboardServices.isValidCall) onStartTranslate()
   }
 
   override def onCreate() {
@@ -380,6 +380,8 @@ class BubbleService
 
     result mapUi {
       case (text: String, translated: String, langs: String) => onEndTranslate(text, translated, langs)
+      case _ => translatedFailed()
+    } recover {
       case _ => translatedFailed()
     }
   }

@@ -21,7 +21,6 @@ import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.clipboard._
 import com.fortysevendeg.translatebubble.service._
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.concurrent.Future
 
 trait ClipboardServicesComponentImpl
@@ -35,7 +34,9 @@ trait ClipboardServicesComponentImpl
 
   class ClipboardServicesImpl extends ClipboardServices {
 
-    var previousText: Option[String] = None
+    val millisInterval = 1000
+
+    var lastDate: Long = 0
 
     var clipChangedListener: Option[ClipboardManager.OnPrimaryClipChangedListener] = None
 
@@ -43,12 +44,38 @@ trait ClipboardServicesComponentImpl
       appContextProvider.get.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
     }
 
+    private def getClipboardManagerPrimaryClip: Option[ClipData] = Option(clipboardManager.getPrimaryClip)
+    private def getPrimaryClipItem(clipData: ClipData): Option[ClipData.Item] = Option(clipData.getItemAt(0))
+    private def getClipDataItemText(clipDataItem: ClipData.Item): Option[CharSequence] = Option(clipDataItem.getText)
+
+    override def isValidCall: Boolean = {
+
+      val currentInterval = System.currentTimeMillis() - lastDate
+
+      val result = for {
+        clipData <- getClipboardManagerPrimaryClip
+        clipDataItem <- getPrimaryClipItem(clipData)
+        text <- getClipDataItemText(clipDataItem)
+      } yield text
+
+      result match {
+        case Some(text) if text.toString.trim.length > 0 => currentInterval > millisInterval
+        case _ => false
+      }
+    }
+
     override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = request =>
       Future {
-        Option(clipboardManager.getPrimaryClip) map (_.getItemAt(0)) map (_.getText) match {
-          case Some(clipDataText) if clipDataText.length > 0 && previousText.map(_ != clipDataText).getOrElse(true) =>
-            previousText = Some(clipDataText.toString)
-            GetTextClipboardResponse(previousText)
+        lastDate = System.currentTimeMillis()
+
+        val result = for {
+          clipData <- getClipboardManagerPrimaryClip
+          clipDataItem <- getPrimaryClipItem(clipData)
+          text <- getClipDataItemText(clipDataItem)
+        } yield text
+
+        result match {
+          case Some(text) => GetTextClipboardResponse(Some(text.toString))
           case _ => GetTextClipboardResponse(None)
         }
       }
@@ -61,9 +88,7 @@ trait ClipboardServicesComponentImpl
       }
 
     def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit = {
-      if (clipChangedListener.isDefined) {
-        clipChangedListener map clipboardManager.removePrimaryClipChangedListener
-      }
+      clipChangedListener map clipboardManager.removePrimaryClipChangedListener
       clipChangedListener = Some(listener)
       clipboardManager.addPrimaryClipChangedListener(listener)
     }
@@ -73,7 +98,7 @@ trait ClipboardServicesComponentImpl
       clipChangedListener = None
     }
 
-    def reset(): Unit = previousText = None
+    def reset(): Unit = lastDate = 0
 
   }
 
