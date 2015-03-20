@@ -17,7 +17,6 @@
 package com.fortysevendeg.translatebubble.ui.commons
 
 import android.widget.{Button, ImageView, LinearLayout, TextView}
-import com.fortysevendeg.macroid.extras.ImageViewTweaks._
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
@@ -41,14 +40,13 @@ trait PlaceHolderLayout
     ) <~ placeholderContentStyle
   }
 
-  def loadFailed() = load(R.string.generalMessageError, R.drawable.placeholder_error)
+  def loadFailed() = load(R.string.generalMessageError)
 
-  def loadEmpty() = load(R.string.generalMessageEmpty, R.drawable.placeholder_general)
+  def loadEmpty() = load(R.string.generalMessageEmpty, false)
 
-  private def load(messageRes: Int, imageRes: Int, showButton: Boolean = true) = {
+  private def load(messageRes: Int, showButton: Boolean = true) = {
     runUi(
       (text <~ tvText(messageRes)) ~
-        (image <~ ivSrc(imageRes)) ~
         (reloadButton <~ (if (showButton) vVisible else vGone)))
   }
 
