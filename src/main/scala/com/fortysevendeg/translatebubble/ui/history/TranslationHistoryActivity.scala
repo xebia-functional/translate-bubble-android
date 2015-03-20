@@ -66,12 +66,11 @@ class TranslationHistoryActivity
 
   }
 
-  override def onOptionsItemSelected(item: MenuItem): Boolean = {
+  override def onOptionsItemSelected(item: MenuItem): Boolean =
     item.getItemId match {
       case android.R.id.home => finish(); true
       case _ => super.onOptionsItemSelected(item)
     }
-  }
 
   def loadTranslationHistory(): Unit = {
     loading()
@@ -84,7 +83,7 @@ class TranslationHistoryActivity
     }
   }
 
-  def reloadList(translationHistoryItems: Seq[TranslationHistoryEntity]) = {
+  def reloadList(translationHistoryItems: Seq[TranslationHistoryEntity]) =
     translationHistoryItems.length match {
       case 0 => empty()
       case _ =>
@@ -93,7 +92,6 @@ class TranslationHistoryActivity
         })
         adapter(translationAdapter)
     }
-  }
 
 }
 

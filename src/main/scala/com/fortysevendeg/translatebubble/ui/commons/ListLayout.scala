@@ -24,8 +24,8 @@ import macroid.FullDsl._
 import macroid.{ActivityContext, AppContext}
 
 trait ListLayout
-  extends ListStyles
-  with PlaceHolderLayout {
+    extends ListStyles
+    with PlaceHolderLayout {
 
   var recyclerView = slot[RecyclerView]
 
@@ -41,36 +41,33 @@ trait ListLayout
     ) <~ rootStyle
   )
 
-  def loading() = {
+  def loading() =
     runUi(
       (progressBar <~ vVisible) ~
-        (recyclerView <~ vGone) ~
-        (placeholderContent <~ vGone))
-  }
+          (recyclerView <~ vGone) ~
+          (placeholderContent <~ vGone))
 
   def failed() = {
     loadFailed()
     runUi(
       (progressBar <~ vGone) ~
-        (recyclerView <~ vGone) ~
-        (placeholderContent <~ vVisible))
+          (recyclerView <~ vGone) ~
+          (placeholderContent <~ vVisible))
   }
 
   def empty() = {
     loadEmpty()
     runUi(
       (progressBar <~ vGone) ~
-        (recyclerView <~ vGone) ~
-        (placeholderContent <~ vVisible))
+          (recyclerView <~ vGone) ~
+          (placeholderContent <~ vVisible))
   }
 
-  def adapter[VH <: RecyclerView.ViewHolder](adapter: RecyclerView.Adapter[VH]) = {
+  def adapter[VH <: RecyclerView.ViewHolder](adapter: RecyclerView.Adapter[VH]) =
     runUi(
       (progressBar <~ vGone) ~
-        (placeholderContent <~ vGone) ~
-        (recyclerView <~ vVisible) ~
-        (recyclerView <~ rvAdapter(adapter))
-    )
-  }
+          (placeholderContent <~ vGone) ~
+          (recyclerView <~ vVisible) ~
+          (recyclerView <~ rvAdapter(adapter)))
 
 }

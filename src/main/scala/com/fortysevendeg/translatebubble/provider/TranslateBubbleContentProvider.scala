@@ -22,7 +22,8 @@ import android.database.sqlite.{SQLiteDatabase, SQLiteQueryBuilder}
 import android.net.Uri
 import TranslateBubbleContentProvider._
 
-class TranslateBubbleContentProvider extends ContentProvider {
+class TranslateBubbleContentProvider
+    extends ContentProvider {
   
   lazy val translateBubbleSqlHelper = new TranslateBubbleSqlHelper(getContext)
   lazy val database: Option[SQLiteDatabase] = Option[SQLiteDatabase](translateBubbleSqlHelper.getWritableDatabase)
