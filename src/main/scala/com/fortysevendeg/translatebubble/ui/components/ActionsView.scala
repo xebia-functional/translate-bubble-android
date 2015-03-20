@@ -75,15 +75,17 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
   }
 
   def hide() = {
-    runUi(
-      (closeView <~~ ActionsViewSnails.animCloseOut(new AnimatorListenerAdapter {
-        override def onAnimationEnd(animation: Animator): Unit = {
-          super.onAnimationEnd(animation)
-          setVisibility(GONE)
-        }
-      })) ~
+    if (isVisible) {
+      runUi(
+        (closeView <~~ ActionsViewSnails.animCloseOut(new AnimatorListenerAdapter {
+          override def onAnimationEnd(animation: Animator): Unit = {
+            super.onAnimationEnd(animation)
+            setVisibility(GONE)
+          }
+        })) ~
           (disableContentOptionsView <~~ ActionsViewSnails.animDisableOut)
-    )
+      )
+    }
   }
 
   def isVisible: Boolean = getVisibility == VISIBLE

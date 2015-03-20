@@ -22,6 +22,7 @@ import android.content.{ClipboardManager, Context, Intent}
 import android.graphics.{PixelFormat, Point}
 import android.os._
 import android.support.v4.view.ViewConfigurationCompat
+import android.view.View._
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
@@ -280,7 +281,7 @@ class BubbleService
 
   private lazy val (actionsView, paramsActionsView) = {
     val actionsView = new ActionsView(this)
-    actionsView.hide()
+    actionsView.setVisibility(GONE)
     val paramsActionsView: WindowManager.LayoutParams = new WindowManager.LayoutParams(
       MATCH_PARENT,
       MATCH_PARENT,
