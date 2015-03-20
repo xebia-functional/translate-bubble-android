@@ -21,7 +21,7 @@ import android.database.Cursor
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.repository._
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity._
-import com.fortysevendeg.translatebubble.provider.{TranslateBubbleSqlHelper, TranslateBubbleContentProvider, TranslationHistoryEntity}
+import com.fortysevendeg.translatebubble.provider.{TranslateBubbleContentProvider, TranslateBubbleSqlHelper, TranslationHistoryEntity}
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.utils.DBUtils
 import com.fortysevendeg.translatebubble.utils.LanguageTypeTransformer._
@@ -30,7 +30,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
-trait RepositoryServicesComponentImpl extends RepositoryServicesComponent with DBUtils {
+trait RepositoryServicesComponentImpl
+    extends RepositoryServicesComponent
+    with DBUtils {
   self: AppContextProvider =>
 
   lazy val repositoryServices = new RepositoryServicesImpl
@@ -53,7 +55,6 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent with D
 
             AddTranslationHistoryResponse(
               success = true,
-              message = "The translation history item has been added successfully",
               translationHistoryEntity = Some(TranslationHistoryEntity(
                 id = Integer.parseInt(uri.getPathSegments.get(1)),
                 data = request.data)))
@@ -62,7 +63,6 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent with D
             case e: Exception =>
               AddTranslationHistoryResponse(
                 success = false,
-                message = "Unexpected error when adding a translation history item",
                 translationHistoryEntity = None)
           }
         }
@@ -77,15 +77,11 @@ trait RepositoryServicesComponentImpl extends RepositoryServicesComponent with D
               s"${TranslateBubbleSqlHelper.id}=?",
               Seq(request.entity.id.toString).toArray)
 
-            DeleteTranslationHistoryResponse(
-              success = true,
-              message = "The translation history item has been deleted successfully")
+            DeleteTranslationHistoryResponse(success = true)
 
           } recover {
             case e: Exception =>
-              DeleteTranslationHistoryResponse(
-                success = false,
-                message = "Unexpected error when deleting a translation history item")
+              DeleteTranslationHistoryResponse(success = false)
           }
         }
       }
