@@ -88,13 +88,13 @@ trait ClipboardServicesComponentImpl
       }
 
     def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit = {
-      clipChangedListener map clipboardManager.removePrimaryClipChangedListener
+      clipChangedListener foreach clipboardManager.removePrimaryClipChangedListener
       clipChangedListener = Some(listener)
       clipboardManager.addPrimaryClipChangedListener(listener)
     }
 
     def destroy(): Unit = {
-      clipChangedListener map clipboardManager.removePrimaryClipChangedListener
+      clipChangedListener foreach clipboardManager.removePrimaryClipChangedListener
       clipChangedListener = None
     }
 
