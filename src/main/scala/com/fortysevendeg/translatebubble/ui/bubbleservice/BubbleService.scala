@@ -126,17 +126,17 @@ class BubbleService
             }
             actionsView match {
               // Bubble is over CloseView
-              case actionsView if actionsView.isOverCloseView(x, y) =>
+              case `actionsView` if actionsView.isOverCloseView(x, y) =>
                 val pos = actionsView.getClosePosition
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
               // Bubble is over DisableTranslation
-              case actionsView if actionsView.isOverDisableView(x, y) =>
+              case `actionsView` if actionsView.isOverDisableView(x, y) =>
                 val pos = actionsView.getDisablePosition
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
               // Bubble is over DisableTranslation30min
-              case actionsView if actionsView.isOver30minView(x, y) =>
+              case `actionsView` if actionsView.isOver30minView(x, y) =>
                 val pos = actionsView.get30minPosition()
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)

@@ -50,7 +50,11 @@ trait ClipboardServicesComponentImpl
 
     override def isValidCall: Boolean = {
 
-      val currentInterval = System.currentTimeMillis() - lastDate
+      val currentMillis = System.currentTimeMillis()
+
+      val currentInterval = currentMillis - lastDate
+
+      lastDate = currentMillis
 
       val result = for {
         clipData <- getClipboardManagerPrimaryClip
@@ -66,7 +70,6 @@ trait ClipboardServicesComponentImpl
 
     override def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse] = request =>
       Future {
-        lastDate = System.currentTimeMillis()
 
         val result = for {
           clipData <- getClipboardManagerPrimaryClip
