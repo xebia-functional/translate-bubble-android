@@ -23,6 +23,12 @@
 
     <string name="failedTitle">Error</string>
     <string name="failedMessage">Por favor inténtalo otra vez</string>
+    <string name="generalMessageError">Se produjo un error intentando recuperar el histórico de las traducciones.
+        Por favor inténtalo otra vez</string>
+    <string name="generalMessageEmpty">No se ha encontrado ningún dato en el histórico.</string>
+    <string name="clipboardMessageError">Se produjo un error intentando recuperar el texto del portapapeles.</string>
+    <string name="translationMessageError">Se produjo un error intentando traducir el texto.</string>
+    <string name="reload">Volver a cargar</string>
 
     <string name="translating">Traduciendo</string>
     <string name="toLanguages">%1$s a %2$s</string>
@@ -42,6 +48,8 @@
 
     <string name="about">Sobre Translate Bubble</string>
     <string name="showTutorial">Ver Tutorial</string>
+    <string name="history">Historial</string>
+    <string name="showHistory">Ver Historial</string>
     <string name="openSource">Bubble Translate es Open Source</string>
     <string name="openSourceMessage">Tu puedes descargar el código fuente y aprender como hacer aplicaciones en Scala en Android.
         El código está licenciada bajo licencia Apache Version 2.0 y desarrollado usando Scala en Android. </string>

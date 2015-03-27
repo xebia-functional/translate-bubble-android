@@ -16,22 +16,23 @@
 
 package com.fortysevendeg.translatebubble.ui.preferences
 
-import android.app.{AlertDialog, Activity}
-import android.content.{Intent, DialogInterface}
+import android.app.{Activity, AlertDialog}
+import android.content.{DialogInterface, Intent}
 import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
-import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
-import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
-import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.macroid.extras.ResourcesExtras._
+import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
+import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
+import com.fortysevendeg.translatebubble.ui.history.TranslationHistoryActivity
 import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
-import com.fortysevendeg.translatebubble.utils.{TranslateUIType, LanguageType}
+import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
 import macroid.FullDsl._
 import macroid.{AppContext, Contexts}
 
@@ -67,6 +68,7 @@ class DefaultPreferencesFragment
   private lazy val fromLanguage = connect[ListPreference]("fromLanguage")
   private lazy val openSource = connect[PreferenceScreen]("openSource")
   private lazy val showTutorial = connect[PreferenceScreen]("showTutorial")
+  private lazy val showHistory = connect[PreferenceScreen]("showHistory")
   private lazy val about = connect[PreferenceScreen]("about")
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -76,17 +78,27 @@ class DefaultPreferencesFragment
     analyticsServices.send(analyticsPreferencesScreen)
 
     showTutorial map (
-      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
-        override def onPreferenceClick(preference: Preference): Boolean = {
-          val intent = new Intent(getActivity, classOf[WizardActivity])
-          val bundle = new Bundle()
-          bundle.putBoolean(WizardActivity.keyModeTutorial, true)
-          intent.putExtras(bundle)
-          getActivity.startActivity(intent)
-          true
-        }
-      })
-    )
+        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+          override def onPreferenceClick(preference: Preference): Boolean = {
+            val intent = new Intent(getActivity, classOf[WizardActivity])
+            val bundle = new Bundle()
+            bundle.putBoolean(WizardActivity.keyModeTutorial, true)
+            intent.putExtras(bundle)
+            getActivity.startActivity(intent)
+            true
+          }
+        })
+        )
+
+    showHistory map (
+        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+          override def onPreferenceClick(preference: Preference): Boolean = {
+            val intent = new Intent(getActivity, classOf[TranslationHistoryActivity])
+            getActivity.startActivity(intent)
+            true
+          }
+        })
+        )
 
     openSource map (
         _.setOnPreferenceClickListener(new OnPreferenceClickListener {

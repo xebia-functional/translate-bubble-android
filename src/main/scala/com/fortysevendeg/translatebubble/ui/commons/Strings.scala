@@ -42,4 +42,5 @@ object Strings {
 
   val analytics30MinDisable = "Disable 30 minutes from Bubble"
 
+  val analyticsHistoryScreen = "History Screen"
 }

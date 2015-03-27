@@ -22,6 +22,7 @@ import com.fortysevendeg.translatebubble.utils.TranslateUIType._
 trait PersistentServices {
   def getLanguages: Service[GetLanguagesRequest, GetLanguagesResponse]
   def getLanguagesString: Option[String]
+  def getLanguagesStringFromData(from: String, to: String): Option[String]
   def disable30MinutesTranslation(): Unit
   def enableTranslation(): Unit
   def disableTranslation(): Unit

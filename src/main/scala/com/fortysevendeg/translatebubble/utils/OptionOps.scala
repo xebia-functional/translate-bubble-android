@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package com.fortysevendeg.translatebubble.modules.clipboard
+package com.fortysevendeg.translatebubble.utils
 
-import android.content.ClipboardManager
-import com.fortysevendeg.translatebubble.service._
+trait OptionOps {
 
-trait ClipboardServices {
-  def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit
-  def destroy(): Unit
-  def reset(): Unit
-  def isValidCall: Boolean
-  def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse]
-  def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse]
-}
+  implicit class RichOptionException[A](option: Option[A]) {
 
-trait ClipboardServicesComponent {
-  val clipboardServices: ClipboardServices
+    def orThrow(e: Exception): Option[A] = option orElse (throw e)
+
+    def flattenOr(e: Exception): A = option getOrElse (throw e)
+
+  }
+
 }

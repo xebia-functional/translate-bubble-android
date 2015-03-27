@@ -61,7 +61,7 @@ object Libraries {
     lazy val apacheCommonsLang = apacheCommonsDep("commons-lang3")
     
   }
-  
+
   object json {
     lazy val json4s = "org.json4s" %% "json4s-native" % Versions.json4sV
   }

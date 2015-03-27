@@ -22,22 +22,23 @@ import android.content.{ClipboardManager, Context, Intent}
 import android.graphics.{PixelFormat, Point}
 import android.os._
 import android.support.v4.view.ViewConfigurationCompat
+import android.view.View._
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams._
 import android.view._
-import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
 import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import com.fortysevendeg.translatebubble.modules.clipboard.GetTextClipboardRequest
+import com.fortysevendeg.translatebubble.modules.clipboard.{GetTextClipboardRequest, GetTextClipboardResponse}
 import com.fortysevendeg.translatebubble.modules.notifications.ShowTextTranslatedRequest
-import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
-import com.fortysevendeg.translatebubble.modules.translate.TranslateRequest
+import com.fortysevendeg.translatebubble.modules.persistent.{GetLanguagesRequest, GetLanguagesResponse}
+import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateResponse}
+import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
-import com.fortysevendeg.translatebubble.utils.TranslateUIType
+import com.fortysevendeg.translatebubble.utils.{OptionOps, TranslateUIType}
 import macroid.FullDsl._
 import macroid.{AppContext, Ui}
-import com.fortysevendeg.translatebubble.ui.commons.Strings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Try}
@@ -45,7 +46,8 @@ import scala.util.{Failure, Try}
 class BubbleService
     extends Service
     with AppContextProvider
-    with ComponentRegistryImpl {
+    with ComponentRegistryImpl
+    with OptionOps {
 
   override implicit lazy val appContextProvider = AppContext(getApplicationContext)
 
@@ -90,23 +92,23 @@ class BubbleService
           actionsView.hide()
           actionsView match {
             // Bubble didn't move, we show text translated
-            case actionView if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
+            case `actionsView` if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
                 && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
               bubbleStatus = BubbleStatus.CONTENT
               bubble.hide()
               contentView.show()
             // Bubble was moved over CloseView
-            case actionsView if actionsView.isOverCloseView(x, y) =>
+            case `actionsView` if actionsView.isOverCloseView(x, y) =>
               bubble.hideFromCloseAction(paramsBubble, windowManager)
             // Bubble was moved over DisableTranslation
-            case actionsView if actionsView.isOverDisableView(x, y) =>
+            case `actionsView` if actionsView.isOverDisableView(x, y) =>
               analyticsServices.send(
                 analyticsTranslateService,
                 Some(analyticsDisable))
               persistentServices.disableTranslation()
               bubble.hideFromOptionAction(paramsBubble, windowManager)
             // Bubble was moved over DisableTranslation during 30 minutes
-            case actionsView if actionsView.isOver30minView(x, y) =>
+            case `actionsView` if actionsView.isOver30minView(x, y) =>
               analyticsServices.send(
                 analyticsTranslateService,
                 Some(analytics30MinDisable))
@@ -124,17 +126,17 @@ class BubbleService
             }
             actionsView match {
               // Bubble is over CloseView
-              case actionsView if actionsView.isOverCloseView(x, y) =>
+              case `actionsView` if actionsView.isOverCloseView(x, y) =>
                 val pos = actionsView.getClosePosition
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
               // Bubble is over DisableTranslation
-              case actionsView if actionsView.isOverDisableView(x, y) =>
+              case `actionsView` if actionsView.isOverDisableView(x, y) =>
                 val pos = actionsView.getDisablePosition
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
               // Bubble is over DisableTranslation30min
-              case actionsView if actionsView.isOver30minView(x, y) =>
+              case `actionsView` if actionsView.isOver30minView(x, y) =>
                 val pos = actionsView.get30minPosition()
                 paramsBubble.x = pos._1 - (bubble.getWidth / 2)
                 paramsBubble.y = pos._2 - (bubble.getHeight / 2)
@@ -279,7 +281,7 @@ class BubbleService
 
   private lazy val (actionsView, paramsActionsView) = {
     val actionsView = new ActionsView(this)
-    actionsView.hide()
+    actionsView.setVisibility(GONE)
     val paramsActionsView: WindowManager.LayoutParams = new WindowManager.LayoutParams(
       MATCH_PARENT,
       MATCH_PARENT,
@@ -290,7 +292,7 @@ class BubbleService
   }
 
   private val clipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener {
-    def onPrimaryClipChanged() = if (persistentServices.isTranslationEnable()) onStartTranslate()
+    def onPrimaryClipChanged() = if (persistentServices.isTranslationEnable() && clipboardServices.isValidCall) onStartTranslate()
   }
 
   override def onCreate() {
@@ -370,22 +372,23 @@ class BubbleService
     }
 
     val result = for {
-      textResponse <- clipboardServices.getText(GetTextClipboardRequest())
-      persistentResponse <- persistentServices.getLanguages(GetLanguagesRequest())
-      translateResponse <- translateServices.translate(
-        TranslateRequest(text = textResponse.text, from = persistentResponse.from, to = persistentResponse.to)
-      )
-    } yield (textResponse.text, translateResponse.translated,
-          "%s-%s".format(persistentResponse.from.toString, persistentResponse.to.toString))
-    result.mapUi(texts => onEndTranslate(texts._1, texts._2, texts._3)).recover {
+      GetTextClipboardResponse(Some(text)) <- clipboardServices.getText(GetTextClipboardRequest())
+      GetLanguagesResponse(from, to) <- persistentServices.getLanguages(GetLanguagesRequest())
+      TranslateResponse(Some(translatedText)) <- translateServices.translate(
+        TranslateRequest(text = text, from = from, to = to))
+    } yield (text, translatedText, "%s-%s".format(from.toString, to.toString))
+
+    result mapUi {
+      case (text: String, translated: String, langs: String) => onEndTranslate(text, translated, langs)
+      case _ => translatedFailed()
+    } recover {
       case _ => translatedFailed()
     }
-
   }
 
   private def onEndTranslate(
-      maybeOriginalText: Option[String],
-      maybeTranslatedText: Option[String],
+      originalText: String,
+      translatedText: String,
       label: String) = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
 
@@ -395,22 +398,19 @@ class BubbleService
       Some(analyticsClipboard),
       Some(label))
 
-    for {
-      originalText <- maybeOriginalText
-      translatedText <- maybeTranslatedText
-      languages <- persistentServices.getLanguagesString
-    } yield {
-      typeTranslateUI match {
-        case TranslateUIType.BUBBLE =>
-          contentView.setTexts(languages, originalText, translatedText)
-          bubble.stopAnimation()
-        case TranslateUIType.NOTIFICATION =>
-          notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
-      }
+    persistentServices.getLanguagesString foreach {
+      languages =>
+        typeTranslateUI match {
+          case TranslateUIType.BUBBLE =>
+            contentView.setTexts(languages, originalText, translatedText)
+            bubble.stopAnimation()
+          case TranslateUIType.NOTIFICATION =>
+            notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
+        }
     }
   }
 
-  private def translatedFailed() {
+  private def translatedFailed() = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     typeTranslateUI match {
       case TranslateUIType.BUBBLE =>

@@ -13,8 +13,7 @@ object Settings {
         Resolver.sonatypeRepo("snapshots"),
         Resolver.defaultLocal,
         "jcenter" at "http://jcenter.bintray.com",
-        "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
-        "47deg Public" at "http://clinker.47deg.com/nexus/content/groups/public"
+        "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases"
       )
 
   lazy val proguardCommons = Seq(

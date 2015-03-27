@@ -21,6 +21,7 @@ import com.fortysevendeg.translatebubble.modules.analytics.impl.AnalyticsService
 import com.fortysevendeg.translatebubble.modules.clipboard.impl.ClipboardServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.notifications.impl.NotificationsServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.persistent.impl.PersistentServicesComponentImpl
+import com.fortysevendeg.translatebubble.modules.repository.impl.RepositoryServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateServicesComponentImpl
 
 trait ComponentRegistryImpl
@@ -31,3 +32,4 @@ trait ComponentRegistryImpl
     with TranslateServicesComponentImpl
     with NotificationsServicesComponentImpl
     with AnalyticsServicesComponentImpl
+    with RepositoryServicesComponentImpl

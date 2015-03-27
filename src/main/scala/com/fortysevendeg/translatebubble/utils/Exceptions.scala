@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package com.fortysevendeg.translatebubble.modules.clipboard
+package com.fortysevendeg.translatebubble.utils
 
-import android.content.ClipboardManager
-import com.fortysevendeg.translatebubble.service._
+package object Exceptions {
 
-trait ClipboardServices {
-  def init(listener: ClipboardManager.OnPrimaryClipChangedListener): Unit
-  def destroy(): Unit
-  def reset(): Unit
-  def isValidCall: Boolean
-  def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse]
-  def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse]
-}
+  case class ClipboardException(message: String) extends Exception
 
-trait ClipboardServicesComponent {
-  val clipboardServices: ClipboardServices
+  case class TranslationException(message: String) extends Exception
+
+  case class ProviderException(message: String) extends Exception
 }

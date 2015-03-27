@@ -21,7 +21,7 @@ import java.net.URLEncoder
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.utils.LanguageType._
-import com.fortysevendeg.translatebubble.utils.TypeLanguageTransformer
+import com.fortysevendeg.translatebubble.utils.LanguageTypeTransformer
 
 trait MyMemoryUtils {
 
@@ -30,7 +30,7 @@ trait MyMemoryUtils {
   def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) =
     appContextProvider.get.getString(R.string.translateServiceUrl,
       URLEncoder.encode(text, "UTF-8"),
-      URLEncoder.encode("%s|%s".format(TypeLanguageTransformer.toMyMemory(from),
-        TypeLanguageTransformer.toMyMemory(to)), "UTF-8"))
+      URLEncoder.encode("%s|%s".format(LanguageTypeTransformer.toMyMemory(from),
+        LanguageTypeTransformer.toMyMemory(to)), "UTF-8"))
 
 }

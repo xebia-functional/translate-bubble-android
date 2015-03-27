@@ -21,7 +21,7 @@
     <SwitchPreference
             android:key="translationEnable"
             android:title="@string/translationEnable"
-            android:defaultValue="true" />
+            android:defaultValue="true"/>
 
     <PreferenceCategory android:title="@string/typeFeedback">
 
@@ -46,6 +46,15 @@
         <ListPreference
                 android:defaultValue="SPANISH"
                 android:key="toLanguage"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/history">
+
+        <PreferenceScreen
+                android:key="showHistory"
+                android:title="@string/showHistory"
+                />
 
     </PreferenceCategory>
 

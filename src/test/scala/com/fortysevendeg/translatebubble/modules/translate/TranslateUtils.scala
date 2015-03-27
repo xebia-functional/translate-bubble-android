@@ -18,19 +18,49 @@ package com.fortysevendeg.translatebubble.modules.translate
 
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.TestConfig
+import com.fortysevendeg.translatebubble.modules.repository._
+import com.fortysevendeg.translatebubble.modules.repository.impl.RepositoryServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateServicesComponentImpl
+import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntityData
+import com.fortysevendeg.translatebubble.utils.LanguageType
 import macroid.AppContext
 import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 
-trait BaseTranslateMocks
-    extends Mockito
-    with AppContextProvider
-    with TranslateServicesComponentImpl
-    with TestConfig
-    with Scope {
-  implicit val appContextProvider: AppContext = mock[AppContext]
+import scala.concurrent.Future
 
+trait TranslateMocks
+    extends BaseTranslateMocks {
+
+  val translateServiceUrl = "http://fakeUrl"
+  val text = "Hello world!"
+  val translatedText = "Hola mundo!"
+  val from = LanguageType.ENGLISH
+  val to = LanguageType.SPANISH
+
+  val addTranslationHistoryRequest = AddTranslationHistoryRequest(TranslationHistoryEntityData(
+    originalText = text,
+    translatedText = translatedText,
+    from = from,
+    to = to))
+  val fetchTranslationHistoryRequest = FetchTranslationHistoryRequest(originalText = text, from = from, to = to)
+  val mockAddTranslationHistoryResponse = mock[AddTranslationHistoryResponse]
+  val mockFetchTranslationHistoryResponse = mock[FetchTranslationHistoryResponse]
+
+  repositoryServices.addTranslationHistory returns (addTranslationHistoryRequest => Future.successful(mockAddTranslationHistoryResponse))
+  repositoryServices.fetchTranslationHistory returns (fetchTranslationHistoryRequest => Future.successful(mockFetchTranslationHistoryResponse))
+  mockFetchTranslationHistoryResponse.result returns None
+}
+
+trait BaseTranslateMocks
+    extends AppContextProvider
+    with TranslateServicesComponentImpl
+    with RepositoryServicesComponentImpl
+    with TestConfig
+    with Scope
+    with Mockito {
+  implicit val appContextProvider: AppContext = mock[AppContext]
   appContextProvider.get returns mockContext
 
+  override lazy val repositoryServices: RepositoryServicesImpl = mock[RepositoryServicesImpl]
 }
