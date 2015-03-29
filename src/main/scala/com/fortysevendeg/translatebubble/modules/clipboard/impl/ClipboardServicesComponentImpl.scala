@@ -54,8 +54,6 @@ trait ClipboardServicesComponentImpl
 
       val currentInterval = currentMillis - lastDate
 
-      lastDate = currentMillis
-
       val result = for {
         clipData <- getClipboardManagerPrimaryClip
         clipDataItem <- getPrimaryClipItem(clipData)
@@ -63,7 +61,7 @@ trait ClipboardServicesComponentImpl
       } yield text
 
       result match {
-        case Some(text) if text.toString.trim.length > 0 => currentInterval > millisInterval
+        case Some(text) if text.toString.trim.length > 0 => lastDate = currentMillis; currentInterval > millisInterval
         case _ => false
       }
     }
