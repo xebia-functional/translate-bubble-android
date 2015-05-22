@@ -61,7 +61,7 @@ trait ClipboardServicesComponentImpl
       } yield text
 
       result match {
-        case Some(text) if text.toString.trim.length > 0 => lastDate = currentMillis; currentInterval > millisInterval
+        case Some(text) if isValidText(text) => lastDate = currentMillis; currentInterval > millisInterval
         case _ => false
       }
     }
@@ -101,6 +101,18 @@ trait ClipboardServicesComponentImpl
 
     def reset(): Unit = lastDate = 0
 
+  }
+
+  private def isValidText(text: CharSequence): Boolean = {
+    !isTrimmedTextEmpty(text) && !isTextANumber(text) && !isTextAUrl(text)
+  }
+
+  private def isTrimmedTextEmpty(text: CharSequence): Boolean = text.toString.trim.length == 0
+
+  private def isTextANumber(text: CharSequence): Boolean = text.toString forall Character.isDigit
+
+  private def isTextAUrl(text: CharSequence): Boolean = {
+    text.toString matches "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]"
   }
 
 }
