@@ -20,6 +20,7 @@ import android.content.{ClipData, Context, ClipboardManager}
 import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.clipboard._
 import com.fortysevendeg.translatebubble.service._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -45,7 +46,9 @@ trait ClipboardServicesComponentImpl
     }
 
     private def getClipboardManagerPrimaryClip: Option[ClipData] = Option(clipboardManager.getPrimaryClip)
+
     private def getPrimaryClipItem(clipData: ClipData): Option[ClipData.Item] = Option(clipData.getItemAt(0))
+
     private def getClipDataItemText(clipDataItem: ClipData.Item): Option[CharSequence] = Option(clipDataItem.getText)
 
     override def isValidCall: Boolean = {
@@ -61,7 +64,7 @@ trait ClipboardServicesComponentImpl
       } yield text
 
       result match {
-        case Some(text) if isValidText(text) => lastDate = currentMillis; currentInterval > millisInterval
+        case Some(text) if isValidText(text.toString) => lastDate = currentMillis; currentInterval > millisInterval
         case _ => false
       }
     }
@@ -103,15 +106,11 @@ trait ClipboardServicesComponentImpl
 
   }
 
-  private def isValidText(text: CharSequence): Boolean = {
-    !isTrimmedTextEmpty(text) && !isTextANumber(text) && !isTextAUrl(text)
-  }
+  private def isValidText(text: String): Boolean = text.trim.nonEmpty && !isTextANumber(text) && !isTextAUrl(text)
 
-  private def isTrimmedTextEmpty(text: CharSequence): Boolean = text.toString.trim.length == 0
+  private def isTextANumber(text: String): Boolean = text forall Character.isDigit
 
-  private def isTextANumber(text: CharSequence): Boolean = text.toString forall Character.isDigit
-
-  private def isTextAUrl(text: CharSequence): Boolean = {
+  private def isTextAUrl(text: String): Boolean = {
     text.toString matches "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]"
   }
 
