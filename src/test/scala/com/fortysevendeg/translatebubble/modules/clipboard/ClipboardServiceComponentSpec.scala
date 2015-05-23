@@ -63,49 +63,49 @@ class ClipboardServiceComponentSpec
       val text = "This is not a number"
       mockClipItem.getText returns text
 
-      clipboardServices.isValidCall shouldEqual true
+      clipboardServices.isValidCall must beTrue
     }
 
     "ClipboardService should not validate text if the text value is a number" in new ClipboardMocks {
       val number = "47"
       mockClipItem.getText returns number
 
-      clipboardServices.isValidCall shouldEqual false
+      clipboardServices.isValidCall must beFalse
     }
 
     "ClipboardService should not validate text if the text value is a URL starting with 'https'" in new ClipboardMocks {
       val url = "https://www.47deg.com"
       mockClipItem.getText returns url
 
-      clipboardServices.isValidCall shouldEqual false
+      clipboardServices.isValidCall must beFalse
     }
 
     "ClipboardService should not validate text if the text value is a URL starting with 'http'" in new ClipboardMocks {
       val url = "http://www.47deg.com"
       mockClipItem.getText returns url
 
-      clipboardServices.isValidCall shouldEqual false
+      clipboardServices.isValidCall must beFalse
     }
 
     "ClipboardService should not validate text if the text value is a URL starting with 'www'" in new ClipboardMocks {
       val url = "www.47deg.com"
       mockClipItem.getText returns url
 
-      clipboardServices.isValidCall shouldEqual false
+      clipboardServices.isValidCall must beFalse
     }
 
     "ClipboardService should not validate text if the text value is a URL starting with the domain" in new ClipboardMocks {
       val url = "47deg.com"
       mockClipItem.getText returns url
 
-      clipboardServices.isValidCall shouldEqual false
+      clipboardServices.isValidCall must beFalse
     }
 
     "ClipboardService should validate text if the text value is not a URL" in new ClipboardMocks {
       val text = "This is not a number"
       mockClipItem.getText returns text
 
-      clipboardServices.isValidCall shouldEqual true
+      clipboardServices.isValidCall must beTrue
     }
 
   }
