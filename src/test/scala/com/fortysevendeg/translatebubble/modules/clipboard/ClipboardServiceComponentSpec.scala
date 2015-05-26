@@ -59,7 +59,7 @@ class ClipboardServiceComponentSpec
 
     }
 
-    "ClipboardService should validate text if the text value is not a number" in new ClipboardMocks {
+    "ClipboardService should validate text if the text value is not a number neither an url" in new ClipboardMocks {
       val text = "This is not a number"
       mockClipItem.getText returns text
 
@@ -99,13 +99,6 @@ class ClipboardServiceComponentSpec
       mockClipItem.getText returns url
 
       clipboardServices.isValidCall must beFalse
-    }
-
-    "ClipboardService should validate text if the text value is not a URL" in new ClipboardMocks {
-      val text = "This is not a number"
-      mockClipItem.getText returns text
-
-      clipboardServices.isValidCall must beTrue
     }
 
   }
