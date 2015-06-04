@@ -25,9 +25,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait ClipboardServicesComponentImpl
-    extends ClipboardServicesComponent {
+  extends ClipboardServicesComponent {
 
-  self : AppContextProvider =>
+  self: AppContextProvider =>
 
   lazy val clipDataBuilder = new ClipDataBuilder
 
@@ -104,14 +104,13 @@ trait ClipboardServicesComponentImpl
 
     def reset(): Unit = lastDate = 0
 
-  }
+    def isValidText(text: String): Boolean = text.trim.nonEmpty && !isTextANumber(text) && !isTextAUrl(text)
 
-  private def isValidText(text: String): Boolean = text.trim.nonEmpty && !isTextANumber(text) && !isTextAUrl(text)
+    private def isTextANumber(text: String): Boolean = text forall Character.isDigit
 
-  private def isTextANumber(text: String): Boolean = text forall Character.isDigit
-
-  private def isTextAUrl(text: String): Boolean = {
-    text.toString matches "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]"
+    private def isTextAUrl(text: String): Boolean = {
+      text.toString matches "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]"
+    }
   }
 
 }
