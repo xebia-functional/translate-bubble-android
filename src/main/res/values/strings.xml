@@ -126,4 +126,5 @@
     <string name="URDU">Urdu</string>
     <string name="VIETNAMESE">Vietnamese</string>
 
+    <string name="shareActivityLabel">Activate Translate Bubble</string>
 </resources>

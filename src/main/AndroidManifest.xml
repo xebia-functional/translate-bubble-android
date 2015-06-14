@@ -43,7 +43,8 @@
         <activity android:name=".ui.preferences.MainActivity"
                   android:label="@string/app_name"/>
 
-        <activity android:name=".ui.bubbleservice.SharedActivity">
+        <activity android:name=".ui.bubbleservice.SharedActivity"
+                  android:label="@string/shareActivityLabel">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

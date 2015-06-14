@@ -21,21 +21,21 @@ class SharedActivity
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
 
-    val intent = getIntent
-    (Option(intent.getAction), Option(intent.getType)) match {
-      case (Some(a), Some(t)) if a == Intent.ACTION_SEND && t == acceptedType =>
-        handleText(Option(intent.getStringExtra(Intent.EXTRA_TEXT)))
+    Option(getIntent) map { i =>
+      (Option(i.getAction), Option(i.getType)) match {
+        case (Some(Intent.ACTION_SEND), Some(`acceptedType`)) =>
+          Option(i.getStringExtra(Intent.EXTRA_TEXT)) map handleText
+      }
     }
 
     finish()
   }
 
-  private def handleText(maybeString: Option[String]) =
-    maybeString match {
-      case Some(text) if clipboardServices.isValidText(text) =>
-        persistentServices.enableTranslation()
-        BubbleService.launchIfIsNecessary()
-        clipboardServices.copyToClipboard(CopyToClipboardRequest(text))
+  private def handleText(text: String) =
+    if (clipboardServices.isValidText(text)) {
+      persistentServices.enableTranslation()
+      BubbleService.launchIfIsNecessary()
+      clipboardServices.copyToClipboard(CopyToClipboardRequest(text))
     }
 
 }
