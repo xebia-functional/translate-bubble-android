@@ -14,5 +14,6 @@ before_install:
   - echo yes | android update sdk --all --filter android-21 --no-ui
   - echo yes | android update sdk --all --filter extra-android-support --no-ui
   - echo yes | android update sdk --all --filter extra-android-m2repository --no-ui
+  - echo yes | android update sdk --all --filter extra-google-google_play_services --no-ui
 script:
   - sbt ++$TRAVIS_SCALA_VERSION test
