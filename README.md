@@ -1,4 +1,4 @@
-[![Translate Bubble Android Status](https://circleci.com/gh/47deg/translate-bubble-android.svg?&style=shield&circle-token=7b5306f949d7b97bcc5ef70ed3d0a2cc1b425153 "Translate Bubble Android Status")](https://circleci.com/gh/47deg/translate-bubble-android)
+[![Translate Bubble Android Status][![Build Status](https://travis-ci.org/47deg/translate-bubble-android.svg?branch=master)](https://travis-ci.org/47deg/translate-bubble-android)
 
 Translate Bubble for Android
 ============================
