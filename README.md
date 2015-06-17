@@ -1,4 +1,4 @@
-[![Translate Bubble Android Status][![Build Status](https://travis-ci.org/47deg/translate-bubble-android.svg?branch=master)](https://travis-ci.org/47deg/translate-bubble-android)
+[![Translate Bubble Android Status](https://travis-ci.org/47deg/translate-bubble-android.svg?branch=master)](https://travis-ci.org/47deg/translate-bubble-android)
 
 Translate Bubble for Android
 ============================
