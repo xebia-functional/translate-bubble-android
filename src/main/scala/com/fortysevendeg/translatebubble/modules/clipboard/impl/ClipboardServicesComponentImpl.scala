@@ -23,6 +23,7 @@ import com.fortysevendeg.translatebubble.service._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Try
 
 trait ClipboardServicesComponentImpl
   extends ClipboardServicesComponent {
@@ -34,6 +35,8 @@ trait ClipboardServicesComponentImpl
   lazy val clipboardServices = new ClipboardServicesImpl
 
   class ClipboardServicesImpl extends ClipboardServices {
+
+    private[this] val urlPattern = "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]".r
 
     val millisInterval = 1000
 
@@ -106,11 +109,9 @@ trait ClipboardServicesComponentImpl
 
     def isValidText(text: String): Boolean = text.trim.nonEmpty && !isTextANumber(text) && !isTextAUrl(text)
 
-    private def isTextANumber(text: String): Boolean = text forall Character.isDigit
+    private[this] def isTextANumber(text: String): Boolean = Try(text.toDouble).isSuccess
 
-    private def isTextAUrl(text: String): Boolean = {
-      text.toString matches "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]"
-    }
+    private[this] def isTextAUrl(text: String): Boolean = urlPattern.pattern.matcher(text).matches
   }
 
 }

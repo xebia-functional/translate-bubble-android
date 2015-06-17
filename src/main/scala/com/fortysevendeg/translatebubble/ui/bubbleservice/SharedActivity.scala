@@ -14,24 +14,27 @@ class SharedActivity
   with ComponentRegistryImpl
   with AppContextProvider {
 
-  private val acceptedType = "text/plain"
+  private[this] val acceptedType = "text/plain"
 
   override implicit lazy val appContextProvider: AppContext = activityAppContext
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
 
-    Option(getIntent) map { i =>
-      (Option(i.getAction), Option(i.getType)) match {
-        case (Some(Intent.ACTION_SEND), Some(`acceptedType`)) =>
-          Option(i.getStringExtra(Intent.EXTRA_TEXT)) map handleText
-      }
-    }
+    readTextIntent map handleText
 
     finish()
   }
 
-  private def handleText(text: String) =
+  private[this] def readTextIntent: Option[String] =
+    for {
+      intent <- Option(getIntent)
+      action <- Option(intent.getAction) if action == Intent.ACTION_SEND
+      contentType <- Option(intent.getType) if contentType == `acceptedType`
+      text <- Option(intent.getStringExtra(Intent.EXTRA_TEXT))
+    } yield text
+
+  private[this] def handleText(text: String) =
     if (clipboardServices.isValidText(text)) {
       persistentServices.enableTranslation()
       BubbleService.launchIfIsNecessary()
