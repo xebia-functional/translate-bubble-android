@@ -36,7 +36,7 @@ trait ClipboardServicesComponentImpl
 
   class ClipboardServicesImpl extends ClipboardServices {
 
-    private[this] val urlPattern = "(\\b(https?|ftp|file|ldap)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]".r
+    private[this] val urlPattern = "(\\b(https?|ftp|file|ldap)://)[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]".r
 
     val millisInterval = 1000
 

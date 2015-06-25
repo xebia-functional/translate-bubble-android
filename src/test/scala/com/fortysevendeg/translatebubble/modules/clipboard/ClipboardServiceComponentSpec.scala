@@ -66,6 +66,13 @@ class ClipboardServiceComponentSpec
       clipboardServices.isValidCall must beTrue
     }
 
+    "ClipboardService should validate text if the text value is a valid word" in new ClipboardMocks {
+      val text = "number"
+      mockClipItem.getText returns text
+
+      clipboardServices.isValidCall must beTrue
+    }
+
     "ClipboardService should not validate text if the text value is a number" in new ClipboardMocks {
       val number = "47"
       mockClipItem.getText returns number
