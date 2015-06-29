@@ -94,20 +94,6 @@ class ClipboardServiceComponentSpec
       clipboardServices.isValidCall must beFalse
     }
 
-    "ClipboardService should not validate text if the text value is a URL starting with 'www'" in new ClipboardMocks {
-      val url = "www.47deg.com"
-      mockClipItem.getText returns url
-
-      clipboardServices.isValidCall must beFalse
-    }
-
-    "ClipboardService should not validate text if the text value is a URL starting with the domain" in new ClipboardMocks {
-      val url = "47deg.com"
-      mockClipItem.getText returns url
-
-      clipboardServices.isValidCall must beFalse
-    }
-
   }
 
 }
