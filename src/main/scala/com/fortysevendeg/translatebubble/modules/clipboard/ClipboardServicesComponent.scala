@@ -24,6 +24,7 @@ trait ClipboardServices {
   def destroy(): Unit
   def reset(): Unit
   def isValidCall: Boolean
+  def isValidText(text: String): Boolean
   def getText: Service[GetTextClipboardRequest, GetTextClipboardResponse]
   def copyToClipboard: Service[CopyToClipboardRequest, CopyToClipboardResponse]
 }

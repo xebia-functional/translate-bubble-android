@@ -43,6 +43,15 @@
         <activity android:name=".ui.preferences.MainActivity"
                   android:label="@string/app_name"/>
 
+        <activity android:name=".ui.bubbleservice.SharedActivity"
+                  android:label="@string/shareActivityLabel">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
         <service
                 android:name=".ui.bubbleservice.BubbleService"
                 />
@@ -60,8 +69,8 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
-        
-        <provider 
+
+        <provider
                 android:authorities="com.fortysevendeg.translatebubble"
                 android:name=".provider.TranslateBubbleContentProvider"
                 android:exported="false" />
