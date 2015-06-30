@@ -16,15 +16,15 @@
 
 package com.fortysevendeg.translatebubble.ui.wizard
 
+import android.content.Intent
 import android.support.v4.view.ViewPager
 import android.widget._
-import com.fortysevendeg.macroid.extras.UIActionsExtras._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
 import com.fortysevendeg.translatebubble.ui.wizard.Styles._
 import macroid.FullDsl._
-import macroid.{ActivityContextWrapper, IdGeneration}
+import macroid.{ActivityContextWrapper, IdGeneration, Ui}
 
 trait Layout
   extends IdGeneration {
@@ -43,9 +43,15 @@ trait Layout
       l[FrameLayout](
         l[LinearLayout]() <~ wire(paginationContent) <~ paginationContentStyle,
         w[Button] <~ wire(gotIt) <~ gotItStyle <~ On.click {
-          persistentServices.wizardWasSeen()
-          contextWrapper.getOriginal.finish()
-          uiStartActivity[MainActivity]
+          Ui {
+            persistentServices.wizardWasSeen()
+            contextWrapper.original.get foreach {
+              activity =>
+                activity.finish()
+                val intent = new Intent(activity, classOf[MainActivity])
+                activity.startActivity(intent)
+            }
+          }
         }
       ) <~ bottomContentStyle
     ) <~ rootStyle

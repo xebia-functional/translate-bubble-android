@@ -25,4 +25,9 @@
 
     </style>
 
+    <style name="AppTransparentTheme" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
 </resources>
