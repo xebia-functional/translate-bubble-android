@@ -19,9 +19,9 @@ package com.fortysevendeg.translatebubble.modules.persistent.impl
 import android.app.{AlarmManager, PendingIntent}
 import android.content.{Context, Intent, SharedPreferences}
 import android.preference.PreferenceManager
-import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.persistent._
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.services.RestartTranslationService
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 trait PersistentServicesComponentImpl
     extends PersistentServicesComponent {
 
-  self: AppContextProvider =>
+  self: ContextWrapperProvider =>
 
   val translationEnableKey = "translationEnable"
 
@@ -57,7 +57,7 @@ trait PersistentServicesComponentImpl
   class PersistentServicesImpl
       extends PersistentServices {
 
-    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContextProvider.get)
+    val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(contextProvider.application)
 
     def enableTranslation(): Unit = sharedPreferences.edit().putBoolean(translationEnableKey, true).commit()
 
@@ -65,9 +65,9 @@ trait PersistentServicesComponentImpl
 
     def disable30MinutesTranslation(): Unit = {
       sharedPreferences.edit().putBoolean(translationEnableKey, false).commit()
-      val am = appContextProvider.get.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
-      val i = new Intent(appContextProvider.get, classOf[RestartTranslationService])
-      val pendingIntent = PendingIntent.getService(appContextProvider.get, 0, i, 0)
+      val am = contextProvider.application.getSystemService(Context.ALARM_SERVICE).asInstanceOf[AlarmManager]
+      val i = new Intent(contextProvider.application, classOf[RestartTranslationService])
+      val pendingIntent = PendingIntent.getService(contextProvider.application, 0, i, 0)
       am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 * 30), pendingIntent)
     }
 
@@ -90,14 +90,14 @@ trait PersistentServicesComponentImpl
       for {
         from <- resGetString(sharedPreferences.getString(fromLanguageKey, englishKey))
         to <- resGetString(sharedPreferences.getString(toLanguageKey, spanishKey))
-      } yield appContextProvider.get.getString(R.string.toLanguages, from, to)
+      } yield contextProvider.application.getString(R.string.toLanguages, from, to)
     }
 
     override def getLanguagesStringFromData(from: String, to: String): Option[String] = {
       for {
         from <- resGetString(from)
         to <- resGetString(to)
-      } yield appContextProvider.get.getString(R.string.toLanguages, from, to)
+      } yield contextProvider.application.getString(R.string.toLanguages, from, to)
     }
 
     override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {

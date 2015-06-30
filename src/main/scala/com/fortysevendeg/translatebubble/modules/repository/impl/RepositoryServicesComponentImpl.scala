@@ -18,7 +18,7 @@ package com.fortysevendeg.translatebubble.modules.repository.impl
 
 import android.content.ContentValues
 import android.database.Cursor
-import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.repository._
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity._
 import com.fortysevendeg.translatebubble.provider.{TranslateBubbleContentProvider, TranslateBubbleSqlHelper, TranslationHistoryEntity}
@@ -33,7 +33,7 @@ import scala.util.{Failure, Success, Try}
 trait RepositoryServicesComponentImpl
     extends RepositoryServicesComponent
     with DBUtils {
-  self: AppContextProvider =>
+  self: ContextWrapperProvider =>
 
   lazy val repositoryServices = new RepositoryServicesImpl
 
@@ -49,7 +49,7 @@ trait RepositoryServicesComponentImpl
             contentValues.put(fromLanguage, toMyMemory(request.data.from))
             contentValues.put(toLanguage, toMyMemory(request.data.to))
 
-            val uri = appContextProvider.get.getContentResolver.insert(
+            val uri = contextProvider.application.getContentResolver.insert(
               TranslateBubbleContentProvider.contentUriTranslationHistory,
               contentValues)
 
@@ -72,7 +72,7 @@ trait RepositoryServicesComponentImpl
       request => {
         tryToFuture {
           Try {
-            appContextProvider.get.getContentResolver.delete(
+            contextProvider.application.getContentResolver.delete(
               TranslateBubbleContentProvider.contentUriTranslationHistory,
               s"${TranslateBubbleSqlHelper.id}=?",
               Seq(request.entity.id.toString).toArray)
@@ -91,7 +91,7 @@ trait RepositoryServicesComponentImpl
       request =>
         tryToFuture {
           Try {
-            val cursor: Option[Cursor] = Option(appContextProvider.get.getContentResolver.query(
+            val cursor: Option[Cursor] = Option(contextProvider.application.getContentResolver.query(
               TranslateBubbleContentProvider.contentUriTranslationHistory,
               allFields.toArray,
               s"$fromLanguage=? AND $toLanguage=? AND $originalText=?",
@@ -107,7 +107,7 @@ trait RepositoryServicesComponentImpl
       request =>
         tryToFuture {
           Try {
-            val cursor: Option[Cursor] = Option(appContextProvider.get.getContentResolver.query(
+            val cursor: Option[Cursor] = Option(contextProvider.application.getContentResolver.query(
               TranslateBubbleContentProvider.contentUriTranslationHistory,
               allFields.toArray,
               "",

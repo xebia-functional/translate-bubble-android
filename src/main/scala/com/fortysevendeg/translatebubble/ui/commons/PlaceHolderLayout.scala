@@ -20,8 +20,8 @@ import android.widget.{Button, ImageView, LinearLayout, TextView}
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
+import macroid.ActivityContextWrapper
 import macroid.FullDsl._
-import macroid.{ActivityContext, AppContext}
 
 trait PlaceHolderLayout
   extends PlaceHolderStyles {
@@ -32,7 +32,7 @@ trait PlaceHolderLayout
 
   var text = slot[TextView]
 
-  def placeholder(implicit appContext: AppContext, context: ActivityContext) = {
+  def placeholder(implicit contextWrapper: ActivityContextWrapper) = {
     l[LinearLayout](
       w[ImageView] <~ placeholderImageStyle <~ wire(image),
       w[TextView] <~ placeholderMessageStyle <~ wire(text),

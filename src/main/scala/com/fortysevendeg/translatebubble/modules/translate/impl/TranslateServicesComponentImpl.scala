@@ -16,7 +16,7 @@
 
 package com.fortysevendeg.translatebubble.modules.translate.impl
 
-import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.repository.impl.RepositoryServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.repository.{AddTranslationHistoryRequest, AddTranslationHistoryResponse, FetchTranslationHistoryRequest, FetchTranslationHistoryResponse}
 import com.fortysevendeg.translatebubble.modules.translate.{TranslateRequest, TranslateResponse, TranslateServices, TranslateServicesComponent}
@@ -38,7 +38,7 @@ trait TranslateServicesComponentImpl
     with NetUtils
     with MyMemoryUtils {
 
-  self: AppContextProvider with RepositoryServicesComponentImpl =>
+  self: ContextWrapperProvider with RepositoryServicesComponentImpl =>
 
   lazy val translateServices = new TranslateServicesImpl
 

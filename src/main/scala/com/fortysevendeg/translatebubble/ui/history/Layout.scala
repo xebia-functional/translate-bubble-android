@@ -17,11 +17,11 @@
 package com.fortysevendeg.translatebubble.ui.history
 
 import android.support.v7.widget.{CardView, RecyclerView}
-import android.widget.{ImageView, LinearLayout, TextView}
+import android.widget.{LinearLayout, TextView}
+import macroid.ActivityContextWrapper
 import macroid.FullDsl._
-import macroid.{ActivityContext, AppContext}
 
-class TranslationHistoryLayoutAdapter(implicit context: ActivityContext, appContext: AppContext)
+class TranslationHistoryLayoutAdapter(implicit contextWrapper: ActivityContextWrapper)
     extends Styles {
 
   var languages = slot[TextView]
@@ -32,7 +32,7 @@ class TranslationHistoryLayoutAdapter(implicit context: ActivityContext, appCont
 
   val content = layout
 
-  private def layout(implicit appContext: AppContext, context: ActivityContext) = getUi(
+  private def layout(implicit contextWrapper: ActivityContextWrapper) = getUi(
     l[CardView](
       l[LinearLayout](
         l[LinearLayout](
@@ -45,7 +45,7 @@ class TranslationHistoryLayoutAdapter(implicit context: ActivityContext, appCont
   )
 }
 
-class TranslationHistoryViewHolder(adapter: TranslationHistoryLayoutAdapter)(implicit context: ActivityContext, appContext: AppContext)
+class TranslationHistoryViewHolder(adapter: TranslationHistoryLayoutAdapter)(implicit contextWrapper: ActivityContextWrapper)
     extends RecyclerView.ViewHolder(adapter.content) {
 
   val content = adapter.content

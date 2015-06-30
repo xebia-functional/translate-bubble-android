@@ -16,15 +16,15 @@
 
 package com.fortysevendeg.translatebubble.modules.analytics.impl
 
-import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.analytics.{AnalyticsServices, AnalyticsServicesComponent}
 import com.google.android.gms.analytics.{HitBuilders, GoogleAnalytics}
 
 trait AnalyticsServicesComponentImpl
     extends AnalyticsServicesComponent {
 
-  self: AppContextProvider =>
+  self: ContextWrapperProvider =>
 
   lazy val analyticsServices = new AnalyticsServicesImpl
 
@@ -32,7 +32,7 @@ trait AnalyticsServicesComponentImpl
       extends AnalyticsServices {
 
     lazy val tracker = GoogleAnalytics
-        .getInstance(appContextProvider.get)
+        .getInstance(contextProvider.application)
         .newTracker(R.xml.app_tracker)
 
 

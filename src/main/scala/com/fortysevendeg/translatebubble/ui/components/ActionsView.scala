@@ -29,28 +29,28 @@ import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.ui.commons.Dimens
 import com.fortysevendeg.translatebubble.ui.components.DisableViewTweaks._
 import macroid.FullDsl._
-import macroid.{AppContext, Snail}
+import macroid.{ContextWrapper, Snail}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Promise
 import scala.util.Success
 
-class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
+class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ContextWrapper)
     extends FrameLayout(context, attrs, defStyleAttr) {
 
-  def this(context: Context)(implicit appContext: AppContext) = this(context, null, 0)
+  def this(context: Context)(implicit contextWrapper: ContextWrapper) = this(context, null, 0)
 
-  def this(context: Context, attr: AttributeSet)(implicit appContext: AppContext) = this(context, attr, 0)
+  def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ContextWrapper) = this(context, attr, 0)
 
-  val sizeClose = appContext.get.getResources.getDimension(R.dimen.size_close).toInt
+  val sizeClose = contextWrapper.application.getResources.getDimension(R.dimen.size_close).toInt
 
-  val marginClose = appContext.get.getResources.getDimension(R.dimen.margin_close).toInt
+  val marginClose = contextWrapper.application.getResources.getDimension(R.dimen.margin_close).toInt
 
-  val sizeDisable = appContext.get.getResources.getDimension(R.dimen.size_disable).toInt
+  val sizeDisable = contextWrapper.application.getResources.getDimension(R.dimen.size_disable).toInt
 
-  val marginTopDisable = appContext.get.getResources.getDimension(R.dimen.margin_top_disable).toInt
+  val marginTopDisable = contextWrapper.application.getResources.getDimension(R.dimen.margin_top_disable).toInt
 
-  val marginSeparateOptionsDisable = appContext.get.getResources.getDimension(R.dimen.margin_separate_options_disable).toInt
+  val marginSeparateOptionsDisable = contextWrapper.application.getResources.getDimension(R.dimen.margin_separate_options_disable).toInt
 
   implicit val rootView: RootView = new RootView(R.layout.actions_view)
 

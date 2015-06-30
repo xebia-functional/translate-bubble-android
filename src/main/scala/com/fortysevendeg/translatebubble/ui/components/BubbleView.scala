@@ -25,20 +25,20 @@ import android.view.animation.{AccelerateInterpolator, Animation, LinearInterpol
 import android.widget.{FrameLayout, ImageView}
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.ui.commons.Dimens
-import macroid.AppContext
+import macroid.ContextWrapper
 
-class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
+class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ContextWrapper)
     extends FrameLayout(context, attrs, defStyleAttr) {
 
   val leftPosition = 0
 
   val rightPosition = 1
 
-  val bubbleHorizontalDisplacement = appContext.get.getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
+  val bubbleHorizontalDisplacement = contextWrapper.application.getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
 
-  def this(context: Context)(implicit appContext: AppContext) = this(context, null, 0)
+  def this(context: Context)(implicit contextWrapper: ContextWrapper) = this(context, null, 0)
 
-  def this(context: Context, attr: AttributeSet)(implicit appContext: AppContext) = this(context, attr, 0)
+  def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ContextWrapper) = this(context, attr, 0)
 
   var positionBubble: Int = leftPosition
 

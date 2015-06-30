@@ -5,7 +5,7 @@
  * not use this file except in compliance with the License. You may obtain
  * a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package com.fortysevendeg.translatebubble.receivers
+package com.fortysevendeg.translatebubble.commons
 
-import android.content.{Intent, Context, BroadcastReceiver}
-import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
 import macroid.ContextWrapper
 
-class BootReceiver
-  extends BroadcastReceiver {
+trait ContextWrapperProvider {
 
-  override def onReceive(context: Context, intent: Intent): Unit = {
-    BubbleService.launchIfIsNecessary(context)
-  }
+  implicit val contextProvider : ContextWrapper
 
 }

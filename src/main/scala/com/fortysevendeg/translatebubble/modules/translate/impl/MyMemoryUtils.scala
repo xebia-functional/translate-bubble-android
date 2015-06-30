@@ -18,17 +18,17 @@ package com.fortysevendeg.translatebubble.modules.translate.impl
 
 import java.net.URLEncoder
 
-import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.utils.LanguageType._
 import com.fortysevendeg.translatebubble.utils.LanguageTypeTransformer
 
 trait MyMemoryUtils {
 
-  self : AppContextProvider =>
+  self : ContextWrapperProvider =>
 
   def getTranslateServiceUrl(text: String, from: LanguageType, to: LanguageType) =
-    appContextProvider.get.getString(R.string.translateServiceUrl,
+    contextProvider.application.getString(R.string.translateServiceUrl,
       URLEncoder.encode(text, "UTF-8"),
       URLEncoder.encode("%s|%s".format(LanguageTypeTransformer.toMyMemory(from),
         LanguageTypeTransformer.toMyMemory(to)), "UTF-8"))

@@ -19,8 +19,8 @@ package com.fortysevendeg.translatebubble.modules.notifications.impl
 import android.app.{Notification, NotificationManager, PendingIntent}
 import android.content.{Context, Intent}
 import android.support.v4.app.NotificationCompat
-import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.notifications._
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
 import com.fortysevendeg.translatebubble.service.Service
@@ -32,7 +32,7 @@ import scala.concurrent.Future
 trait NotificationsServicesComponentImpl
     extends NotificationsServicesComponent {
 
-  self : PersistentServicesComponent with AppContextProvider =>
+  self : PersistentServicesComponent with ContextWrapperProvider =>
 
   lazy val notificationsServices = new NotificationsServicesImpl
 
@@ -41,15 +41,15 @@ trait NotificationsServicesComponentImpl
 
     private val NOTIFICATION_ID: Int = 1100
 
-    val notifyManager = appContextProvider.get.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+    val notifyManager = contextProvider.application.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
 
     override def showTextTranslated: Service[ShowTextTranslatedRequest, ShowTextTranslatedResponse] = request =>
         Future {
-          val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
-          val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
+          val notificationIntent: Intent = new Intent(contextProvider.application, classOf[MainActivity])
+          val contentIntent: PendingIntent = PendingIntent.getActivity(contextProvider.application, getUniqueId, notificationIntent, 0)
 
-          val builder = new NotificationCompat.Builder(appContextProvider.get)
-          val title = appContextProvider.get.getString(R.string.translatedTitle, request.original)
+          val builder = new NotificationCompat.Builder(contextProvider.application)
+          val title = contextProvider.application.getString(R.string.translatedTitle, request.original)
           builder
               .setContentTitle(title)
               .setContentText(request.translated)
@@ -72,13 +72,13 @@ trait NotificationsServicesComponentImpl
         }
 
     override def failed(): Unit = {
-      val notificationIntent: Intent = new Intent(appContextProvider.get, classOf[MainActivity])
-      val contentIntent: PendingIntent = PendingIntent.getActivity(appContextProvider.get, getUniqueId, notificationIntent, 0)
+      val notificationIntent: Intent = new Intent(contextProvider.application, classOf[MainActivity])
+      val contentIntent: PendingIntent = PendingIntent.getActivity(contextProvider.application, getUniqueId, notificationIntent, 0)
 
 
-      val builder = new NotificationCompat.Builder(appContextProvider.get)
-      val title = appContextProvider.get.getString(R.string.failedTitle)
-      val message = appContextProvider.get.getString(R.string.failedMessage)
+      val builder = new NotificationCompat.Builder(contextProvider.application)
+      val title = contextProvider.application.getString(R.string.failedTitle)
+      val message = contextProvider.application.getString(R.string.failedMessage)
       val notification: Notification = builder
           .setContentTitle(title)
           .setContentText(message)

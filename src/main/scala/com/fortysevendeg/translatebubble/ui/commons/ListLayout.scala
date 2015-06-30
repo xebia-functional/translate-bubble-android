@@ -21,11 +21,11 @@ import android.widget.{FrameLayout, LinearLayout, ProgressBar}
 import com.fortysevendeg.macroid.extras.RecyclerViewTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import macroid.FullDsl._
-import macroid.{ActivityContext, AppContext}
+import macroid.ActivityContextWrapper
 
 trait ListLayout
-    extends ListStyles
-    with PlaceHolderLayout {
+  extends ListStyles
+  with PlaceHolderLayout {
 
   var recyclerView = slot[RecyclerView]
 
@@ -33,7 +33,7 @@ trait ListLayout
 
   var placeholderContent = slot[LinearLayout]
 
-  def content(implicit appContext: AppContext, context: ActivityContext) = getUi(
+  def content(implicit contextWrapper: ActivityContextWrapper) = getUi(
     l[FrameLayout](
       w[ProgressBar] <~ wire(progressBar) <~ progressBarStyle,
       w[RecyclerView] <~ wire(recyclerView) <~ recyclerViewStyle,
@@ -44,30 +44,30 @@ trait ListLayout
   def loading() =
     runUi(
       (progressBar <~ vVisible) ~
-          (recyclerView <~ vGone) ~
-          (placeholderContent <~ vGone))
+        (recyclerView <~ vGone) ~
+        (placeholderContent <~ vGone))
 
   def failed() = {
     loadFailed()
     runUi(
       (progressBar <~ vGone) ~
-          (recyclerView <~ vGone) ~
-          (placeholderContent <~ vVisible))
+        (recyclerView <~ vGone) ~
+        (placeholderContent <~ vVisible))
   }
 
   def empty() = {
     loadEmpty()
     runUi(
       (progressBar <~ vGone) ~
-          (recyclerView <~ vGone) ~
-          (placeholderContent <~ vVisible))
+        (recyclerView <~ vGone) ~
+        (placeholderContent <~ vVisible))
   }
 
   def adapter[VH <: RecyclerView.ViewHolder](adapter: RecyclerView.Adapter[VH]) =
     runUi(
       (progressBar <~ vGone) ~
-          (placeholderContent <~ vGone) ~
-          (recyclerView <~ vVisible) ~
-          (recyclerView <~ rvAdapter(adapter)))
+        (placeholderContent <~ vGone) ~
+        (recyclerView <~ vVisible) ~
+        (recyclerView <~ rvAdapter(adapter)))
 
 }

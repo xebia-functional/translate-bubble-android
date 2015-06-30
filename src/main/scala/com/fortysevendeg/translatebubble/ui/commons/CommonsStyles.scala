@@ -24,64 +24,63 @@ import com.fortysevendeg.macroid.extras.LinearLayoutTweaks._
 import com.fortysevendeg.macroid.extras.RecyclerViewTweaks._
 import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.macroid.extras.TextTweaks._
-import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.macroid.extras.ViewGroupTweaks._
+import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
-import macroid.{AppContext, Tweak}
+import macroid.{ContextWrapper, Tweak}
 
 import scala.language.postfixOps
 
 trait ToolbarStyles {
 
-  def toolbarStyle(height: Int)(implicit appContext: AppContext): Tweak[Toolbar] =
+  def toolbarStyle(height: Int)(implicit contextWrapper: ContextWrapper): Tweak[Toolbar] =
     vContentSizeMatchWidth(height) +
-        vBackground(R.color.primary)
+      vBackground(R.color.primary)
 
 }
 
 trait ListStyles {
 
-  def rootStyle(implicit appContext: AppContext): Tweak[FrameLayout] =
+  def rootStyle(implicit contextWrapper: ContextWrapper): Tweak[FrameLayout] =
     vMatchParent
 
-  def recyclerViewStyle(implicit appContext: AppContext): Tweak[RecyclerView] =
+  def recyclerViewStyle(implicit contextWrapper: ContextWrapper): Tweak[RecyclerView] =
     vMatchParent +
-        rvNoFixedSize +
-        vPaddings(resGetDimensionPixelSize(R.dimen.padding_default)) +
-        vgClipToPadding(false)
+      rvNoFixedSize +
+      vPaddings(resGetDimensionPixelSize(R.dimen.padding_default)) +
+      vgClipToPadding(false)
 
   val progressBarStyle: Tweak[ProgressBar] =
     vWrapContent +
-        flLayoutGravity(Gravity.CENTER)
+      flLayoutGravity(Gravity.CENTER)
 }
 
 trait PlaceHolderStyles {
 
   val placeholderContentStyle: Tweak[LinearLayout] =
     vWrapContent +
-        flLayoutGravity(Gravity.CENTER) +
-        llGravity(Gravity.CENTER_HORIZONTAL) +
-        llVertical +
-        vGone
+      flLayoutGravity(Gravity.CENTER) +
+      llGravity(Gravity.CENTER_HORIZONTAL) +
+      llVertical +
+      vGone
 
-  val placeholderImageStyle: Tweak[ImageView] =
-    vWrapContent
+  val placeholderImageStyle: Tweak[ImageView] = vWrapContent
 
-  def placeholderMessageStyle(implicit appContext: AppContext): Tweak[TextView] =
+  def placeholderMessageStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
     vWrapContent +
-        tvGravity(Gravity.CENTER) +
-        tvColorResource(R.color.text_error_message) +
-        tvSize(resGetInteger(R.integer.text_big)) +
-        vPaddings(resGetDimensionPixelSize(R.dimen.padding_default_big))
+      tvGravity(Gravity.CENTER) +
+      tvColorResource(R.color.text_error_message) +
+      tvSize(resGetInteger(R.integer.text_big)) +
+      vPaddings(resGetDimensionPixelSize(R.dimen.padding_default_big))
 
-  def placeholderButtonStyle(implicit appContext: AppContext): Tweak[TextView] =
+  def placeholderButtonStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
     vWrapContent +
-        vMinWidth(resGetDimensionPixelSize(R.dimen.width_button)) +
-        tvText(R.string.reload) +
-        tvColorResource(R.color.text_error_button) +
-        vBackground(R.drawable.background_error_button) +
-        tvAllCaps +
-        tvSize(resGetInteger(R.integer.text_medium)) +
-        tvGravity(Gravity.CENTER)
+      vMinWidth(resGetDimensionPixelSize(R.dimen.width_button)) +
+      tvText(R.string.reload) +
+      tvColorResource(R.color.text_error_button) +
+      vBackground(R.drawable.background_error_button) +
+      tvAllCaps +
+      tvSize(resGetInteger(R.integer.text_medium)) +
+      tvGravity(Gravity.CENTER)
 
 }

@@ -26,17 +26,17 @@ import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
 import com.fortysevendeg.macroid.extras.RootView
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.translatebubble.R
-import macroid.AppContext
+import macroid.ContextWrapper
 import macroid.FullDsl._
 
 import scala.language.postfixOps
 
-class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
-    extends FrameLayout(context, attrs, defStyleAttr) {
+class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ContextWrapper)
+  extends FrameLayout(context, attrs, defStyleAttr) {
 
-  def this(context: Context)(implicit appContext: AppContext) = this(context, null, 0)
+  def this(context: Context)(implicit contextWrapper: ContextWrapper) = this(context, null, 0)
 
-  def this(context: Context, attr: AttributeSet)(implicit appContext: AppContext) = this(context, attr, 0)
+  def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ContextWrapper) = this(context, attr, 0)
 
   implicit val rootView: RootView = new RootView(R.layout.content_view)
 
@@ -53,13 +53,9 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     )
   }
 
-  def show() {
-    setVisibility(VISIBLE)
-  }
+  def show() = setVisibility(VISIBLE)
 
-  def hide() {
-    setVisibility(INVISIBLE)
-  }
+  def hide() = setVisibility(INVISIBLE)
 
   def collapse(params: WindowManager.LayoutParams, windowManager: WindowManager) {
     val animator: ValueAnimator = ValueAnimator.ofFloat(0, 100)
@@ -74,24 +70,23 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     animator.addListener(new Animator.AnimatorListener {
       def onAnimationStart(animation: Animator) {
       }
+
       def onAnimationEnd(animation: Animator) {
         hide()
         params.alpha = 1
         windowManager.updateViewLayout(ContentView.this, params)
       }
+
       def onAnimationCancel(animation: Animator) {
       }
+
       def onAnimationRepeat(animation: Animator) {
       }
     })
     animator.start()
   }
 
-  def changePositionIfIsNecessary(
-      widthScreen: Int,
-      heightScreen: Int,
-      params: WindowManager.LayoutParams,
-      windowManager: WindowManager): Unit = {
+  def changePositionIfIsNecessary(widthScreen: Int, heightScreen: Int, params: WindowManager.LayoutParams, windowManager: WindowManager): Unit = {
     if (params.x + getWidth > widthScreen) {
       params.x = widthScreen - getWidth
     }
