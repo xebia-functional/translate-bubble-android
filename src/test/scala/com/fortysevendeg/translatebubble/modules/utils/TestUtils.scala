@@ -16,14 +16,7 @@
 
 package com.fortysevendeg.translatebubble.modules.utils
 
-import android.content.{ClipData, ClipboardManager, Context}
-import com.fortysevendeg.macroid.extras.AppContextProvider
-import com.fortysevendeg.translatebubble.modules.TestConfig
-import com.fortysevendeg.translatebubble.modules.clipboard.impl.{ClipDataBuilder, ClipboardServicesComponentImpl}
-import macroid.AppContext
 import org.specs2.matcher.{ExceptionMatchers, MustMatchers, ThrownExpectations}
-import org.specs2.mock.Mockito
-import org.specs2.specification.Scope
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
