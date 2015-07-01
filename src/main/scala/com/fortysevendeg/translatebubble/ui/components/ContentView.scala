@@ -36,8 +36,8 @@ import macroid.{ContextWrapper, ServiceContextWrapper, Tweak}
 import scala.language.postfixOps
 
 class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ServiceContextWrapper)
-  extends FrameLayout(context, attrs, defStyleAttr)
-  with ContentViewLayout {
+    extends FrameLayout(context, attrs, defStyleAttr)
+    with ContentViewLayout {
 
   def this(context: Context)(implicit contextWrapper: ServiceContextWrapper) = this(context, null, 0)
 
@@ -84,7 +84,11 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     animator.start()
   }
 
-  def changePositionIfIsNecessary(widthScreen: Int, heightScreen: Int, params: WindowManager.LayoutParams, windowManager: WindowManager): Unit = {
+  def changePositionIfIsNecessary(
+      widthScreen: Int,
+      heightScreen: Int,
+      params: WindowManager.LayoutParams,
+      windowManager: WindowManager): Unit = {
     if (params.x + getWidth > widthScreen) {
       params.x = widthScreen - getWidth
     }
@@ -120,47 +124,47 @@ trait ContentViewLayout {
 
   def rootStyle(implicit contextWrapper: ContextWrapper): Tweak[LinearLayout] =
     vMatchParent +
-      llVertical +
-      vBackground(R.drawable.box)
+        llVertical +
+        vBackground(R.drawable.box)
 
   def titleContentStyle(implicit contextWrapper: ContextWrapper): Tweak[LinearLayout] =
     vMatchWidth +
-      llHorizontal +
-      llLayoutMargin(marginBottom = resGetDimensionPixelSize(R.dimen.margin_default)) +
-      llGravity(Gravity.CENTER_VERTICAL)
+        llHorizontal +
+        llLayoutMargin(marginBottom = resGetDimensionPixelSize(R.dimen.margin_default)) +
+        llGravity(Gravity.CENTER_VERTICAL)
 
   def tittleLanguagesStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
     llWrapWeightHorizontal +
-      vPadding(paddingBottom = resGetDimensionPixelSize(R.dimen.margin_default)) +
-      tvColorResource(R.color.languages_content_light) +
-      tvSizeResource(R.dimen.languages_content ) +
-      tvLines(1) +
-      tvEllipsize(TruncateAt.END) +
-      tvBold
+        vPadding(paddingBottom = resGetDimensionPixelSize(R.dimen.margin_default)) +
+        tvColorResource(R.color.languages_content_light) +
+        tvSizeResource(R.dimen.languages_content) +
+        tvLines(1) +
+        tvEllipsize(TruncateAt.END) +
+        tvBold
 
   def optionsStyle(implicit contextWrapper: ContextWrapper): Tweak[ImageView] =
     vWrapContent +
-      llLayoutGravity(Gravity.TOP | Gravity.RIGHT) +
-      ivSrc(R.drawable.box_icon_close)
+        llLayoutGravity(Gravity.TOP | Gravity.RIGHT) +
+        ivSrc(R.drawable.box_icon_close)
 
   def originalTextStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
     vMatchWidth +
-      tvColorResource(R.color.title_content_light) +
-      tvSizeResource(R.dimen.text_content) +
-      tvLines(1) +
-      tvEllipsize(TruncateAt.END)
+        tvColorResource(R.color.title_content_light) +
+        tvSizeResource(R.dimen.text_content) +
+        tvLines(1) +
+        tvEllipsize(TruncateAt.END)
 
   def lineStyle(implicit contextWrapper: ContextWrapper): Tweak[ImageView] = {
     val padding = resGetDimensionPixelSize(R.dimen.padding_default)
     lp[ViewGroup](MATCH_PARENT, resGetDimensionPixelSize(R.dimen.line_stroke)) +
-      llLayoutMargin(marginTop = padding, marginBottom = padding) +
-      vBackgroundColorResource(R.color.line_content)
+        llLayoutMargin(marginTop = padding, marginBottom = padding) +
+        vBackgroundColorResource(R.color.line_content)
   }
 
   def translateTextStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
     llMatchWeightVertical +
-      tvColorResource(R.color.text_content_light) +
-      tvSizeResource(R.dimen.text_content) +
-      tvEllipsize(TruncateAt.END)
+        tvColorResource(R.color.text_content_light) +
+        tvSizeResource(R.dimen.text_content) +
+        tvEllipsize(TruncateAt.END)
 
 }

@@ -44,10 +44,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Try}
 
 class BubbleService
-  extends Service
-  with Contexts[Service]
-  with ComponentRegistryImpl
-  with OptionOps {
+    extends Service
+    with Contexts[Service]
+    with ComponentRegistryImpl
+    with OptionOps {
 
   override lazy val contextProvider: ContextWrapper = serviceContextWrapper
 
@@ -94,7 +94,7 @@ class BubbleService
           actionsView match {
             // Bubble didn't move, we show text translated
             case `actionsView` if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
-              && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
+                && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
               bubbleStatus = BubbleStatus.CONTENT
               bubble.hide()
               contentView.show()
@@ -394,7 +394,10 @@ class BubbleService
     }
   }
 
-  private def onEndTranslate(originalText: String, translatedText: String, label: String) = {
+  private def onEndTranslate(
+      originalText: String,
+      translatedText: String,
+      label: String) = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
 
     analyticsServices.send(
