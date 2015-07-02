@@ -23,14 +23,14 @@ import com.fortysevendeg.macroid.extras.ImageViewTweaks._
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import macroid.FullDsl._
-import macroid.{AppContext, Contexts}
+import macroid.{ContextWrapper, Contexts}
 
 class StepFragment
     extends Fragment
     with Contexts[Fragment]
     with ComponentRegistryImpl  {
 
-  override implicit lazy val appContextProvider: AppContext = fragmentAppContext
+  override lazy val contextProvider: ContextWrapper = fragmentContextWrapper
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val steps = Steps.steps

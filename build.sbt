@@ -40,11 +40,10 @@ libraryDependencies ++= Seq(
   androidTest,
   compilerPlugin(Libraries.wartRemover))
 
-
 apkSigningConfig in Android := Option(
-  PromptPasswordsSigningConfig(
-    keystore = new File(Path.userHome.absolutePath + "/.android/translate-bubble.keystore"),
-    alias = "47deg"))
+    PromptPasswordsSigningConfig(
+        keystore = new File(Path.userHome.absolutePath + "/.android/translate-bubble.keystore"),
+        alias = "47deg"))
 
 run <<= run in Android
 
@@ -55,3 +54,5 @@ proguardScala in Android := true
 useProguard in Android := true
 
 proguardOptions in Android ++= Settings.proguardCommons
+
+proguardCache in Android := Seq.empty

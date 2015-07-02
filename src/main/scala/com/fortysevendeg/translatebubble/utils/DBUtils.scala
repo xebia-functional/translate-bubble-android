@@ -19,14 +19,14 @@ package com.fortysevendeg.translatebubble.utils
 import android.content.Context
 import android.database.Cursor
 import com.fortysevendeg.translatebubble.provider.{TranslateBubbleContentProvider, TranslateBubbleSqlHelper}
-import macroid.AppContext
+import macroid.ContextWrapper
 
 import scala.annotation.tailrec
 
 trait DBUtils {
 
-  def emptyAllTables(implicit appContext: AppContext) =
-    appContext.get.getContentResolver.delete(
+  def emptyAllTables(implicit contextWrapper: ContextWrapper) =
+    contextWrapper.application.getContentResolver.delete(
       TranslateBubbleContentProvider.contentUriTranslationHistory,
       "",
       Seq.empty.toArray)

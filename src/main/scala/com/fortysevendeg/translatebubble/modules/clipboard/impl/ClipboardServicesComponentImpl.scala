@@ -16,8 +16,8 @@
 
 package com.fortysevendeg.translatebubble.modules.clipboard.impl
 
-import android.content.{ClipData, Context, ClipboardManager}
-import com.fortysevendeg.macroid.extras.AppContextProvider
+import android.content.{ClipData, ClipboardManager, Context}
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.clipboard._
 import com.fortysevendeg.translatebubble.service._
 
@@ -28,7 +28,7 @@ import scala.util.Try
 trait ClipboardServicesComponentImpl
   extends ClipboardServicesComponent {
 
-  self: AppContextProvider =>
+  self: ContextWrapperProvider =>
 
   lazy val clipDataBuilder = new ClipDataBuilder
 
@@ -45,7 +45,7 @@ trait ClipboardServicesComponentImpl
     var clipChangedListener: Option[ClipboardManager.OnPrimaryClipChangedListener] = None
 
     val clipboardManager: ClipboardManager = {
-      appContextProvider.get.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
+      contextProvider.application.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
     }
 
     private def getClipboardManagerPrimaryClip: Option[ClipData] = Option(clipboardManager.getPrimaryClip)

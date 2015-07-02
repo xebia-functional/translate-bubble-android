@@ -16,7 +16,7 @@
 
 package com.fortysevendeg.translatebubble.modules
 
-import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.analytics.impl.AnalyticsServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.impl.ClipboardServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.notifications.impl.NotificationsServicesComponentImpl
@@ -26,7 +26,7 @@ import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateService
 
 trait ComponentRegistryImpl
     extends ComponentRegistry
-    with AppContextProvider
+    with ContextWrapperProvider
     with ClipboardServicesComponentImpl
     with PersistentServicesComponentImpl
     with TranslateServicesComponentImpl

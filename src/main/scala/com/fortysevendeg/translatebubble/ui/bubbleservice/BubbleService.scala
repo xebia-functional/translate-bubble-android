@@ -24,9 +24,9 @@ import android.os._
 import android.support.v4.view.ViewConfigurationCompat
 import android.view.View._
 import android.view.ViewGroup.LayoutParams._
+import android.view.WindowManager.LayoutParams
 import android.view.WindowManager.LayoutParams._
 import android.view._
-import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
@@ -38,18 +38,18 @@ import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
 import com.fortysevendeg.translatebubble.utils.{OptionOps, TranslateUIType}
 import macroid.FullDsl._
-import macroid.{AppContext, Ui}
+import macroid.{Contexts, ContextWrapper, Ui}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Try}
 
 class BubbleService
     extends Service
-    with AppContextProvider
+    with Contexts[Service]
     with ComponentRegistryImpl
     with OptionOps {
 
-  override implicit lazy val appContextProvider = AppContext(getApplicationContext)
+  override lazy val contextProvider: ContextWrapper = serviceContextWrapper
 
   var widthScreen: Int = 0
 
@@ -73,6 +73,7 @@ class BubbleService
     private var initialTouchX: Float = 0f
     private var initialTouchY: Float = 0f
     private var moving = false
+
     def onTouch(v: View, event: MotionEvent): Boolean = {
       val x = event.getRawX
       val y = event.getRawY
@@ -163,6 +164,7 @@ class BubbleService
         case _ => false
       }
     }
+
     def verifyMoving(x: Float, y: Float): (Boolean, Boolean) = {
       val xDiff: Int = Math.abs(x - initialTouchX).toInt
       val yDiff: Int = Math.abs(y - initialTouchY).toInt
@@ -176,6 +178,7 @@ class BubbleService
     private var initialTouchX: Float = 0f
     private var initialTouchY: Float = 0f
     private var moving = false
+
     def onTouch(v: View, event: MotionEvent): Boolean = {
       val x = event.getRawX
       val y = event.getRawY
@@ -231,6 +234,7 @@ class BubbleService
         case _ => false
       }
     }
+
     def verifyMoving(x: Float, y: Float): (Boolean, Boolean) = {
       val xDiff: Int = Math.abs(x - initialTouchX).toInt
       val yDiff: Int = Math.abs(y - initialTouchY).toInt
@@ -249,7 +253,7 @@ class BubbleService
     bubble.setDimensionsScreen(widthScreen, heightScreen)
   }
 
-  private lazy val (bubble, paramsBubble) = {
+  private lazy val (bubble: BubbleView, paramsBubble: LayoutParams) = {
     val bubble = new BubbleView(this)
     bubble.hide()
     val paramsBubble = new WindowManager.LayoutParams(
@@ -262,7 +266,7 @@ class BubbleService
     (bubble, paramsBubble)
   }
 
-  private lazy val (contentView, paramsContentView) = {
+  private lazy val (contentView: ContentView, paramsContentView: LayoutParams) = {
     val contentView = new ContentView(this)
     contentView.hide()
     val width = {
@@ -274,12 +278,12 @@ class BubbleService
       getResources.getDimension(R.dimen.height_content).toInt,
       TYPE_SYSTEM_ALERT, FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_NO_LIMITS,
       PixelFormat.TRANSLUCENT)
-    paramsContentView.y = heightScreen - appContextProvider.get.getResources.getDimension(R.dimen.height_content).toInt
+    paramsContentView.y = heightScreen - contextProvider.application.getResources.getDimension(R.dimen.height_content).toInt
     paramsContentView.gravity = Gravity.TOP | Gravity.LEFT
     (contentView, paramsContentView)
   }
 
-  private lazy val (actionsView, paramsActionsView) = {
+  private lazy val (actionsView: ActionsView, paramsActionsView: LayoutParams) = {
     val actionsView = new ActionsView(this)
     actionsView.setVisibility(GONE)
     val paramsActionsView: WindowManager.LayoutParams = new WindowManager.LayoutParams(
@@ -379,8 +383,12 @@ class BubbleService
     } yield (text, translatedText, "%s-%s".format(from.toString, to.toString))
 
     result mapUi {
-      case (text: String, translated: String, langs: String) => onEndTranslate(text, translated, langs)
-      case _ => translatedFailed()
+      case (text: String, translated: String, langs: String) => Ui {
+        onEndTranslate(text, translated, langs)
+      }
+      case _ => Ui {
+        translatedFailed()
+      }
     } recover {
       case _ => translatedFailed()
     }
@@ -434,11 +442,9 @@ class BubbleService
 
 object BubbleService {
 
-  def launchIfIsNecessary()(implicit appContext: AppContext) {
-    Try(appContext.get.startService(new Intent(appContext.get, classOf[BubbleService]))) match {
-      case Failure(ex) => ex.printStackTrace()
-      case _ =>
-    }
+  def launchIfIsNecessary(context: Context) = Try(context.startService(new Intent(context, classOf[BubbleService]))) match {
+    case Failure(ex) => ex.printStackTrace()
+    case _ =>
   }
 
 }

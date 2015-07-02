@@ -20,13 +20,14 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
-import macroid.AppContext
+import macroid.Contexts
 
 class RestartTranslationService
-    extends Service
-    with ComponentRegistryImpl {
+  extends Service
+  with Contexts[Service]
+  with ComponentRegistryImpl {
 
-  override implicit lazy val appContextProvider = AppContext(getApplicationContext)
+  override lazy val contextProvider = serviceContextWrapper
 
   override def onStartCommand(intent: Intent, flags: Int, startId: Int): Int =
     super.onStartCommand(intent, flags, startId)

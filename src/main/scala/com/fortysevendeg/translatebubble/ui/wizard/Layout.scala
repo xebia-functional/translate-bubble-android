@@ -16,17 +16,18 @@
 
 package com.fortysevendeg.translatebubble.ui.wizard
 
+import android.content.Intent
 import android.support.v4.view.ViewPager
 import android.widget._
+import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
+import com.fortysevendeg.translatebubble.ui.wizard.Styles._
 import macroid.FullDsl._
-import macroid.{IdGeneration, ActivityContext, AppContext}
-import Styles._
-import com.fortysevendeg.macroid.extras.ViewTweaks._
-import com.fortysevendeg.macroid.extras.UIActionsExtras._
+import macroid.{ActivityContextWrapper, IdGeneration, Ui}
 
-trait Layout extends IdGeneration {
+trait Layout
+  extends IdGeneration {
 
   self: PersistentServicesComponent =>
 
@@ -36,27 +37,33 @@ trait Layout extends IdGeneration {
 
   var gotIt = slot[Button]
 
-  def layout(implicit appContext: AppContext, context: ActivityContext) = getUi(
+  def layout(implicit contextWrapper: ActivityContextWrapper) = getUi(
     l[LinearLayout](
       l[ViewPager]() <~ wire(viewPager) <~ pagerStyle <~ id(Id.pager), // ViewPager need set resource id
       l[FrameLayout](
         l[LinearLayout]() <~ wire(paginationContent) <~ paginationContentStyle,
         w[Button] <~ wire(gotIt) <~ gotItStyle <~ On.click {
-          persistentServices.wizardWasSeen()
-          context.get.finish()
-          uiStartActivity[MainActivity]
+          Ui {
+            persistentServices.wizardWasSeen()
+            contextWrapper.original.get foreach {
+              activity =>
+                activity.finish()
+                val intent = new Intent(activity, classOf[MainActivity])
+                activity.startActivity(intent)
+            }
+          }
         }
       ) <~ bottomContentStyle
     ) <~ rootStyle
   )
 
-  def pagination(position: Int)(implicit appContext: AppContext, context: ActivityContext) = getUi(
+  def pagination(position: Int)(implicit contextWrapper: ActivityContextWrapper) = getUi(
     w[ImageView] <~ paginationItemStyle <~ vTag("position_%d".format(position))
   )
 
 }
 
-class FragmentLayout(implicit appContext: AppContext, context: ActivityContext) {
+class FragmentLayout(implicit contextWrapper: ActivityContextWrapper) {
 
   var image = slot[ImageView]
 

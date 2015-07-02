@@ -24,8 +24,9 @@ import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceCl
 import android.preference._
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
 import com.fortysevendeg.macroid.extras.ResourcesExtras._
-import com.fortysevendeg.macroid.extras.{AppContextProvider, RootPreferencesFragment}
+import com.fortysevendeg.macroid.extras.RootPreferencesFragment
 import com.fortysevendeg.translatebubble.R
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.persistent.GetLanguagesRequest
 import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
@@ -34,34 +35,32 @@ import com.fortysevendeg.translatebubble.ui.history.TranslationHistoryActivity
 import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
 import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
 import macroid.FullDsl._
-import macroid.{AppContext, Contexts}
+import macroid.{Ui, ContextWrapper, Contexts}
 
 class MainActivity
-    extends Activity
-    with Contexts[Activity]
-    with AppContextProvider {
+  extends Activity
+  with Contexts[Activity]
+  with ContextWrapperProvider {
 
-  override implicit lazy val appContextProvider: AppContext = activityAppContext
+  override lazy val contextProvider: ContextWrapper = activityContextWrapper
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
-    BubbleService.launchIfIsNecessary
+    BubbleService.launchIfIsNecessary(this)
     getFragmentManager.beginTransaction.replace(android.R.id.content, new DefaultPreferencesFragment()).commit
   }
 
 }
 
 class DefaultPreferencesFragment
-    extends PreferenceFragment
-    with AppContextProvider
-    with Contexts[PreferenceFragment]
-    with ComponentRegistryImpl {
+  extends PreferenceFragment
+  with Contexts[PreferenceFragment]
+  with ComponentRegistryImpl {
 
-  override implicit lazy val appContextProvider: AppContext = fragmentAppContext
+  override lazy val contextProvider: ContextWrapper = fragmentContextWrapper
 
   implicit lazy val rootPreferencesFragment = new RootPreferencesFragment(this, R.xml.preferences)
 
-  private lazy val launchFake = connect[PreferenceScreen]("launchFake")
   private lazy val typeTranslate = connect[ListPreference]("typeTranslate")
   private lazy val headUpNotification = connect[CheckBoxPreference]("headUpNotification")
   private lazy val toLanguage = connect[ListPreference]("toLanguage")
@@ -78,92 +77,92 @@ class DefaultPreferencesFragment
     analyticsServices.send(analyticsPreferencesScreen)
 
     showTutorial map (
-        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
-          override def onPreferenceClick(preference: Preference): Boolean = {
-            val intent = new Intent(getActivity, classOf[WizardActivity])
-            val bundle = new Bundle()
-            bundle.putBoolean(WizardActivity.keyModeTutorial, true)
-            intent.putExtras(bundle)
-            getActivity.startActivity(intent)
-            true
-          }
-        })
-        )
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          val intent = new Intent(getActivity, classOf[WizardActivity])
+          val bundle = new Bundle()
+          bundle.putBoolean(WizardActivity.keyModeTutorial, true)
+          intent.putExtras(bundle)
+          getActivity.startActivity(intent)
+          true
+        }
+      })
+      )
 
     showHistory map (
-        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
-          override def onPreferenceClick(preference: Preference): Boolean = {
-            val intent = new Intent(getActivity, classOf[TranslationHistoryActivity])
-            getActivity.startActivity(intent)
-            true
-          }
-        })
-        )
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          val intent = new Intent(getActivity, classOf[TranslationHistoryActivity])
+          getActivity.startActivity(intent)
+          true
+        }
+      })
+      )
 
     openSource map (
-        _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+      _.setOnPreferenceClickListener(new OnPreferenceClickListener {
+        override def onPreferenceClick(preference: Preference): Boolean = {
+          analyticsServices.send(analyticsOpenSourceDialog)
+          val builder = new AlertDialog.Builder(getActivity)
+          builder
+            .setMessage(R.string.openSourceMessage)
+            .setPositiveButton(R.string.goToGitHub,
+              new DialogInterface.OnClickListener() {
+                def onClick(dialog: DialogInterface, id: Int) {
+                  val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.gitHubProjectUrl)));
+                  startActivity(webIntent);
+                  analyticsServices.send(analyticsGoToGitHub)
+                  dialog.dismiss()
+                }
+              })
+            .setNeutralButton(R.string.goToWeb,
+              new DialogInterface.OnClickListener() {
+                def onClick(dialog: DialogInterface, id: Int) {
+                  val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.translateBubbleUrl)));
+                  startActivity(webIntent);
+                  analyticsServices.send(analyticsGoToWebProject)
+                  dialog.dismiss()
+                }
+              })
+          val dialog = builder.create()
+          dialog.show()
+          true
+        }
+      })
+      )
+
+    about map (
+      _.setOnPreferenceClickListener(
+        new OnPreferenceClickListener {
           override def onPreferenceClick(preference: Preference): Boolean = {
             analyticsServices.send(analyticsOpenSourceDialog)
             val builder = new AlertDialog.Builder(getActivity)
             builder
-                .setMessage(R.string.openSourceMessage)
-                .setPositiveButton(R.string.goToGitHub,
-                  new DialogInterface.OnClickListener() {
-                    def onClick(dialog: DialogInterface, id: Int) {
-                      val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.gitHubProjectUrl)));
-                      startActivity(webIntent);
-                      analyticsServices.send(analyticsGoToGitHub)
-                      dialog.dismiss()
-                    }
-                  })
-                .setNeutralButton(R.string.goToWeb,
-                  new DialogInterface.OnClickListener() {
-                    def onClick(dialog: DialogInterface, id: Int) {
-                      val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.translateBubbleUrl)));
-                      startActivity(webIntent);
-                      analyticsServices.send(analyticsGoToWebProject)
-                      dialog.dismiss()
-                    }
-                  })
+              .setMessage(R.string.aboutMessage)
+              .setPositiveButton(R.string.goTo47Deg,
+                new DialogInterface.OnClickListener() {
+                  def onClick(dialog: DialogInterface, id: Int) {
+                    val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.fortySevenUrl)));
+                    startActivity(webIntent);
+                    analyticsServices.send(analyticsGoTo47Deg)
+                    dialog.dismiss()
+                  }
+                })
+              .setNeutralButton(R.string.goToMyMemory,
+                new DialogInterface.OnClickListener() {
+                  def onClick(dialog: DialogInterface, id: Int) {
+                    val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.myMemoryUrl)));
+                    startActivity(webIntent);
+                    analyticsServices.send(analyticsGoToMyMemory)
+                    dialog.dismiss()
+                  }
+                })
             val dialog = builder.create()
             dialog.show()
             true
           }
         })
-        )
-
-    about map (
-        _.setOnPreferenceClickListener(
-          new OnPreferenceClickListener {
-            override def onPreferenceClick(preference: Preference): Boolean = {
-              analyticsServices.send(analyticsOpenSourceDialog)
-              val builder = new AlertDialog.Builder(getActivity)
-              builder
-                  .setMessage(R.string.aboutMessage)
-                  .setPositiveButton(R.string.goTo47Deg,
-                    new DialogInterface.OnClickListener() {
-                      def onClick(dialog: DialogInterface, id: Int) {
-                        val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.fortySevenUrl)));
-                        startActivity(webIntent);
-                        analyticsServices.send(analyticsGoTo47Deg)
-                        dialog.dismiss()
-                      }
-                    })
-                  .setNeutralButton(R.string.goToMyMemory,
-                    new DialogInterface.OnClickListener() {
-                      def onClick(dialog: DialogInterface, id: Int) {
-                        val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.myMemoryUrl)));
-                        startActivity(webIntent);
-                        analyticsServices.send(analyticsGoToMyMemory)
-                        dialog.dismiss()
-                      }
-                    })
-              val dialog = builder.create()
-              dialog.show()
-              true
-            }
-          })
-        )
+      )
 
     typeTranslate map {
       translate =>
@@ -210,12 +209,14 @@ class DefaultPreferencesFragment
         })
     }
 
-    persistentServices.getLanguages(GetLanguagesRequest()).mapUi(
-      response => {
-        changeFrom(response.from.toString)
-        changeTo(response.to.toString)
-      }
-    )
+    persistentServices.getLanguages(GetLanguagesRequest()).mapUi {
+      response =>
+        Ui {
+          changeFrom(response.from.toString)
+          changeTo(response.to.toString)
+        }
+    }
+
 
   }
 

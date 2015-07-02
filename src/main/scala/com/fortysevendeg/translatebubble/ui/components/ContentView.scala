@@ -18,34 +18,32 @@ package com.fortysevendeg.translatebubble.ui.components
 
 import android.animation.{Animator, ValueAnimator}
 import android.content.Context
+import android.text.TextUtils.TruncateAt
 import android.util.AttributeSet
 import android.view.View._
+import android.view.ViewGroup.LayoutParams._
 import android.view._
-import android.widget.{FrameLayout, ImageView, TextView}
-import com.fortysevendeg.macroid.extras.LayoutBuildingExtra._
-import com.fortysevendeg.macroid.extras.RootView
+import android.widget.{FrameLayout, ImageView, LinearLayout, TextView}
+import com.fortysevendeg.macroid.extras.ImageViewTweaks._
+import com.fortysevendeg.macroid.extras.LinearLayoutTweaks._
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.macroid.extras.TextTweaks._
+import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
-import macroid.AppContext
 import macroid.FullDsl._
+import macroid.{ContextWrapper, ServiceContextWrapper, Tweak}
 
 import scala.language.postfixOps
 
-class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit appContext: AppContext)
-    extends FrameLayout(context, attrs, defStyleAttr) {
+class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ServiceContextWrapper)
+    extends FrameLayout(context, attrs, defStyleAttr)
+    with ContentViewLayout {
 
-  def this(context: Context)(implicit appContext: AppContext) = this(context, null, 0)
+  def this(context: Context)(implicit contextWrapper: ServiceContextWrapper) = this(context, null, 0)
 
-  def this(context: Context, attr: AttributeSet)(implicit appContext: AppContext) = this(context, attr, 0)
+  def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ServiceContextWrapper) = this(context, attr, 0)
 
-  implicit val rootView: RootView = new RootView(R.layout.content_view)
-
-  val languages: Option[TextView] = connect[TextView](R.id.languages)
-  val original: Option[TextView] = connect[TextView](R.id.original)
-  val translate: Option[TextView] = connect[TextView](R.id.translate)
-  val options: Option[ImageView] = connect[ImageView](R.id.options)
-
-  addView(rootView.view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+  addView(layout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
   def setTexts(langs: String, textOriginal: String, textTranslate: String) {
     runUi(
@@ -53,13 +51,9 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     )
   }
 
-  def show() {
-    setVisibility(VISIBLE)
-  }
+  def show() = setVisibility(VISIBLE)
 
-  def hide() {
-    setVisibility(INVISIBLE)
-  }
+  def hide() = setVisibility(INVISIBLE)
 
   def collapse(params: WindowManager.LayoutParams, windowManager: WindowManager) {
     val animator: ValueAnimator = ValueAnimator.ofFloat(0, 100)
@@ -74,13 +68,16 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     animator.addListener(new Animator.AnimatorListener {
       def onAnimationStart(animation: Animator) {
       }
+
       def onAnimationEnd(animation: Animator) {
         hide()
         params.alpha = 1
         windowManager.updateViewLayout(ContentView.this, params)
       }
+
       def onAnimationCancel(animation: Animator) {
       }
+
       def onAnimationRepeat(animation: Animator) {
       }
     })
@@ -100,5 +97,74 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     }
     windowManager.updateViewLayout(ContentView.this, params)
   }
+
+}
+
+trait ContentViewLayout {
+
+  var languages = slot[TextView]
+
+  var options = slot[ImageView]
+
+  var original = slot[TextView]
+
+  var translate = slot[TextView]
+
+  def layout(implicit contextWrapper: ServiceContextWrapper) = getUi(
+    l[LinearLayout](
+      l[LinearLayout](
+        w[TextView] <~ wire(languages) <~ tittleLanguagesStyle,
+        w[ImageView] <~ wire(options) <~ optionsStyle
+      ) <~ titleContentStyle,
+      w[TextView] <~ wire(original) <~ originalTextStyle,
+      w[ImageView] <~ lineStyle,
+      w[TextView] <~ wire(translate) <~ translateTextStyle
+    ) <~ rootStyle
+  )
+
+  def rootStyle(implicit contextWrapper: ContextWrapper): Tweak[LinearLayout] =
+    vMatchParent +
+        llVertical +
+        vBackground(R.drawable.box)
+
+  def titleContentStyle(implicit contextWrapper: ContextWrapper): Tweak[LinearLayout] =
+    vMatchWidth +
+        llHorizontal +
+        llLayoutMargin(marginBottom = resGetDimensionPixelSize(R.dimen.margin_default)) +
+        llGravity(Gravity.CENTER_VERTICAL)
+
+  def tittleLanguagesStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
+    llWrapWeightHorizontal +
+        vPadding(paddingBottom = resGetDimensionPixelSize(R.dimen.margin_default)) +
+        tvColorResource(R.color.languages_content_light) +
+        tvSizeResource(R.dimen.languages_content) +
+        tvLines(1) +
+        tvEllipsize(TruncateAt.END) +
+        tvBold
+
+  def optionsStyle(implicit contextWrapper: ContextWrapper): Tweak[ImageView] =
+    vWrapContent +
+        llLayoutGravity(Gravity.TOP | Gravity.RIGHT) +
+        ivSrc(R.drawable.box_icon_close)
+
+  def originalTextStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
+    vMatchWidth +
+        tvColorResource(R.color.title_content_light) +
+        tvSizeResource(R.dimen.text_content) +
+        tvLines(1) +
+        tvEllipsize(TruncateAt.END)
+
+  def lineStyle(implicit contextWrapper: ContextWrapper): Tweak[ImageView] = {
+    val padding = resGetDimensionPixelSize(R.dimen.padding_default)
+    lp[ViewGroup](MATCH_PARENT, resGetDimensionPixelSize(R.dimen.line_stroke)) +
+        llLayoutMargin(marginTop = padding, marginBottom = padding) +
+        vBackgroundColorResource(R.color.line_content)
+  }
+
+  def translateTextStyle(implicit contextWrapper: ContextWrapper): Tweak[TextView] =
+    llMatchWeightVertical +
+        tvColorResource(R.color.text_content_light) +
+        tvSizeResource(R.dimen.text_content) +
+        tvEllipsize(TruncateAt.END)
 
 }

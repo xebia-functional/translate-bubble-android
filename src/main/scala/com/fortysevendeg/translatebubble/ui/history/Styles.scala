@@ -24,54 +24,54 @@ import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
-import macroid.{ActivityContext, AppContext, Tweak}
+import macroid.{ContextWrapper, Tweak}
 
 import scala.language.postfixOps
 
 trait Styles {
 
-  def cardStyle(implicit activityContext: ActivityContext, appContext: AppContext): Tweak[CardView] =
+  def cardStyle(implicit contextWrapper: ContextWrapper): Tweak[CardView] =
     vMatchWidth
 
-  def translateStyle(implicit appContext: AppContext) =
+  def translateStyle(implicit contextWrapper: ContextWrapper) =
     vMatchWidth +
-        llVertical +
-        vPadding(
-          paddingBottom = resGetDimensionPixelSize(R.dimen.padding_default),
-          paddingLeft = resGetDimensionPixelSize(R.dimen.padding_history_content),
-          paddingRight = resGetDimensionPixelSize(R.dimen.padding_history_content),
-          paddingTop = resGetDimensionPixelSize(R.dimen.padding_default))
+      llVertical +
+      vPadding(
+        paddingBottom = resGetDimensionPixelSize(R.dimen.padding_default),
+        paddingLeft = resGetDimensionPixelSize(R.dimen.padding_history_content),
+        paddingRight = resGetDimensionPixelSize(R.dimen.padding_history_content),
+        paddingTop = resGetDimensionPixelSize(R.dimen.padding_default))
 
-  def translateTitleStyle(implicit appContext: AppContext) =
+  def translateTitleStyle(implicit contextWrapper: ContextWrapper) =
     vMatchWidth +
-        llHorizontal +
-        llGravity(Gravity.CENTER_VERTICAL)
+      llHorizontal +
+      llGravity(Gravity.CENTER_VERTICAL)
 
-  def languagesStyle(implicit appContext: AppContext) =
+  def languagesStyle(implicit contextWrapper: ContextWrapper) =
     vMatchParent +
-        tvColor(resGetColor(R.color.history_text_title)) +
-        tvEllipsize(TruncateAt.END) +
-        tvMaxLines(1) +
-        tvSize(resGetInteger(R.integer.text_big))
+      tvColor(resGetColor(R.color.history_text_title)) +
+      tvEllipsize(TruncateAt.END) +
+      tvMaxLines(1) +
+      tvSize(resGetInteger(R.integer.text_big))
 
-  def originalTextStyle(implicit appContext: AppContext) =
+  def originalTextStyle(implicit contextWrapper: ContextWrapper) =
     textStyle +
-        vMatchWidth +
-        tvMaxLines(1) +
-        vPadding(
-          paddingBottom = resGetDimensionPixelSize(R.dimen.padding_default),
-          paddingTop = resGetDimensionPixelSize(R.dimen.padding_default))
+      vMatchWidth +
+      tvMaxLines(1) +
+      vPadding(
+        paddingBottom = resGetDimensionPixelSize(R.dimen.padding_default),
+        paddingTop = resGetDimensionPixelSize(R.dimen.padding_default))
 
-  def translatedTextStyle(implicit appContext: AppContext) =
+  def translatedTextStyle(implicit contextWrapper: ContextWrapper) =
     textStyle +
-        llMatchWeightVertical
+      llMatchWeightVertical
 
-  def lineStyle(implicit appContext: AppContext) =
+  def lineStyle(implicit contextWrapper: ContextWrapper) =
     vContentSizeMatchWidth(resGetDimensionPixelSize(R.dimen.line_stroke)) +
-        vBackgroundColor(R.color.line_content)
+      vBackgroundColor(R.color.line_content)
 
-  def textStyle(implicit appContext: AppContext) =
+  def textStyle(implicit contextWrapper: ContextWrapper) =
     tvColor(resGetColor(R.color.history_text_content)) +
-        tvEllipsize(TruncateAt.END) +
-        tvSize(resGetInteger(R.integer.text_medium))
+      tvEllipsize(TruncateAt.END) +
+      tvSize(resGetInteger(R.integer.text_medium))
 }

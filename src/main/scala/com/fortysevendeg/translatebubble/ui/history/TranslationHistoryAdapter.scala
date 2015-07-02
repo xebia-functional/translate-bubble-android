@@ -23,14 +23,14 @@ import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity
 import macroid.FullDsl._
-import macroid.{ActivityContext, AppContext}
+import macroid.{ActivityContextWrapper, ContextWrapper}
 
 class TranslationHistoryAdapter(tranlationHistoryItems: Seq[TranslationHistoryEntity], listener: RecyclerClickListener)
-    (implicit context: ActivityContext, appContext: AppContext)
+    (implicit context: ActivityContextWrapper)
     extends RecyclerView.Adapter[TranslationHistoryViewHolder]
     with ComponentRegistryImpl {
 
-  override val appContextProvider: AppContext = appContext
+  override val contextProvider: ContextWrapper = context
   val recyclerClickListener = listener
 
   override def onCreateViewHolder(parentViewGroup: ViewGroup, i: Int): TranslationHistoryViewHolder = {

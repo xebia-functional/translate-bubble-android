@@ -3,20 +3,18 @@ package com.fortysevendeg.translatebubble.ui.bubbleservice
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.fortysevendeg.macroid.extras.AppContextProvider
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
 import com.fortysevendeg.translatebubble.modules.clipboard.CopyToClipboardRequest
-import macroid.{AppContext, Contexts}
+import macroid.{ContextWrapper, Contexts}
 
 class SharedActivity
   extends Activity
   with Contexts[Activity]
-  with ComponentRegistryImpl
-  with AppContextProvider {
+  with ComponentRegistryImpl {
 
   private[this] val acceptedType = "text/plain"
 
-  override implicit lazy val appContextProvider: AppContext = activityAppContext
+  override lazy val contextProvider: ContextWrapper = activityContextWrapper
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
@@ -37,7 +35,7 @@ class SharedActivity
   private[this] def handleText(text: String) =
     if (clipboardServices.isValidText(text)) {
       persistentServices.enableTranslation()
-      BubbleService.launchIfIsNecessary()
+      BubbleService.launchIfIsNecessary(this)
       clipboardServices.copyToClipboard(CopyToClipboardRequest(text))
     }
 

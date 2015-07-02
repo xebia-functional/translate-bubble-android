@@ -16,14 +16,14 @@
 
 package com.fortysevendeg.translatebubble.modules.translate
 
-import com.fortysevendeg.macroid.extras.AppContextProvider
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.TestConfig
 import com.fortysevendeg.translatebubble.modules.repository._
 import com.fortysevendeg.translatebubble.modules.repository.impl.RepositoryServicesComponentImpl
 import com.fortysevendeg.translatebubble.modules.translate.impl.TranslateServicesComponentImpl
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntityData
 import com.fortysevendeg.translatebubble.utils.LanguageType
-import macroid.AppContext
+import macroid.ContextWrapper
 import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 
@@ -53,14 +53,14 @@ trait TranslateMocks
 }
 
 trait BaseTranslateMocks
-    extends AppContextProvider
+    extends ContextWrapperProvider
     with TranslateServicesComponentImpl
     with RepositoryServicesComponentImpl
     with TestConfig
     with Scope
     with Mockito {
-  implicit val appContextProvider: AppContext = mock[AppContext]
-  appContextProvider.get returns mockContext
+  implicit val contextProvider: ContextWrapper = mock[ContextWrapper]
+  contextProvider.application returns mockContext
 
   override lazy val repositoryServices: RepositoryServicesImpl = mock[RepositoryServicesImpl]
 }

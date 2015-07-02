@@ -27,7 +27,7 @@ import com.fortysevendeg.translatebubble.modules.repository.FetchAllTranslationH
 import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity
 import com.fortysevendeg.translatebubble.ui.commons.{HistoryItemDecorator, ListLayout}
 import macroid.FullDsl._
-import macroid.{AppContext, Contexts, Ui}
+import macroid.{ContextWrapper, Contexts, Ui}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -37,7 +37,7 @@ class TranslationHistoryActivity
     with ComponentRegistryImpl
     with ListLayout {
 
-  override implicit lazy val appContextProvider: AppContext = activityAppContext
+  override lazy val contextProvider: ContextWrapper = activityContextWrapper
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
@@ -47,11 +47,11 @@ class TranslationHistoryActivity
     getActionBar.setHomeButtonEnabled(true)
 
     val layoutManager = if (landscapeTablet) {
-      new GridLayoutManager(appContextProvider.get, 3)
+      new GridLayoutManager(contextProvider.application, 3)
     } else if (tablet) {
-      new GridLayoutManager(appContextProvider.get, 2)
+      new GridLayoutManager(contextProvider.application, 2)
     } else {
-      new LinearLayoutManager(appContextProvider.get)
+      new LinearLayoutManager(contextProvider.application)
     }
 
     runUi(

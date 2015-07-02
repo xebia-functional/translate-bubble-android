@@ -24,20 +24,20 @@ import android.widget.ImageView
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.ComponentRegistryImpl
+import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
 import macroid.FullDsl._
-import macroid.{AppContext, Contexts, Transformer}
-import com.fortysevendeg.translatebubble.ui.commons.Strings._
+import macroid.{ContextWrapper, Contexts, Transformer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class WizardActivity
-    extends FragmentActivity
-    with Contexts[FragmentActivity]
-    with Layout
-    with ComponentRegistryImpl {
+  extends FragmentActivity
+  with Contexts[FragmentActivity]
+  with Layout
+  with ComponentRegistryImpl {
 
-  override implicit lazy val appContextProvider: AppContext = activityAppContext
+  override lazy val contextProvider: ContextWrapper = activityContextWrapper
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
@@ -66,8 +66,11 @@ class WizardActivity
       pager.setAdapter(new StepsPagerAdapter(getSupportFragmentManager))
       pager.setOnPageChangeListener(new OnPageChangeListener {
         var isLastStep = false
+
         override def onPageScrollStateChanged(i: Int): Unit = {}
+
         override def onPageScrolled(i: Int, v: Float, i1: Int): Unit = {}
+
         override def onPageSelected(i: Int): Unit = {
           runUi(paginationContent <~ activateImages(i))
           if (!modeTutorial) {
@@ -75,13 +78,13 @@ class WizardActivity
               isLastStep = true
               runUi(
                 (paginationContent <~~ (vGone ++ fadeOut(300))) ~
-                    (gotIt <~ vVisible <~~ fadeIn(300))
+                  (gotIt <~ vVisible <~~ fadeIn(300))
               )
             } else if (isLastStep) {
               isLastStep = false
               runUi(
                 (paginationContent <~ vVisible <~~ fadeIn(300)) ~
-                    (gotIt <~~ (vGone ++ fadeOut(300)))
+                  (gotIt <~~ (vGone ++ fadeOut(300)))
               )
             }
           }
@@ -96,7 +99,7 @@ class WizardActivity
   }
 
   class StepsPagerAdapter(fragmentManager: FragmentManager)
-      extends FragmentPagerAdapter(fragmentManager) {
+    extends FragmentPagerAdapter(fragmentManager) {
 
     val steps = Steps.steps
 
@@ -121,27 +124,27 @@ object WizardActivity {
 
 object Steps {
 
-  def steps(implicit appContext: AppContext) = List(
+  def steps(implicit contextWrapper: ContextWrapper) = List(
     Step(
       R.drawable.wizard_icon,
-      appContext.get.getString(R.string.wizardTitle1),
-      appContext.get.getString(R.string.wizardDescription1)),
+      contextWrapper.application.getString(R.string.wizardTitle1),
+      contextWrapper.application.getString(R.string.wizardDescription1)),
     Step(
       R.drawable.wizard_step_01,
-      appContext.get.getString(R.string.wizardTitle2),
-      appContext.get.getString(R.string.wizardDescription2)),
+      contextWrapper.application.getString(R.string.wizardTitle2),
+      contextWrapper.application.getString(R.string.wizardDescription2)),
     Step(
       R.drawable.wizard_step_02,
-      appContext.get.getString(R.string.wizardTitle3),
-      appContext.get.getString(R.string.wizardDescription3)),
+      contextWrapper.application.getString(R.string.wizardTitle3),
+      contextWrapper.application.getString(R.string.wizardDescription3)),
     Step(
       R.drawable.wizard_step_03,
-      appContext.get.getString(R.string.wizardTitle4),
-      appContext.get.getString(R.string.wizardDescription4)),
+      contextWrapper.application.getString(R.string.wizardTitle4),
+      contextWrapper.application.getString(R.string.wizardDescription4)),
     Step(
       R.drawable.wizard_step_04,
-      appContext.get.getString(R.string.wizardTitle5),
-      appContext.get.getString(R.string.wizardDescription5)))
+      contextWrapper.application.getString(R.string.wizardTitle5),
+      contextWrapper.application.getString(R.string.wizardDescription5)))
 
 
 }

@@ -16,11 +16,11 @@
 
 package com.fortysevendeg.translatebubble.modules.clipboard
 
-import android.content.{Context, ClipboardManager, ClipData}
-import com.fortysevendeg.macroid.extras.AppContextProvider
+import android.content.{ClipData, ClipboardManager, Context}
+import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.TestConfig
 import com.fortysevendeg.translatebubble.modules.clipboard.impl.{ClipDataBuilder, ClipboardServicesComponentImpl}
-import macroid.AppContext
+import macroid.ContextWrapper
 import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 
@@ -36,15 +36,15 @@ trait ClipboardMocks
 
 trait BaseClipboardMocks
     extends Mockito
-    with AppContextProvider
+    with ContextWrapperProvider
     with ClipboardServicesComponentImpl
     with TestConfig
     with Scope {
-  implicit val appContextProvider: AppContext = mock[AppContext]
+  implicit val contextProvider: ContextWrapper = mock[ContextWrapper]
 
   override lazy val clipDataBuilder = mock[ClipDataBuilder]
 
   val clipboardManager = mock[ClipboardManager]
   mockContext.getSystemService(Context.CLIPBOARD_SERVICE) returns clipboardManager
-  appContextProvider.get returns mockContext
+  contextProvider.application returns mockContext
 }
