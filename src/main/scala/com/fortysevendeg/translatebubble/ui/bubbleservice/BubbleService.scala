@@ -22,7 +22,6 @@ import android.content.{ClipboardManager, Context, Intent}
 import android.graphics.{PixelFormat, Point}
 import android.os._
 import android.support.v4.view.ViewConfigurationCompat
-import android.view.View._
 import android.view.ViewGroup.LayoutParams._
 import android.view.WindowManager.LayoutParams
 import android.view.WindowManager.LayoutParams._
@@ -86,18 +85,17 @@ class BubbleService
           moving = false
           true
         case MotionEvent.ACTION_CANCEL =>
-          actionsView.hide()
+          runUi(actionsView.hide())
           moving = false
           false
         case MotionEvent.ACTION_UP =>
-          actionsView.hide()
-          actionsView match {
+          runUi(actionsView.hide())
+          val ui = actionsView match {
             // Bubble didn't move, we show text translated
             case `actionsView` if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
                 && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
               bubbleStatus = BubbleStatus.CONTENT
-              bubble.hide()
-              contentView.show()
+              bubble.hide ~ contentView.show()
             // Bubble was moved over CloseView
             case `actionsView` if actionsView.isOverCloseView(x, y) =>
               bubble.hideFromCloseAction(paramsBubble, windowManager)
@@ -118,13 +116,12 @@ class BubbleService
             // Bubble drops somewhere else
             case _ => bubble.drop(paramsBubble, windowManager)
           }
+          runUi(ui)
           moving = false
           true
         case MotionEvent.ACTION_MOVE =>
           if (moving) {
-            if (!actionsView.isVisible) {
-              actionsView.show()
-            }
+            runUi(actionsView.show())
             actionsView match {
               // Bubble is over CloseView
               case `actionsView` if actionsView.isOverCloseView(x, y) =>
@@ -255,7 +252,7 @@ class BubbleService
 
   private lazy val (bubble: BubbleView, paramsBubble: LayoutParams) = {
     val bubble = new BubbleView(this)
-    bubble.hide()
+    runUi(bubble.hide)
     val paramsBubble = new WindowManager.LayoutParams(
       WRAP_CONTENT,
       WRAP_CONTENT,
@@ -268,7 +265,7 @@ class BubbleService
 
   private lazy val (contentView: ContentView, paramsContentView: LayoutParams) = {
     val contentView = new ContentView(this)
-    contentView.hide()
+    runUi(contentView.hide())
     val width = {
       val w = if (widthScreen > heightScreen) heightScreen else widthScreen
       if (tablet) (w * 0.7f).toInt else w
@@ -285,7 +282,7 @@ class BubbleService
 
   private lazy val (actionsView: ActionsView, paramsActionsView: LayoutParams) = {
     val actionsView = new ActionsView(this)
-    actionsView.setVisibility(GONE)
+    runUi(actionsView.gone)
     val paramsActionsView: WindowManager.LayoutParams = new WindowManager.LayoutParams(
       MATCH_PARENT,
       MATCH_PARENT,
@@ -299,7 +296,7 @@ class BubbleService
     def onPrimaryClipChanged() = if (persistentServices.isTranslationEnable() && clipboardServices.isValidCall) onStartTranslate()
   }
 
-  override def onCreate() {
+  override def onCreate() = {
     super.onCreate()
 
     reloadSizeDisplay()
@@ -313,24 +310,15 @@ class BubbleService
 
     contentView.setOnTouchListener(contentTouchListener)
     windowManager.addView(contentView, paramsContentView)
-    runUi(
-      contentView.options <~ On.click {
-        Ui(collapse())
-      }
-    )
+
+    runUi(contentView.options <~ On.click { collapse() })
   }
 
-  private def close() {
+  private def collapse(): Ui[_] = {
     bubbleStatus = BubbleStatus.FLOATING
-    contentView.hide()
-    bubble.hide()
-  }
-
-  private def collapse() {
-    bubbleStatus = BubbleStatus.FLOATING
-    contentView.collapse(paramsContentView, windowManager)
-    bubble.show(paramsBubble, windowManager)
-    bubble.stopAnimation()
+    contentView.collapse(paramsContentView, windowManager) ~
+        bubble.show(paramsBubble, windowManager) ~
+        bubble.stopAnimation()
   }
 
   override def onStartCommand(intent: Intent, flags: Int, startId: Int): Int = {
@@ -368,11 +356,11 @@ class BubbleService
   private def onStartTranslate() {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
     if (typeTranslateUI == TranslateUIType.BUBBLE) {
-      bubbleStatus match {
+      val ui = bubbleStatus match {
         case BubbleStatus.FLOATING => bubble.show(paramsBubble, windowManager)
         case BubbleStatus.CONTENT => bubble.startAnimation()
       }
-      contentView.setTexts(getString(R.string.translating), "-", "-")
+      runUi(ui ~ contentView.setTexts(getString(R.string.translating), "-", "-"))
     }
 
     val result = for {
@@ -380,16 +368,12 @@ class BubbleService
       GetLanguagesResponse(from, to) <- persistentServices.getLanguages(GetLanguagesRequest())
       TranslateResponse(Some(translatedText)) <- translateServices.translate(
         TranslateRequest(text = text, from = from, to = to))
-    } yield (text, translatedText, "%s-%s".format(from.toString, to.toString))
+    } yield (text, translatedText, s"${from.toString}-${to.toString}")
 
     result mapUi {
-      case (text: String, translated: String, langs: String) => Ui {
-        onEndTranslate(text, translated, langs)
-      }
-      case _ => Ui {
-        translatedFailed()
-      }
-    } recover {
+      case (text: String, translated: String, langs: String) => onEndTranslate(text, translated, langs)
+      case _ => translatedFailed()
+    } recoverUi {
       case _ => translatedFailed()
     }
   }
@@ -397,7 +381,7 @@ class BubbleService
   private def onEndTranslate(
       originalText: String,
       translatedText: String,
-      label: String) = {
+      label: String): Ui[_] = {
     val typeTranslateUI = persistentServices.getTypeTranslateUI()
 
     analyticsServices.send(
@@ -406,27 +390,28 @@ class BubbleService
       Some(analyticsClipboard),
       Some(label))
 
-    persistentServices.getLanguagesString foreach {
+    persistentServices.getLanguagesString map {
       languages =>
         typeTranslateUI match {
           case TranslateUIType.BUBBLE =>
-            contentView.setTexts(languages, originalText, translatedText)
-            bubble.stopAnimation()
+            contentView.setTexts(languages, originalText, translatedText) ~
+                bubble.stopAnimation()
           case TranslateUIType.NOTIFICATION =>
-            notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
+            Ui {
+              notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
+            }
         }
-    }
+    } getOrElse Ui.nop
   }
 
-  private def translatedFailed() = {
-    val typeTranslateUI = persistentServices.getTypeTranslateUI()
-    typeTranslateUI match {
-      case TranslateUIType.BUBBLE =>
-        contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "")
-        bubble.stopAnimation()
-      case TranslateUIType.NOTIFICATION =>
+  private def translatedFailed(): Ui[_] = persistentServices.getTypeTranslateUI() match {
+    case TranslateUIType.BUBBLE =>
+      contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "") ~
+          bubble.stopAnimation()
+    case TranslateUIType.NOTIFICATION =>
+      Ui {
         notificationsServices.failed()
-    }
+      }
   }
 
   override def onBind(intent: Intent): IBinder = null
@@ -434,8 +419,8 @@ class BubbleService
   override def onConfigurationChanged(newConfig: Configuration): Unit = {
     super.onConfigurationChanged(newConfig)
     reloadSizeDisplay()
-    bubble.changePositionIfIsNecessary(paramsBubble, windowManager)
-    contentView.changePositionIfIsNecessary(widthScreen, heightScreen, paramsContentView, windowManager)
+    runUi(bubble.changePositionIfIsNecessary(paramsBubble, windowManager) ~
+        contentView.changePositionIfIsNecessary(widthScreen, heightScreen, paramsContentView, windowManager))
   }
 
 }

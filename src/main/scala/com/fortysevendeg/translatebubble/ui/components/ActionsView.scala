@@ -31,55 +31,52 @@ import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.ui.commons.Dimens
 import com.fortysevendeg.translatebubble.ui.components.DisableViewTweaks._
 import macroid.FullDsl._
-import macroid.{ContextWrapper, ServiceContextWrapper, Snail, Tweak}
+import macroid._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Promise
 import scala.util.Success
 
 class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ServiceContextWrapper)
-  extends FrameLayout(context, attrs, defStyleAttr)
-  with ActionViewLayout {
+    extends FrameLayout(context, attrs, defStyleAttr)
+    with ActionViewLayout {
 
   def this(context: Context)(implicit contextWrapper: ServiceContextWrapper) = this(context, null, 0)
 
   def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ServiceContextWrapper) = this(context, attr, 0)
 
-  val sizeClose = contextWrapper.application.getResources.getDimension(R.dimen.size_close).toInt
+  val resources = contextWrapper.application.getResources
 
-  val marginClose = contextWrapper.application.getResources.getDimension(R.dimen.margin_close).toInt
+  val sizeClose = resources.getDimension(R.dimen.size_close).toInt
 
-  val sizeDisable = contextWrapper.application.getResources.getDimension(R.dimen.size_disable).toInt
+  val marginClose = resources.getDimension(R.dimen.margin_close).toInt
 
-  val marginTopDisable = contextWrapper.application.getResources.getDimension(R.dimen.margin_top_disable).toInt
+  val sizeDisable = resources.getDimension(R.dimen.size_disable).toInt
 
-  val marginSeparateOptionsDisable = contextWrapper.application.getResources.getDimension(R.dimen.margin_separate_options_disable).toInt
+  val marginTopDisable = resources.getDimension(R.dimen.margin_top_disable).toInt
+
+  val marginSeparateOptionsDisable = resources.getDimension(R.dimen.margin_separate_options_disable).toInt
 
   addView(layout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
   runUi(disable30MinView <~ dvTypeIcon(DisableView.TYPE_30_MIN))
 
-  def show() = {
-    setVisibility(VISIBLE)
-    runUi(
+  def show(): Ui[_] = if (!isVisible) { (this <~ vVisible) ~
       (closeView <~~ ActionsViewSnails.animCloseIn) ~
-        (disableContentOptionsView <~~ ActionsViewSnails.animDisableIn)
-    )
-  }
+      (disableContentOptionsView <~~ ActionsViewSnails.animDisableIn)
+  } else Ui.nop
 
-  def hide() = {
-    if (isVisible) {
-      runUi(
-        (closeView <~~ ActionsViewSnails.animCloseOut(new AnimatorListenerAdapter {
-          override def onAnimationEnd(animation: Animator): Unit = {
-            super.onAnimationEnd(animation)
-            setVisibility(GONE)
-          }
-        })) ~
-          (disableContentOptionsView <~~ ActionsViewSnails.animDisableOut)
-      )
-    }
-  }
+  def hide(): Ui[_] = if (isVisible) {
+    (closeView <~~ ActionsViewSnails.animCloseOut(new AnimatorListenerAdapter {
+      override def onAnimationEnd(animation: Animator): Unit = {
+        super.onAnimationEnd(animation)
+        runUi(gone)
+      }
+    })) ~
+        (disableContentOptionsView <~~ ActionsViewSnails.animDisableOut)
+  } else Ui.nop
+
+  def gone: Ui[_] = this <~ vGone
 
   def isVisible: Boolean = getVisibility == VISIBLE
 
@@ -91,7 +88,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     x > x1 && x < x2 && y > y1 && y < y2
   }
 
-  def getClosePosition = (getWidth / 2, getHeight - marginClose - (sizeClose / 2))
+  def getClosePosition: (Int, Int) = (getWidth / 2, getHeight - marginClose - (sizeClose / 2))
 
   def isOverDisableView(x: Float, y: Float): Boolean = {
     val x1 = getWidth - sizeDisable - marginSeparateOptionsDisable
@@ -101,7 +98,7 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
     x > x1 && x < x2 && y > y1 && y < y2
   }
 
-  def getDisablePosition =
+  def getDisablePosition: (Int, Int) =
     (getWidth - (sizeDisable / 2) - marginSeparateOptionsDisable, marginTopDisable + (sizeDisable / 2))
 
   def isOver30minView(x: Float, y: Float): Boolean = {
@@ -145,7 +142,7 @@ object ActionsViewSnails {
           .setListener(new AnimatorListenerAdapter {
         override def onAnimationEnd(animation: Animator) {
           super.onAnimationEnd(animation)
-          animPromise.complete(Success(()))
+          animPromise.success()
         }
       }).start()
       animPromise.future
@@ -161,7 +158,7 @@ object ActionsViewSnails {
           .setListener(new AnimatorListenerAdapter {
         override def onAnimationEnd(animation: Animator) {
           super.onAnimationEnd(animation)
-          animPromise.complete(Success(()))
+          animPromise.success()
         }
       }).start()
       animPromise.future
@@ -177,7 +174,7 @@ object ActionsViewSnails {
         override def onAnimationEnd(animation: Animator) {
           super.onAnimationEnd(animation)
           listener.onAnimationEnd(animation)
-          animPromise.complete(Success(()))
+          animPromise.success()
         }
       }).start()
       animPromise.future
@@ -207,32 +204,32 @@ trait ActionViewLayout {
 
   def rootStyle(implicit contextWrapper: ContextWrapper): Tweak[FrameLayout] =
     vMatchParent +
-      vBackground(R.drawable.background_system_alert)
+        vBackground(R.drawable.background_system_alert)
 
   def contentDisableButtonsStyle(implicit contextWrapper: ContextWrapper): Tweak[LinearLayout] =
     vWrapContent +
-      llVertical +
-      vPadding(paddingTop = resGetDimensionPixelSize(R.dimen.margin_top_disable)) +
-      flLayoutGravity(Gravity.RIGHT | Gravity.TOP)
+        llVertical +
+        vPadding(paddingTop = resGetDimensionPixelSize(R.dimen.margin_top_disable)) +
+        flLayoutGravity(Gravity.RIGHT | Gravity.TOP)
 
   def actionDisableButtonStyle(implicit contextWrapper: ContextWrapper): Tweak[DisableView] = {
     val size = resGetDimensionPixelSize(R.dimen.size_disable)
     lp[ViewGroup](size, size) +
-      llLayoutMargin(marginRight = resGetDimensionPixelSize(R.dimen.margin_separate_options_disable))
+        llLayoutMargin(marginRight = resGetDimensionPixelSize(R.dimen.margin_separate_options_disable))
   }
 
   def action30mDisableButtonStyle(implicit contextWrapper: ContextWrapper): Tweak[DisableView] = {
     val size = resGetDimensionPixelSize(R.dimen.size_disable)
     val margin = resGetDimensionPixelSize(R.dimen.margin_separate_options_disable)
     lp[ViewGroup](size, size) +
-      llLayoutMargin(marginRight = margin, marginTop = margin)
+        llLayoutMargin(marginRight = margin, marginTop = margin)
   }
 
   def actionCloseButtonStyle(implicit contextWrapper: ContextWrapper): Tweak[CloseView] = {
     val size = resGetDimensionPixelSize(R.dimen.size_close)
     val margin = resGetDimensionPixelSize(R.dimen.margin_close)
     lp[FrameLayout](size, size) +
-      Tweak[View] {
+        Tweak[View] {
         view ⇒
           val params = new FrameLayout.LayoutParams(view.getLayoutParams)
           params.setMargins(margin, margin, margin, margin)
