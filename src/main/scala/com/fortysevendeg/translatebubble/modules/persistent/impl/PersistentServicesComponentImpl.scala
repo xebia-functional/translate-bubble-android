@@ -25,8 +25,7 @@ import com.fortysevendeg.translatebubble.commons.ContextWrapperProvider
 import com.fortysevendeg.translatebubble.modules.persistent._
 import com.fortysevendeg.translatebubble.service.Service
 import com.fortysevendeg.translatebubble.services.RestartTranslationService
-import com.fortysevendeg.translatebubble.utils.TranslateUIType.TypeTranslateUI
-import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
+import com.fortysevendeg.translatebubble.utils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -100,11 +99,11 @@ trait PersistentServicesComponentImpl
       } yield contextProvider.application.getString(R.string.toLanguages, from, to)
     }
 
-    override def getTypeTranslateUI(): TypeTranslateUI = sharedPreferences match {
-      case s: SharedPreferences if s.getString(typeTranslateKey, "").equals(TranslateUIType.NOTIFICATION.toString) =>
-        TranslateUIType.NOTIFICATION
+    override def getTypeTranslateUI(): TranslateUiType = sharedPreferences match {
+      case s: SharedPreferences if s.getString(typeTranslateKey, "").equals(Notification.toString) =>
+        Notification
       case _ =>
-        TranslateUIType.BUBBLE
+        Bubble
     }
 
   }

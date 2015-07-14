@@ -17,23 +17,28 @@
 package com.fortysevendeg.translatebubble.utils
 
 import macroid.ContextWrapper
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
 
-object TranslateUIType extends Enumeration {
+sealed trait TranslateUiType
 
-  type TypeTranslateUI = Value
+object TranslateUiType {
 
-  val NOTIFICATION, BUBBLE = Value
+  def unapply(t: TranslateUiType): String = t.toString
 
-  def toSortedTuples()(implicit contextWrapper: ContextWrapper) = (stringNames zip resourceNames).sortBy(_._2)
+  val types: List[String] = List(Bubble.toString, Notification.toString)
 
-  val stringNames: List[String] = TranslateUIType.values.toList.map(_.toString)
+  def toSortedTuples()(implicit contextWrapper: ContextWrapper): List[(String, String)] = (types zip resourceNames).sortBy(_._2)
 
   private def resourceNames(implicit contextWrapper: ContextWrapper): List[String] =
-    TranslateUIType.values.toList.map {
+    types map {
       v =>
-        val id = contextWrapper.application.getResources.getIdentifier(v.toString, "string", contextWrapper.application.getPackageName)
-        if (id == 0) v.toString else contextWrapper.application.getString(id)
+        val id = resGetIdentifier(v, "string")
+        id map resGetString getOrElse v
     }
 
 }
+
+case object Notification extends TranslateUiType
+
+case object Bubble extends TranslateUiType
 

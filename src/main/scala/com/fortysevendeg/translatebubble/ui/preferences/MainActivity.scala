@@ -33,9 +33,9 @@ import com.fortysevendeg.translatebubble.ui.bubbleservice.BubbleService
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.history.TranslationHistoryActivity
 import com.fortysevendeg.translatebubble.ui.wizard.WizardActivity
-import com.fortysevendeg.translatebubble.utils.{LanguageType, TranslateUIType}
+import com.fortysevendeg.translatebubble.utils.{TranslateUiType, Notification, LanguageType}
 import macroid.FullDsl._
-import macroid.{Ui, ContextWrapper, Contexts}
+import macroid.{ContextWrapper, Contexts, Ui}
 
 class MainActivity
   extends Activity
@@ -167,7 +167,7 @@ class DefaultPreferencesFragment
     typeTranslate map {
       translate =>
         setTypeTranslated(translate.getValue)
-        val translateSortedTuples = TranslateUIType.toSortedTuples()
+        val translateSortedTuples = TranslateUiType.toSortedTuples()
         val translates: List[String] = translateSortedTuples map (_._2)
         val translatesValues: List[String] = translateSortedTuples map (_._1)
         translate.setEntries(translates.toArray[CharSequence])
@@ -221,11 +221,11 @@ class DefaultPreferencesFragment
   }
 
   private def setTypeTranslated(key: String) = {
-    headUpNotification.map(_.setEnabled(key.equals(TranslateUIType.NOTIFICATION.toString)))
+    headUpNotification.map(_.setEnabled(key.equals(Notification.toString)))
     typeTranslate map {
       translate =>
         key match {
-          case _ if key.equals(TranslateUIType.NOTIFICATION.toString) =>
+          case _ if key.equals(Notification.toString) =>
             translate.setTitle(R.string.notificationTitle)
             translate.setSummary(R.string.notificationMessage)
           case _ =>

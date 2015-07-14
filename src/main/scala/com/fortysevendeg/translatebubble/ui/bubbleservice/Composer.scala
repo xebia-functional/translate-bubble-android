@@ -16,7 +16,7 @@ import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsSer
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
-import com.fortysevendeg.translatebubble.utils.TranslateUIType
+import com.fortysevendeg.translatebubble.utils.{Notification, Bubble}
 import macroid.FullDsl._
 import macroid.{Contexts, Ui}
 
@@ -289,19 +289,18 @@ trait Composer {
     if (actionsView != null) windowManager.removeView(actionsView)
   }
 
-  protected def configurationChanged: Ui[_]  = reloadSizeDisplay() ~
+  protected def configurationChanged: Ui[_] = reloadSizeDisplay() ~
     bubble.changePositionIfIsNecessary(paramsBubble, windowManager) ~
     contentView.changePositionIfIsNecessary(widthScreen, heightScreen, paramsContentView, windowManager)
 
-  protected def loading: Ui[_] = {
-    val typeTranslateUI = persistentServices.getTypeTranslateUI()
-    if (typeTranslateUI == TranslateUIType.BUBBLE) {
+  protected def loading: Ui[_] = persistentServices.getTypeTranslateUI() match {
+    case Bubble =>
       val ui = bubbleStatus match {
         case BubbleStatus.FLOATING => bubble.show(paramsBubble, windowManager)
         case BubbleStatus.CONTENT => bubble.startAnimation()
       }
       ui ~ contentView.setTexts(getString(R.string.translating), "-", "-")
-    } else Ui.nop
+    case _ => Ui.nop
   }
 
   protected def translatedSuccess(
@@ -320,25 +319,21 @@ trait Composer {
     persistentServices.getLanguagesString map {
       languages =>
         typeTranslateUI match {
-          case TranslateUIType.BUBBLE =>
-            contentView.setTexts(languages, originalText, translatedText) ~
-              bubble.stopAnimation()
-          case TranslateUIType.NOTIFICATION =>
-            Ui {
-              notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
-            }
+          case Bubble => contentView.setTexts(languages, originalText, translatedText) ~
+            bubble.stopAnimation()
+          case Notification => Ui {
+            notificationsServices.showTextTranslated(ShowTextTranslatedRequest(originalText, translatedText))
+          }
         }
     } getOrElse Ui.nop
   }
 
   protected def translatedFailed(): Ui[_] = persistentServices.getTypeTranslateUI() match {
-    case TranslateUIType.BUBBLE =>
-      contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "") ~
-        bubble.stopAnimation()
-    case TranslateUIType.NOTIFICATION =>
-      Ui {
-        notificationsServices.failed()
-      }
+    case Bubble => contentView.setTexts(getString(R.string.failedTitle), getString(R.string.failedMessage), "") ~
+      bubble.stopAnimation()
+    case Notification => Ui {
+      notificationsServices.failed()
+    }
   }
 
   protected def collapse(): Ui[_] = {
