@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference.{OnPreferenceChangeListener, OnPreferenceClickListener}
 import android.preference._
-import android.support.v4.app.Fragment
 import com.fortysevendeg.macroid.extras.PreferencesBuildingExtra._
 import com.fortysevendeg.macroid.extras.ResourcesExtras._
 import com.fortysevendeg.macroid.extras.RootPreferencesFragment
@@ -42,18 +41,24 @@ trait Composer {
   def initializePreferences(implicit contextWrapper: ContextWrapper) = {
     showTutorial foreach (onPreferenceClickListener(_,
       () => {
-        val intent = new Intent(getActivity, classOf[WizardActivity])
-        val bundle = new Bundle()
-        bundle.putBoolean(WizardActivity.keyModeTutorial, true)
-        intent.putExtras(bundle)
-        getActivity.startActivity(intent)
+        Option(getActivity) foreach {
+          activity =>
+            val intent = new Intent(activity, classOf[WizardActivity])
+            val bundle = new Bundle()
+            bundle.putBoolean(WizardActivity.keyModeTutorial, true)
+            intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
         true
       }))
 
     showHistory foreach (onPreferenceClickListener(_,
       () => {
-        val intent = new Intent(getActivity, classOf[TranslationHistoryActivity])
-        getActivity.startActivity(intent)
+        Option(getActivity) foreach {
+          activity =>
+            val intent = new Intent(activity, classOf[TranslationHistoryActivity])
+            activity.startActivity(intent)
+        }
         true
       }))
 
@@ -133,14 +138,18 @@ trait Composer {
     }
   }
 
-  private[this] def changeTo(key: String): Ui[_] = Ui {
-    val toNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
-    toLanguage foreach (_.setTitle(getString(R.string.to, toNameLang)))
+  private[this] def changeTo(key: String)(implicit contextWrapper: ContextWrapper): Ui[_] = Ui {
+    for {
+      toNameLang <- resGetString(key)
+      pref <- toLanguage
+    } yield pref.setTitle(getString(R.string.to, toNameLang))
   }
 
-  private[this] def changeFrom(key: String): Ui[_] = Ui {
-    val fromNameLang: String = getString(getResources.getIdentifier(key, "string", getActivity.getPackageName))
-    fromLanguage foreach (_.setTitle(getString(R.string.from, fromNameLang)))
+  private[this] def changeFrom(key: String)(implicit contextWrapper: ContextWrapper): Ui[_] = Ui {
+    for {
+      fromNameLang <- resGetString(key)
+      pref <- fromLanguage
+    } yield pref.setTitle(getString(R.string.from, fromNameLang))
   }
 
   private[this] def onPreferenceClickListener(pref: PreferenceScreen, f: ClickListenerFunction) = {
@@ -156,55 +165,61 @@ trait Composer {
   }
 
   private[this] def showAboutDialog(implicit contextWrapper: ContextWrapper) = {
-    val builder = new AlertDialog.Builder(getActivity)
-    builder
-      .setMessage(R.string.aboutMessage)
-      .setPositiveButton(R.string.goTo47Deg,
-        new DialogInterface.OnClickListener() {
-          def onClick(dialog: DialogInterface, id: Int) {
-            val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.fortySevenUrl)))
-            startActivity(webIntent)
-            analyticsServices.send(analyticsGoTo47Deg)
-            dialog.dismiss()
-          }
-        })
-      .setNeutralButton(R.string.goToMyMemory,
-        new DialogInterface.OnClickListener() {
-          def onClick(dialog: DialogInterface, id: Int) {
-            val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.myMemoryUrl)))
-            startActivity(webIntent)
-            analyticsServices.send(analyticsGoToMyMemory)
-            dialog.dismiss()
-          }
-        })
-    val dialog = builder.create()
-    dialog.show()
+    Option(getActivity) foreach {
+      activity =>
+        val builder = new AlertDialog.Builder(activity)
+        builder
+          .setMessage(R.string.aboutMessage)
+          .setPositiveButton(R.string.goTo47Deg,
+            new DialogInterface.OnClickListener() {
+              def onClick(dialog: DialogInterface, id: Int) {
+                val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.fortySevenUrl)))
+                startActivity(webIntent)
+                analyticsServices.send(analyticsGoTo47Deg)
+                dialog.dismiss()
+              }
+            })
+          .setNeutralButton(R.string.goToMyMemory,
+            new DialogInterface.OnClickListener() {
+              def onClick(dialog: DialogInterface, id: Int) {
+                val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.myMemoryUrl)))
+                startActivity(webIntent)
+                analyticsServices.send(analyticsGoToMyMemory)
+                dialog.dismiss()
+              }
+            })
+        val dialog = builder.create()
+        dialog.show()
+    }
   }
 
   private[this] def showOpenSourceDialog(implicit contextWrapper: ContextWrapper) = {
-    val builder = new AlertDialog.Builder(getActivity)
-    builder
-      .setMessage(R.string.openSourceMessage)
-      .setPositiveButton(R.string.goToGitHub,
-        new DialogInterface.OnClickListener() {
-          def onClick(dialog: DialogInterface, id: Int) {
-            val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.gitHubProjectUrl)))
-            startActivity(webIntent)
-            analyticsServices.send(analyticsGoToGitHub)
-            dialog.dismiss()
-          }
-        })
-      .setNeutralButton(R.string.goToWeb,
-        new DialogInterface.OnClickListener() {
-          def onClick(dialog: DialogInterface, id: Int) {
-            val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.translateBubbleUrl)))
-            startActivity(webIntent)
-            analyticsServices.send(analyticsGoToWebProject)
-            dialog.dismiss()
-          }
-        })
-    val dialog = builder.create()
-    dialog.show()
+    Option(getActivity) foreach {
+      activity =>
+        val builder = new AlertDialog.Builder(activity)
+        builder
+          .setMessage(R.string.openSourceMessage)
+          .setPositiveButton(R.string.goToGitHub,
+            new DialogInterface.OnClickListener() {
+              def onClick(dialog: DialogInterface, id: Int) {
+                val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.gitHubProjectUrl)))
+                startActivity(webIntent)
+                analyticsServices.send(analyticsGoToGitHub)
+                dialog.dismiss()
+              }
+            })
+          .setNeutralButton(R.string.goToWeb,
+            new DialogInterface.OnClickListener() {
+              def onClick(dialog: DialogInterface, id: Int) {
+                val webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(resGetString(R.string.translateBubbleUrl)))
+                startActivity(webIntent)
+                analyticsServices.send(analyticsGoToWebProject)
+                dialog.dismiss()
+              }
+            })
+        val dialog = builder.create()
+        dialog.show()
+    }
   }
 
 }

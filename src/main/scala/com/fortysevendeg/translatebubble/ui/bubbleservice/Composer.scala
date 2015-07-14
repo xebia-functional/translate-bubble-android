@@ -16,7 +16,7 @@ import com.fortysevendeg.translatebubble.modules.notifications.{NotificationsSer
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
 import com.fortysevendeg.translatebubble.ui.commons.Strings._
 import com.fortysevendeg.translatebubble.ui.components.{ActionsView, BubbleView, ContentView}
-import com.fortysevendeg.translatebubble.utils.{Notification, Bubble}
+import com.fortysevendeg.translatebubble.utils._
 import macroid.FullDsl._
 import macroid.{Contexts, Ui}
 
@@ -33,12 +33,7 @@ trait Composer {
 
   protected var heightScreen: Int = 0
 
-  object BubbleStatus extends Enumeration {
-    type BubbleStatus = Value
-    val FLOATING, CONTENT = Value
-  }
-
-  protected var bubbleStatus = BubbleStatus.FLOATING
+  protected var bubbleStatus: BubbleStatusType = BubbleStatusFloating
 
   protected lazy val configuration: ViewConfiguration = ViewConfiguration.get(getApplicationContext)
 
@@ -126,7 +121,7 @@ trait Composer {
             // Bubble didn't move, we show text translated
             case `actionsView` if (!moving && paramsBubble.x > initialX - touchSlop && paramsBubble.x < initialX + touchSlop
               && paramsBubble.y > initialY - touchSlop && paramsBubble.y < initialY + touchSlop) =>
-              bubbleStatus = BubbleStatus.CONTENT
+              bubbleStatus = BubbleStatusContent
               bubble.hide ~ contentView.show()
             // Bubble was moved over CloseView
             case `actionsView` if actionsView.isOverCloseView(x, y) =>
@@ -296,8 +291,8 @@ trait Composer {
   protected def loading: Ui[_] = persistentServices.getTypeTranslateUI() match {
     case Bubble =>
       val ui = bubbleStatus match {
-        case BubbleStatus.FLOATING => bubble.show(paramsBubble, windowManager)
-        case BubbleStatus.CONTENT => bubble.startAnimation()
+        case BubbleStatusFloating => bubble.show(paramsBubble, windowManager)
+        case BubbleStatusContent => bubble.startAnimation()
       }
       ui ~ contentView.setTexts(getString(R.string.translating), "-", "-")
     case _ => Ui.nop
@@ -337,7 +332,7 @@ trait Composer {
   }
 
   protected def collapse(): Ui[_] = {
-    bubbleStatus = BubbleStatus.FLOATING
+    bubbleStatus = BubbleStatusFloating
     contentView.collapse(paramsContentView, windowManager) ~
       bubble.show(paramsBubble, windowManager) ~
       bubble.stopAnimation()

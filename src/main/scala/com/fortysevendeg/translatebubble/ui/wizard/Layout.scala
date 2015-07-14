@@ -24,6 +24,8 @@ import android.widget._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.macroid.extras.ViewPagerTweaks._
 import com.fortysevendeg.macroid.extras.ViewGroupTweaks._
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
+import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.modules.persistent.PersistentServicesComponent
 import com.fortysevendeg.translatebubble.ui.preferences.MainActivity
 import com.fortysevendeg.translatebubble.ui.wizard.Styles._
@@ -69,6 +71,7 @@ trait Layout
 
   def initializeUi(modeTutorial: Boolean)(implicit contextWrapper: ActivityContextWrapper, managerContext: FragmentManagerContext[Fragment, FragmentManager]) = {
     val stepsCount = Steps.steps.length
+    val duration = resGetInteger(R.integer.duration_default)
     (viewPager <~
       vpAdapter(new StepsPagerAdapter(managerContext.manager)) <~
       vpOnPageChangeListener(new OnPageChangeListener {
@@ -82,12 +85,12 @@ trait Layout
           val ui = (modeTutorial, isLastStep, stepsCount) match {
             case (tutorial, _, steps) if !tutorial && i >= steps - 1 =>
               isLastStep = true
-              (paginationContent <~~ (vGone ++ fadeOut(300))) ~
-                (gotIt <~ vVisible <~~ fadeIn(300))
+              (paginationContent <~~ (vGone ++ fadeOut(duration))) ~
+                (gotIt <~ vVisible <~~ fadeIn(duration))
             case (tutorial, lastStep, _) if !tutorial && lastStep =>
               isLastStep = false
-              (paginationContent <~ vVisible <~~ fadeIn(300)) ~
-                (gotIt <~~ (vGone ++ fadeOut(300)))
+              (paginationContent <~ vVisible <~~ fadeIn(duration)) ~
+                (gotIt <~~ (vGone ++ fadeOut(duration)))
             case _ => Ui.nop
           }
           runUi((paginationContent <~ activateImages(i)) ~ ui)

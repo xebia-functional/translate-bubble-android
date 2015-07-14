@@ -47,15 +47,15 @@ class ActionsView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   val resources = contextWrapper.application.getResources
 
-  val sizeClose = resources.getDimension(R.dimen.size_close).toInt
+  val sizeClose = resGetDimensionPixelSize(R.dimen.size_close)
 
-  val marginClose = resources.getDimension(R.dimen.margin_close).toInt
+  val marginClose = resGetDimensionPixelSize(R.dimen.margin_close)
 
-  val sizeDisable = resources.getDimension(R.dimen.size_disable).toInt
+  val sizeDisable = resGetDimensionPixelSize(R.dimen.size_disable)
 
-  val marginTopDisable = resources.getDimension(R.dimen.margin_top_disable).toInt
+  val marginTopDisable = resGetDimensionPixelSize(R.dimen.margin_top_disable)
 
-  val marginSeparateOptionsDisable = resources.getDimension(R.dimen.margin_separate_options_disable).toInt
+  val marginSeparateOptionsDisable = resGetDimensionPixelSize(R.dimen.margin_separate_options_disable)
 
   addView(layout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 

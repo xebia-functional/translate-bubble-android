@@ -21,6 +21,8 @@ import android.widget.{FrameLayout, LinearLayout, ProgressBar}
 import com.fortysevendeg.macroid.extras.DeviceMediaQueries._
 import com.fortysevendeg.macroid.extras.RecyclerViewTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
+import com.fortysevendeg.macroid.extras.ResourcesExtras._
+import com.fortysevendeg.translatebubble.R
 import macroid.FullDsl._
 import macroid.{ContextWrapper, Ui, ActivityContextWrapper}
 
@@ -34,12 +36,14 @@ trait ListLayout
 
   var placeholderContent = slot[LinearLayout]
 
-  def layoutManager(implicit contextWrapper: ContextWrapper) = if (landscapeTablet) {
-    new GridLayoutManager(contextWrapper.application, 3)
-  } else if (tablet) {
-    new GridLayoutManager(contextWrapper.application, 2)
-  } else {
-    new LinearLayoutManager(contextWrapper.application)
+  def layoutManager(implicit contextWrapper: ContextWrapper) = (tablet.b, landscape.b) match {
+    case (true, true) =>
+      new GridLayoutManager(contextWrapper.application, resGetInteger(R.integer.column_tablet_landscape))
+    case (true, false) =>
+      new GridLayoutManager(contextWrapper.application, resGetInteger(R.integer.column_or_tablet_or_landscape))
+    case (false, true) =>
+      new GridLayoutManager(contextWrapper.application, resGetInteger(R.integer.column_or_tablet_or_landscape))
+    case _ => new LinearLayoutManager(contextWrapper.application)
   }
 
 
