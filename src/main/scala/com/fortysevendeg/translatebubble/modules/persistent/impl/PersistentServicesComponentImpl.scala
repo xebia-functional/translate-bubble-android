@@ -31,7 +31,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait PersistentServicesComponentImpl
-    extends PersistentServicesComponent {
+  extends PersistentServicesComponent {
 
   self: ContextWrapperProvider =>
 
@@ -54,7 +54,7 @@ trait PersistentServicesComponentImpl
   lazy val persistentServices = new PersistentServicesImpl
 
   class PersistentServicesImpl
-      extends PersistentServices {
+    extends PersistentServices {
 
     val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(contextProvider.application)
 
