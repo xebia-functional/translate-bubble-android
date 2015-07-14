@@ -32,10 +32,10 @@ import macroid.{ContextWrapper, Contexts, Ui}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class TranslationHistoryActivity
-    extends Activity
-    with Contexts[Activity]
-    with ComponentRegistryImpl
-    with ListLayout {
+  extends Activity
+  with Contexts[Activity]
+  with ComponentRegistryImpl
+  with ListLayout {
 
   override lazy val contextProvider: ContextWrapper = activityContextWrapper
 
@@ -46,24 +46,9 @@ class TranslationHistoryActivity
     getActionBar.setDisplayHomeAsUpEnabled(true)
     getActionBar.setHomeButtonEnabled(true)
 
-    val layoutManager = if (landscapeTablet) {
-      new GridLayoutManager(contextProvider.application, 3)
-    } else if (tablet) {
-      new GridLayoutManager(contextProvider.application, 2)
-    } else {
-      new LinearLayoutManager(contextProvider.application)
-    }
-
-    runUi(
-      (recyclerView
-          <~ rvLayoutManager(layoutManager)
-          <~ rvAddItemDecoration(new HistoryItemDecorator)) ~
-          (reloadButton <~ On.click(Ui {
-            loadTranslationHistory()
-          })))
-
-    loadTranslationHistory()
-
+    runUi(initializeUi ~
+      loadTranslationHistory() ~
+      (reloadButton <~ On.click(loadTranslationHistory())))
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean =
@@ -72,26 +57,23 @@ class TranslationHistoryActivity
       case _ => super.onOptionsItemSelected(item)
     }
 
-  def loadTranslationHistory(): Unit = {
-    loading()
+  def loadTranslationHistory(): Ui[_] = {
     val result = for {
       response <- repositoryServices.fetchAllTranslationHistory(FetchAllTranslationHistoryRequest())
-    } yield reloadList(response.result)
-
-    result recover {
+    } yield response.result
+    result mapUi {
+      list =>
+        reloadList(list)
+    } recoverUi {
       case _ => failed()
     }
+    loading()
   }
 
-  def reloadList(translationHistoryItems: Seq[TranslationHistoryEntity]) =
-    translationHistoryItems.length match {
-      case 0 => empty()
-      case _ =>
-        val translationAdapter = new TranslationHistoryAdapter(translationHistoryItems, new RecyclerClickListener {
-          override def onClick(translationHistoryItem: TranslationHistoryEntity): Unit = {}
-        })
-        adapter(translationAdapter)
-    }
+  def reloadList(translationHistoryItems: Seq[TranslationHistoryEntity]): Ui[_] = translationHistoryItems.length match {
+    case 0 => empty()
+    case _ => adapter(new TranslationHistoryAdapter(translationHistoryItems))
+  }
 
 }
 
