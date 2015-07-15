@@ -20,14 +20,18 @@ import android.animation.{Animator, AnimatorListenerAdapter, ValueAnimator}
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View._
-import android.view.WindowManager
 import android.view.animation.{AccelerateInterpolator, Animation, LinearInterpolator, RotateAnimation}
+import android.view.{View, WindowManager}
 import android.widget.{FrameLayout, ImageView}
+import com.fortysevendeg.macroid.extras.ImageViewTweaks._
+import com.fortysevendeg.macroid.extras.ViewGroupTweaks._
+import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
 import com.fortysevendeg.translatebubble.ui.commons.Dimens
-import macroid.ContextWrapper
+import macroid.FullDsl._
+import macroid.{ServiceContextWrapper, Tweak, Ui}
 
-class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ContextWrapper)
+class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(implicit contextWrapper: ServiceContextWrapper)
     extends FrameLayout(context, attrs, defStyleAttr) {
 
   val leftPosition = 0
@@ -36,9 +40,9 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
 
   val bubbleHorizontalDisplacement = contextWrapper.application.getResources.getDimension(R.dimen.bubble_horizontal_displacement).toInt
 
-  def this(context: Context)(implicit contextWrapper: ContextWrapper) = this(context, null, 0)
+  def this(context: Context)(implicit contextWrapper: ServiceContextWrapper) = this(context, null, 0)
 
-  def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ContextWrapper) = this(context, attr, 0)
+  def this(context: Context, attr: AttributeSet)(implicit contextWrapper: ServiceContextWrapper) = this(context, attr, 0)
 
   var positionBubble: Int = leftPosition
 
@@ -46,18 +50,9 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
 
   var heightScreen: Int = 0
 
-  val bubble: ImageView = {
-    val bubble = new ImageView(getContext)
-    bubble.setImageResource(R.drawable.common_bubble)
-    bubble
-  }
+  val bubble = getUi(w[ImageView] <~ ivSrc(R.drawable.common_bubble))
 
-  val loading: ImageView = {
-    val loading = new ImageView(getContext)
-    loading.setImageResource(R.drawable.bubble_loading)
-    loading.setVisibility(INVISIBLE)
-    loading
-  }
+  val loading = getUi(w[ImageView] <~ ivSrc(R.drawable.bubble_loading) <~ vInvisible)
 
   val anim: RotateAnimation = {
     val anim = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
@@ -67,67 +62,60 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
     anim
   }
 
-  addView(bubble)
-  addView(loading)
+  runUi(this <~ vgAddViews(Seq(bubble, loading)))
 
-  def init(paramsBubble: WindowManager.LayoutParams) {
+  def init(paramsBubble: WindowManager.LayoutParams): Unit = {
     paramsBubble.x = left
     paramsBubble.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
   }
 
   def setDimensionsScreen(width: Int, height: Int): Unit = {
-    val previousHeight = heightScreen
     widthScreen = width
     heightScreen = height
   }
 
-  def changePositionIfIsNecessary(params: WindowManager.LayoutParams, windowManager: WindowManager): Unit = {
+  def changePositionIfIsNecessary(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = {
     val previousHeight = heightScreen
     if (positionBubble == rightPosition || params.y > heightScreen) {
       params.x = right()
       params.y = (heightScreen * params.y) / previousHeight
-      windowManager.updateViewLayout(BubbleView.this, params)
-    }
+      updateLayout(params, windowManager)
+    } else Ui.nop
   }
 
-  def left: Int = {
+  private[this] def left: Int = {
     positionBubble = leftPosition
     -bubbleHorizontalDisplacement
   }
 
-  def right(): Int = {
+  private[this] def right(): Int = {
     positionBubble = rightPosition
     widthScreen - getWidth + bubbleHorizontalDisplacement
   }
 
-  def startAnimation() {
-    loading.setVisibility(VISIBLE)
-    loading.startAnimation(anim)
+  private[this] def updateLayout(params: WindowManager.LayoutParams, windowManager: WindowManager) = Ui {
+    windowManager.updateViewLayout(this, params)
   }
 
-  def stopAnimation() {
-    loading.clearAnimation()
-    loading.setVisibility(INVISIBLE)
+  def startAnimation(): Ui[_] = loading <~ vVisible <~ Tweak[View] (_.startAnimation(anim))
+
+  def stopAnimation(): Ui[_] = loading <~ Tweak[View] (_.clearAnimation()) <~ vInvisible
+
+  def show(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = {
+    val maybeUpdate = if (getVisibility != VISIBLE) {
+      updateLayout(params, windowManager) ~ (this <~ vVisible)
+    } else Ui.nop
+    maybeUpdate ~ startAnimation()
   }
 
-  def show(params: WindowManager.LayoutParams, windowManager: WindowManager) {
-    if (getVisibility != VISIBLE) {
-      windowManager.updateViewLayout(this, params)
-      setVisibility(VISIBLE)
-    }
-    loading.setVisibility(VISIBLE)
-    loading.startAnimation(anim)
-  }
+  def hide: Ui[_] = this <~ vGone
 
-  def hide() = setVisibility(GONE)
-
-  def close(params: WindowManager.LayoutParams, windowManager: WindowManager) = {
-    hide()
+  def close(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = hide ~ Ui {
     params.x = left
     params.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
   }
 
-  def hideFromCloseAction(params: WindowManager.LayoutParams, windowManager: WindowManager) = {
+  def hideFromCloseAction(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = Ui {
     val y: Int = params.y
     val to: Int = y + Dimens.distanceOut
     val animator: ValueAnimator = ValueAnimator.ofFloat(y, to)
@@ -136,13 +124,13 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
       def onAnimationUpdate(animation: ValueAnimator) {
         val pos: Float = animation.getAnimatedValue.asInstanceOf[Float]
         params.y = pos.toInt
-        windowManager.updateViewLayout(BubbleView.this, params)
+        runUi(updateLayout(params, windowManager))
       }
     })
     animator.addListener(new AnimatorListenerAdapter {
       override def onAnimationEnd(animation: Animator): Unit = {
         super.onAnimationEnd(animation)
-        hide()
+        runUi(hide)
         params.x = left
         params.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
       }
@@ -150,7 +138,7 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
     animator.start()
   }
 
-  def hideFromOptionAction(params: WindowManager.LayoutParams, windowManager: WindowManager) = {
+  def hideFromOptionAction(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = Ui {
     val x: Int = params.x
     val to: Int = x + Dimens.distanceOut
     val animator: ValueAnimator = ValueAnimator.ofFloat(x, to)
@@ -159,13 +147,13 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
       def onAnimationUpdate(animation: ValueAnimator) {
         val pos: Float = animation.getAnimatedValue.asInstanceOf[Float]
         params.x = pos.toInt
-        windowManager.updateViewLayout(BubbleView.this, params)
+        runUi(updateLayout(params, windowManager))
       }
     })
     animator.addListener(new AnimatorListenerAdapter {
       override def onAnimationEnd(animation: Animator): Unit = {
         super.onAnimationEnd(animation)
-        hide()
+        runUi(hide)
         params.x = left
         params.y = getResources.getDimension(R.dimen.bubble_start_pos_y).toInt
       }
@@ -173,7 +161,7 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
     animator.start()
   }
 
-  def drop(params: WindowManager.LayoutParams, windowManager: WindowManager) {
+  def drop(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = Ui {
     val x: Int = params.x
     val to: Int = if (x < widthScreen / 2) left else right()
     val animator: ValueAnimator = ValueAnimator.ofFloat(x, to)
@@ -181,7 +169,7 @@ class BubbleView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impli
       def onAnimationUpdate(animation: ValueAnimator) {
         val pos: Float = animation.getAnimatedValue.asInstanceOf[Float]
         params.x = pos.toInt
-        windowManager.updateViewLayout(BubbleView.this, params)
+        runUi(updateLayout(params, windowManager))
       }
     })
     animator.start()

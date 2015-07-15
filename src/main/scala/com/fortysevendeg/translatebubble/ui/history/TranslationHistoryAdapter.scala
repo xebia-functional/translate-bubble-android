@@ -25,37 +25,26 @@ import com.fortysevendeg.translatebubble.provider.TranslationHistoryEntity
 import macroid.FullDsl._
 import macroid.{ActivityContextWrapper, ContextWrapper}
 
-class TranslationHistoryAdapter(tranlationHistoryItems: Seq[TranslationHistoryEntity], listener: RecyclerClickListener)
-    (implicit context: ActivityContextWrapper)
-    extends RecyclerView.Adapter[TranslationHistoryViewHolder]
-    with ComponentRegistryImpl {
+class TranslationHistoryAdapter(translationHistoryItems: Seq[TranslationHistoryEntity])
+  (implicit context: ActivityContextWrapper)
+  extends RecyclerView.Adapter[TranslationHistoryViewHolder]
+  with ComponentRegistryImpl {
 
   override val contextProvider: ContextWrapper = context
-  val recyclerClickListener = listener
 
-  override def onCreateViewHolder(parentViewGroup: ViewGroup, i: Int): TranslationHistoryViewHolder = {
-    val layoutAdapter = new TranslationHistoryLayoutAdapter()
-    layoutAdapter.content.setOnClickListener(new OnClickListener {
-      override def onClick(v: View): Unit = recyclerClickListener.onClick(tranlationHistoryItems(v.getTag.asInstanceOf[Int]))
-    })
-    new TranslationHistoryViewHolder(layoutAdapter)
-  }
+  override def onCreateViewHolder(parentViewGroup: ViewGroup, i: Int): TranslationHistoryViewHolder =
+    new TranslationHistoryViewHolder(new TranslationHistoryLayoutAdapter())
 
-  override def getItemCount: Int = tranlationHistoryItems.size
+  override def getItemCount: Int = translationHistoryItems.size
 
   override def onBindViewHolder(viewHolder: TranslationHistoryViewHolder, position: Int): Unit = {
-    val translationHistoryItem = tranlationHistoryItems(position)
+    val translationHistoryItem = translationHistoryItems(position)
     val from = translationHistoryItem.data.from.toString
     val to = translationHistoryItem.data.to.toString
-    viewHolder.content.setTag(position)
     runUi(
-      (viewHolder.languages <~ tvText(persistentServices.getLanguagesStringFromData(from, to) getOrElse "")) ~
-          (viewHolder.originalText <~ tvText(translationHistoryItem.data.originalText)) ~
-          (viewHolder.translatedText <~ tvText(translationHistoryItem.data.translatedText))
+      viewHolder.bind(persistentServices.getLanguagesStringFromData(from, to) getOrElse "",
+        translationHistoryItem.data.originalText,
+        translationHistoryItem.data.translatedText)
     )
   }
-}
-
-trait RecyclerClickListener {
-  def onClick(translationHistoryItem: TranslationHistoryEntity)
 }

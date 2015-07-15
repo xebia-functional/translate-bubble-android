@@ -90,7 +90,7 @@ trait NotificationsServicesComponentImpl
       notifyManager.notify(NOTIFICATION_ID, notification)
     }
 
-    def getUniqueId(): Int = (System.currentTimeMillis & 0xfffffff).toInt
+    def getUniqueId: Int = (System.currentTimeMillis & 0xfffffff).toInt
 
   }
 

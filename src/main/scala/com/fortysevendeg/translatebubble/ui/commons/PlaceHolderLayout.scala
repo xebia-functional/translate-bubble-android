@@ -20,7 +20,7 @@ import android.widget.{Button, ImageView, LinearLayout, TextView}
 import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
-import macroid.ActivityContextWrapper
+import macroid.{Ui, ActivityContextWrapper}
 import macroid.FullDsl._
 
 trait PlaceHolderLayout
@@ -40,14 +40,11 @@ trait PlaceHolderLayout
     ) <~ placeholderContentStyle
   }
 
-  def loadFailed() = load(R.string.generalMessageError)
+  def loadFailed(): Ui[_] = load(R.string.generalMessageError)
 
-  def loadEmpty() = load(R.string.generalMessageEmpty, false)
+  def loadEmpty(): Ui[_] = load(R.string.generalMessageEmpty, showButton = false)
 
-  private def load(messageRes: Int, showButton: Boolean = true) = {
-    runUi(
-      (text <~ tvText(messageRes)) ~
-        (reloadButton <~ (if (showButton) vVisible else vGone)))
-  }
+  private def load(messageRes: Int, showButton: Boolean = true): Ui[_] = (text <~ tvText(messageRes)) ~
+    (reloadButton <~ (if (showButton) vVisible else vGone))
 
 }

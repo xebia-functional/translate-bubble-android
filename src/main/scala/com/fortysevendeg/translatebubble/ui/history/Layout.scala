@@ -18,17 +18,18 @@ package com.fortysevendeg.translatebubble.ui.history
 
 import android.support.v7.widget.{CardView, RecyclerView}
 import android.widget.{LinearLayout, TextView}
+import com.fortysevendeg.macroid.extras.TextTweaks._
 import macroid.ActivityContextWrapper
 import macroid.FullDsl._
 
 class TranslationHistoryLayoutAdapter(implicit contextWrapper: ActivityContextWrapper)
-    extends Styles {
+  extends Styles {
 
   var languages = slot[TextView]
 
-  var originalText = slot[TextView]
+  var original = slot[TextView]
 
-  var translatedText = slot[TextView]
+  var translated = slot[TextView]
 
   val content = layout
 
@@ -38,22 +39,26 @@ class TranslationHistoryLayoutAdapter(implicit contextWrapper: ActivityContextWr
         l[LinearLayout](
           w[TextView] <~ wire(languages) <~ languagesStyle
         ) <~ translateTitleStyle,
-        w[TextView] <~ wire(originalText) <~ originalTextStyle,
-        w[TextView] <~ wire(translatedText) <~ translatedTextStyle
+        w[TextView] <~ wire(original) <~ originalTextStyle,
+        w[TextView] <~ wire(translated) <~ translatedTextStyle
       ) <~ translateStyle
     ) <~ cardStyle
   )
 }
 
 class TranslationHistoryViewHolder(adapter: TranslationHistoryLayoutAdapter)(implicit contextWrapper: ActivityContextWrapper)
-    extends RecyclerView.ViewHolder(adapter.content) {
+  extends RecyclerView.ViewHolder(adapter.content) {
 
   val content = adapter.content
 
   val languages = adapter.languages
 
-  val originalText = adapter.originalText
+  val original = adapter.original
 
-  val translatedText = adapter.translatedText
+  val translated = adapter.translated
+
+  def bind(languagesFromTo: String, originalText: String, translatedText: String) = (languages <~ tvText(languagesFromTo)) ~
+    (original <~ tvText(originalText)) ~
+    (translated <~ tvText(translatedText))
 
 }

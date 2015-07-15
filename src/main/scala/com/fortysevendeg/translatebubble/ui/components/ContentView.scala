@@ -16,11 +16,10 @@
 
 package com.fortysevendeg.translatebubble.ui.components
 
-import android.animation.{Animator, ValueAnimator}
+import android.animation.{AnimatorListenerAdapter, Animator, ValueAnimator}
 import android.content.Context
 import android.text.TextUtils.TruncateAt
 import android.util.AttributeSet
-import android.view.View._
 import android.view.ViewGroup.LayoutParams._
 import android.view._
 import android.widget.{FrameLayout, ImageView, LinearLayout, TextView}
@@ -31,7 +30,7 @@ import com.fortysevendeg.macroid.extras.TextTweaks._
 import com.fortysevendeg.macroid.extras.ViewTweaks._
 import com.fortysevendeg.translatebubble.R
 import macroid.FullDsl._
-import macroid.{ContextWrapper, ServiceContextWrapper, Tweak}
+import macroid._
 
 import scala.language.postfixOps
 
@@ -45,40 +44,31 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
 
   addView(layout, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
-  def setTexts(langs: String, textOriginal: String, textTranslate: String) {
-    runUi(
-      (languages <~ tvText(langs)) ~ (original <~ tvText(textOriginal)) ~ (translate <~ tvText(textTranslate))
-    )
+  private[this] def updateLayout(params: WindowManager.LayoutParams, windowManager: WindowManager) = Ui {
+    windowManager.updateViewLayout(this, params)
   }
 
-  def show() = setVisibility(VISIBLE)
+  def setTexts(langs: String, textOriginal: String, textTranslate: String): Ui[_] =
+    (languages <~ tvText(langs)) ~ (original <~ tvText(textOriginal)) ~ (translate <~ tvText(textTranslate))
 
-  def hide() = setVisibility(INVISIBLE)
+  def show(): Ui[_] = this <~ vVisible
 
-  def collapse(params: WindowManager.LayoutParams, windowManager: WindowManager) {
+  def hide(): Ui[_] = this <~ vInvisible
+
+  def collapse(params: WindowManager.LayoutParams, windowManager: WindowManager): Ui[_] = Ui {
     val animator: ValueAnimator = ValueAnimator.ofFloat(0, 100)
     animator.setDuration(100)
     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener {
-      def onAnimationUpdate(animation: ValueAnimator) {
+      def onAnimationUpdate(animation: ValueAnimator) = {
         val pos: Float = animation.getAnimatedValue.asInstanceOf[Float]
         params.alpha = 1 - (pos / 100)
-        windowManager.updateViewLayout(ContentView.this, params)
+        runUi(updateLayout(params, windowManager))
       }
     })
-    animator.addListener(new Animator.AnimatorListener {
-      def onAnimationStart(animation: Animator) {
-      }
-
-      def onAnimationEnd(animation: Animator) {
-        hide()
+    animator.addListener(new AnimatorListenerAdapter {
+      override def onAnimationEnd(animation: Animator) = {
         params.alpha = 1
-        windowManager.updateViewLayout(ContentView.this, params)
-      }
-
-      def onAnimationCancel(animation: Animator) {
-      }
-
-      def onAnimationRepeat(animation: Animator) {
+        runUi(hide() ~ updateLayout(params, windowManager))
       }
     })
     animator.start()
@@ -88,14 +78,14 @@ class ContentView(context: Context, attrs: AttributeSet, defStyleAttr: Int)(impl
       widthScreen: Int,
       heightScreen: Int,
       params: WindowManager.LayoutParams,
-      windowManager: WindowManager): Unit = {
+      windowManager: WindowManager): Ui[_] = {
     if (params.x + getWidth > widthScreen) {
       params.x = widthScreen - getWidth
     }
     if (params.y + getHeight > heightScreen) {
       params.y = heightScreen - getHeight
     }
-    windowManager.updateViewLayout(ContentView.this, params)
+    updateLayout(params, windowManager)
   }
 
 }

@@ -54,4 +54,9 @@
     <integer name="text_medium">14</integer>
     <integer name="text_small">12</integer>
     <integer name="text_info_window_snippet">11</integer>
+
+    <integer name="duration_default">300</integer>
+
+    <integer name="column_tablet_landscape">3</integer>
+    <integer name="column_or_tablet_or_landscape">2</integer>
 </resources>
